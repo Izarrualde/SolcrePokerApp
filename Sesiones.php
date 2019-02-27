@@ -219,13 +219,13 @@ public function setBuyins($buyins){
 
 /* punto 7 de correcciones */
 public function getResultado($sesionUsuario){
-	/* esta función recibe un array del tipo $usuario y devuelve el resultado del usuario en esa sesión  */ 
+	/* esta función recibe un array del tipo $usuarios y devuelve el resultado del usuario en esa sesión  */ 
 $resultado = $sesionUsuario[6] - $sesionUsuario[5];
 return $resultado;
 }
 
 public function getHorasJugadas($sesionUsuario){
-	/* esta función recibe un array del tipo $usuario y devuelve la cantidad de horas jugadas del usuario en esa sesión  */ 
+	/* esta función recibe un array del tipo $usuarios y devuelve la cantidad de horas jugadas del usuario en esa sesión  */ 
 $horasJugadas = dateDiff($sesionUsuario[7], $sesionUsuario[8])
 return $horasJugadas;
 }
@@ -235,18 +235,26 @@ public function dateDiff($horaInicio, $horaFin){
 }
 
 
-
+/* ---------------------------------------------------------------------------------------------------------- */
 /* 9- En la clase Sesion tenés que tener un método calcularComision() que lo que haga es iterar en la colección de SesionComision e ir sumando lo que se comisonó hora por hora y devolver el total.  */
 
 public function calcularComision($sesionComision){
-/* dudas en que es la coleccion SesionComision */
+/* Observacion: en SesionComision los elementos "hora" y "comision" deben ser arrays, pudiendo agregarle elementos mediante array_push en cada nueva hora de la sesion */
 }
+
+
+/* -------------------------------------------------------------------------------------------------------------*/
 
 /* 10- En la clase Sesión tenes que agregar un método getTotalJugado() que lo que haga es iterar en los buyins y devolver la suma de todos los buyins para saber cuanto se jugó en total. */ 
 
 public function getTotalJugado($buyins){
-/* duda con implemetación, iterar en los buyins? de distintos arreglos? */
+
 }
+
+
+
+
+
 
 
 /* 11- En la clase Sesión tenes que agregar un método que sea getTotalCashout() que lo haga es iterar en todos los jugadores que jugaron la sesión y devolver la suma total del cashout. */
