@@ -247,11 +247,19 @@ public function calcularComision($sesionComision){
 
 /* 10- En la clase Sesión tenes que agregar un método getTotalJugado() que lo que haga es iterar en los buyins y devolver la suma de todos los buyins para saber cuanto se jugó en total. */ 
 
-public function getTotalJugado($buyins){
-
+public function getTotalJugado($usuarios){
+/* esta funcion recibe el buyin de los jugadores de la sesion y devuelve el total jugado */
+$buyins = $this-> getSesion()->getBuyins();
+$montoTotal = 0;
+foreach ($buyins as $buyin) {
+If($buyin->getUsuario()->getId() == $this->getUsuario()->getId()) {
+$montoTotal = $montoTotal + $buyin->getMontoTotal();
 }
 
+/* DUDAS */ 
+}
 
+/* -----------------------------------------------------------------------------------------------------------*/
 
 
 
@@ -269,10 +277,6 @@ getTotalJugado() = getTotalCashout() + calcularComision()  + getPropinaDealer()
 
 Si esa ecuación se cumple, no diferencias en la venta de fichas, si no se cumple validarSesion tiene que dar error para nosotros saber que el Rodri le dio fichas de más o de menos a alguien o se mezcló comisión o propina con fichas que no estaban en juego o e perdieron fichas. */
 
-public function getTotalJugado($sesion){
-Foreach ($usuario->cashin as $cashin) 
-/* implementarla */
-}
 
 public function validarSesion($sesion){
 If (getTotalJugado() = getTotalCashout() + calcularComision()  + getPropinaDealer()  + getPropinaServicio())
