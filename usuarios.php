@@ -8,6 +8,11 @@ class Usuario {
 	protected $email;
 	protected $apellido;
 	protected $multiplicador;
+	protected $activo;
+	protected $horas;
+	protected $puntos;
+	protected $resultado;
+	protected $cashin;
 
 public function __construct($id=null, $usuario="", $clave="", $email="", $apellido="", $multiplicador= null) {
 	$this->id = setId($id);
@@ -63,11 +68,7 @@ public function getApellido($apellido) {
 	return $this->apellido;
 }
 
-protected function activo(){};
-protected function horas(){};
-protected function puntos(){};
-protected function resultado(){};
-protected function cashin(){};
+
 
 }
 
