@@ -19,7 +19,7 @@ class Sesion {
 	protected $propinaDealer;
 	protected $propinaServicio;
 
-	/* punto 6 de las correcciones, las siguientes variables deben ser cada una un array con objetos del tipo SesionBuyIn, SesionComision y SesionUsuario, respectivamente. */
+	/* punto 6 de las correcciones, las siguientes variables deben ser cada una un array con objetos del tipo SesionBuyIn, SesionComision y SesionUsuario, respectivamente. HECHO. */
 
 	protected $usuarios = array('Id', 'IdSesion', 'IdUsuario', 'Aprobado', 'PuntosAcumulados', 'Cashin', 'Cashout', 'inicio', 'fin');
 
@@ -217,17 +217,23 @@ public function setBuyins($buyins){
 	return $this;
 }
 
-
 /* punto 7 de correcciones */
-public function getResultado($cashin, $cashout){
-$resultado = $cashin - $cashout;
+public function getResultado($sesionUsuario){
+	/* esta función recibe un array del tipo $usuario y devuelve el resultado del usuario en esa sesión  */ 
+$resultado = $sesionUsuario[6] - $sesionUsuario[5];
 return $resultado;
 }
 
-public function getHorasJugadas($horaInicio, $horaFin){
-/* $HorasJugadas = ;   falta implementación */
+public function getHorasJugadas($sesionUsuario){
+	/* esta función recibe un array del tipo $usuario y devuelve la cantidad de horas jugadas del usuario en esa sesión  */ 
+$horasJugadas = dateDiff($sesionUsuario[7], $sesionUsuario[8])
 return $horasJugadas;
 }
+
+public function dateDiff($horaInicio, $horaFin){
+	/* esta funcion recibe hora de inicio y hora de fin de sesión y devuelve la cantidad de horas jugadas en un formato determinado */
+}
+
 
 
 /* 9- En la clase Sesion tenés que tener un método calcularComision() que lo que haga es iterar en la colección de SesionComision e ir sumando lo que se comisonó hora por hora y devolver el total.  */
