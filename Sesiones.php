@@ -217,20 +217,22 @@ public function setBuyins($buyins){
 	return $this;
 }
 
+/*--------------------------------------------------------------------------------------------------------------*/
+
 /* punto 7 de correcciones */
-public function getResultado($sesionUsuario){
+protected function getResultado($sesionUsuario){
 	/* esta función recibe un array del tipo $usuarios y devuelve el resultado del usuario en esa sesión  */ 
 $resultado = $sesionUsuario[6] - $sesionUsuario[5];
 return $resultado;
 }
 
-public function getHorasJugadas($sesionUsuario){
+protected function getHorasJugadas($sesionUsuario){
 	/* esta función recibe un array del tipo $usuarios y devuelve la cantidad de horas jugadas del usuario en esa sesión  */ 
 $horasJugadas = dateDiff($sesionUsuario[7], $sesionUsuario[8])
 return $horasJugadas;
 }
 
-public function dateDiff($horaInicio, $horaFin){
+protected function dateDiff($horaInicio, $horaFin){
 	/* esta funcion recibe hora de inicio y hora de fin de sesión y devuelve la cantidad de horas jugadas en un formato determinado */
 }
 
@@ -238,7 +240,7 @@ public function dateDiff($horaInicio, $horaFin){
 /* ---------------------------------------------------------------------------------------------------------- */
 /* 9- En la clase Sesion tenés que tener un método calcularComision() que lo que haga es iterar en la colección de SesionComision e ir sumando lo que se comisonó hora por hora y devolver el total.  */
 
-public function calcularComision($sesionComision){
+protected function calcularComision($sesionComision){
 /* Observacion: en SesionComision los elementos "hora" y "comision" deben ser arrays, pudiendo agregarle elementos mediante array_push en cada nueva hora de la sesion */
 }
 
@@ -247,7 +249,11 @@ public function calcularComision($sesionComision){
 
 /* 10- En la clase Sesión tenes que agregar un método getTotalJugado() que lo que haga es iterar en los buyins y devolver la suma de todos los buyins para saber cuanto se jugó en total. */ 
 
-public function getTotalJugado($usuarios){
+protected function agregarUsuario($usuario){
+$usuario = $this->usuarios;
+}
+
+protected function getTotalJugado($usuarios){
 /* esta funcion recibe el buyin de los jugadores de la sesion y devuelve el total jugado */
 $buyins = $this-> getSesion()->getBuyins();
 $montoTotal = 0;
@@ -267,7 +273,7 @@ $montoTotal = $montoTotal + $buyin->getMontoTotal();
 
 /* 11- En la clase Sesión tenes que agregar un método que sea getTotalCashout() que lo haga es iterar en todos los jugadores que jugaron la sesión y devolver la suma total del cashout. */
 
-public function getTotalCashout(){
+protected function getTotalCashout(){
 /* implementarla */
 }
 
@@ -278,7 +284,7 @@ getTotalJugado() = getTotalCashout() + calcularComision()  + getPropinaDealer()
 Si esa ecuación se cumple, no diferencias en la venta de fichas, si no se cumple validarSesion tiene que dar error para nosotros saber que el Rodri le dio fichas de más o de menos a alguien o se mezcló comisión o propina con fichas que no estaban en juego o e perdieron fichas. */
 
 
-public function validarSesion($sesion){
+protected function validarSesion($sesion){
 If (getTotalJugado() = getTotalCashout() + calcularComision()  + getPropinaDealer()  + getPropinaServicio())
 
 }
