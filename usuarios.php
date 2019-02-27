@@ -14,13 +14,22 @@ class Usuario {
 	protected $resultado;
 	protected $cashin;
 
-public function __construct($id=null, $usuario="", $clave="", $email="", $apellido="", $multiplicador= null) {
+public function __construct($id=null, $usuario="", $clave="", $email="", $apellido="", $multiplicador=null, $activo=null, $horas=0, $puntos=0, $resultado=0, $cashin=0) {
 	$this->id = setId($id);
 	$this->usuario = setUsuario($usuario);
 	$this->clave = setClave($clave);
 	$this->email = setEmail($email);
 	$this->apellido = setApellido($apellido);
 	$this->multiplicador = setMultiplicador($multiplicador);
+	$this->activo = setActivo($activo);
+	$this->horas = setHoras($horas);
+	$this->puntos = setpuntos($puntos);
+	$this->resultado = setResultado($resultado);
+	$this->cashin = setCashin($cashin);
+}
+
+public function getId() {
+	return $this->id;
 }
 
 public function setId($id){
@@ -28,8 +37,8 @@ public function setId($id){
 	return $this;
 }
 
-public function getId($id) {
-	return $this->id;
+public function getUsuario() {
+	return $this->usuario;
 }
 
 public function setUsuario($usuario){
@@ -37,8 +46,8 @@ public function setUsuario($usuario){
 	return $this;
 }
 
-public function getUsuario($usuario) {
-	return $this->usuario;
+public function getClave() {
+	return $this->clave;
 }
 
 public function setClave($clave){
@@ -46,17 +55,18 @@ public function setClave($clave){
 	return $this;
 }
 
-public function getClave($clave) {
-	return $this->clave;
+public function getEmail() {
+	return $this->email;
 }
+
 
 public function setEmail($email){
 	$this->email = $email;
 	return $this;
 }
 
-public function getEmail($email) {
-	return $this->email;
+public function getApellido() {
+	return $this->apellido;
 }
 
 public function setApellido($apellido){
@@ -64,10 +74,50 @@ public function setApellido($apellido){
 	return $this;
 }
 
-public function getApellido($apellido) {
-	return $this->apellido;
+public function getMultiplicador() {
+	return $this->multiplicador;
 }
 
+public function setMultiplicador($multiplicador){
+	$this->multiplicador = $multiplicador;
+	return $this;
+}
+
+public function getHoras() {
+	return $this->horas;
+}
+
+public function setHoras($horas){
+	$this->horas = $horas;
+	return $this;
+}
+
+public function getSesiones() {
+	return $this->sesiones;
+}
+
+public function setSesiones($sesiones){
+	$this->sesiones = $sesiones;
+	return $this;
+}
+
+public function getPuntos() {
+	return $this->puntos;
+}
+
+public function setPuntos($puntos){
+	$this->puntos = $puntos;
+	return $this;
+}
+
+public function getCashin() {
+	return $this->cashin;
+}
+
+public function setCashin($cashin){
+	$this->cashin = $cashin;
+	return $this;
+}
 
 
 }
