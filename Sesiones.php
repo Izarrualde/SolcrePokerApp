@@ -21,24 +21,14 @@ class Sesion {
 
 	/* punto 6 de las correcciones, las siguientes variables deben ser cada una un array con objetos del tipo SesionBuyIn, SesionComision y SesionUsuario, respectivamente. */
 
-	protected $usuarios = array('Id' => , 'IdSesion' =>, 'IdUsuario' =>, 'Aprobado' =>, 'PuntosAcumulados' =>, 'Cashin' =>, 'Cashout' =>, 'inicio' =>, 'fin' =>,  );
+	protected $usuarios = array('Id', 'IdSesion', 'IdUsuario', 'Aprobado', 'PuntosAcumulados', 'Cashin', 'Cashout', 'inicio', 'fin');
 
-	protected $comisiones = array('Id' => , 'IdSesion' => 'hora' => 'comision' => );
+	protected $comisiones = array('Id', 'IdSesion', 'hora', 'comision');
 
-	protected $buyins = array'Id' => , 'IdSesion' =>, 'IdJugador' =>, 'MontoCash' =>, 'MontoCredito' =>, 'Moneda' =>, 'Hora' =>, 'Aprobado' => );
-
-/* duda de si puedo darle valor al array usando una funcion ej array (IdSesion' => getIdSesion($sesion)) */
-
-	/* las siguientes no sé si deberían ser variables o funciones 
-
-	protected $comision;
-	protected $propinaDealer;
-	protected $propinaServicio;
-*/
-
+	protected $buyins = array('Id', 'IdSesion', 'IdJugador', 'MontoCash', 'MontoCredito', 'Moneda', 'Hora', 'Aprobado');
 }
 
-public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0){
+public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0, $usuarios, $comisiones, $buyins){
 	$this->idSesion=setIdSesion($idSesion);
 	$this->fecha=setFecha($fecha);
 	$this->titulo=setTitulo($titulo);
@@ -53,6 +43,9 @@ public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion
 	$this->comision=setComision($comision);
 	$this->propinaDealer=setPropinaDealer($propinaDealer);
 	$this->propinaServicio=setPropinaServicio($propinaServicio);
+	$this->usuarios=setUsuarios($usuarios);
+	$this->comisiones=setComisiones($comisiones);
+	$this->buiyins=setBuyins($buiyins);
 }
 
 
@@ -190,6 +183,40 @@ public function setPropinaServicio($propinaServicio){
 	$this->horaFin=$propinaServicio;
 	return $this;
 }
+
+public function getUsuarios(){
+return $this->usuarios;	
+}
+
+public function setUsuarios($usuarios){
+	for (i=0; i<9; i++){
+		$this->usuarios[i]=$usuarios[i]
+	}
+	return $this;
+}
+
+public function getComisiones(){
+	return $this->comisiones;
+}
+
+public function setComisiones($comisiones){
+	for (i=0; i<4: i++){
+		$this->comisiones[i]=$comisiones[i];
+	}
+	return $this;
+}
+
+public function getBuyins(){
+	return $this->buyins;
+}
+
+public function setBuyins($buyins){
+	for (i=0; i<8; i++){
+		$this->buyins[i]=$buyins[i];
+	}
+	return $this;
+}
+
 
 /* punto 7 de correcciones */
 public function getResultado($cashin, $cashout){
