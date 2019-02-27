@@ -15,6 +15,9 @@ class Sesion {
 	protected $horaInicio;
 	protected $horaInicioReal;
 	protected $horaFin;
+	protected $comision;
+	protected $propinaDealer;
+	protected $propinaServicio;
 
 	/* punto 6 de las correcciones, las siguientes variables deben ser cada una un array con objetos del tipo SesionBuyIn, SesionComision y SesionUsuario, respectivamente. */
 
@@ -35,18 +38,26 @@ class Sesion {
 
 }
 
-public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null){
-	$this->idSesion=$idSesion;
-	$this->fecha=$fecha;
-	$this->titulo=$titulo;
-	$this->descripcion=$descripcion;
-	$this->foto=$foto;
-	$this->confirmados=$confirmados;
-	$this->lugaresEspera=$lugaresEspera
-	$this->reservaEspera=$reservaEspera;
-	$this->horaInicio=$horaInicio;
-	$this->horaInicioReal=$horaInicioReal;
-	$this->horaFin=$horaFin;
+public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0){
+	$this->idSesion=setIdSesion($idSesion);
+	$this->fecha=setFecha($fecha);
+	$this->titulo=setTitulo($titulo);
+	$this->descripcion=setDescripcion($descripcion);
+	$this->foto=setFoto($foto);
+	$this->confirmados=setCofirmados($confirmados);
+	$this->lugaresEspera=setLugaresEspera($lugaresEspera);
+	$this->reservaEspera=setReservaEspera($reservaEspera);
+	$this->horaInicio=setHoraInicio($horaInicio);
+	$this->horaInicioReal=setHoraInicioReal($horaInicioReal);
+	$this->horaFin=setHoraFin($horaFin);
+	$this->comision=setComision($comision);
+	$this->propinaDealer=setPropinaDealer($propinaDealer);
+	$this->propinaServicio=setPropinaServicio($propinaServicio);
+}
+
+
+public function getIdSesion(){
+	return $this->IdSesion;
 }
 
 public function setIdSesion($idSesion){
@@ -54,17 +65,17 @@ public function setIdSesion($idSesion){
 	return $this;
 }
 
+public function getFecha(){
+	return $this->fecha;
+}
+
+
 public function getIdSesion(){
 	return $this->IdSesion;
 }
 
-public function setFecha($fecha){
-	$this->fecha=$fecha;
-	return $this;
-}
-
-public function getFecha(){
-	return $this->fecha;
+public function getTitulo(){
+	return $this->titulo;
 }
 
 public function setTitulo($titulo){
@@ -72,8 +83,8 @@ public function setTitulo($titulo){
 	return $this;
 }
 
-public function getTitulo(){
-	return $this->titulo;
+public function getDescripcion(){
+	return $this->descripcion;
 }
 
 public function setDescripcion($descripcion){
@@ -81,22 +92,12 @@ public function setDescripcion($descripcion){
 	return $this;
 }
 
-public function getDescripcion(){
-	return $this->descripcion;
-}
-
-
-public function setFoto($foto){
-	$this->foto=$foto;
-	return $this;
-}
-
 public function getFoto(){
 	return $this->foto;
 }
 
-public function setLugares($lugares){
-	$this->lugares=$lugares;
+public function setFoto($foto){
+	$this->foto=$foto;
 	return $this;
 }
 
@@ -104,9 +105,8 @@ public function getLugares(){
 	return $this->lugares;
 }
 
-
-public function setConfirmados($confirmados){
-	$this->confirmados=$confirmados;
+public function setLugares($lugares){
+	$this->lugares=$lugares;
 	return $this;
 }
 
@@ -114,8 +114,8 @@ public function getConfirmados(){
 	return $this->confirmados;
 }
 
-public function setLugaresEspera($lugaresEspera){
-	$this->lugaresEspera=$lugaresEspera;
+public function setConfirmados($confirmados){
+	$this->confirmados=$confirmados;
 	return $this;
 }
 
@@ -123,8 +123,8 @@ public function getLugaresEspera(){
 	return $this->lugaresEspera;
 }
 
-public function setReservaEspera($ReservaEspera){
-	$this->ReservaEspera=$ReservaEspera;
+public function setLugaresEspera($lugaresEspera){
+	$this->lugaresEspera=$lugaresEspera;
 	return $this;
 }
 
@@ -132,8 +132,8 @@ public function getReservaEspera(){
 	return $this->ReservaEspera;
 }
 
-public function setHoraInicio($horaInicio){
-	$this->horaInicio=$horaInicio;
+public function setReservaEspera($ReservaEspera){
+	$this->ReservaEspera=$ReservaEspera;
 	return $this;
 }
 
@@ -141,8 +141,8 @@ public function getHoraInicio(){
 	return $this->horaInicio;
 }
 
-public function setHoraInicioReal($horaInicioReal){
-	$this->horaInicioReal=$horaInicioReal;
+public function setHoraInicio($horaInicio){
+	$this->horaInicio=$horaInicio;
 	return $this;
 }
 
@@ -150,13 +150,45 @@ public function getHoraInicioReal(){
 	return $this->horaInicioReal;
 }
 
-public function setHoraFin($horaFin){
-	$this->horaFin=$horaFin;
+public function setHoraInicioReal($horaInicioReal){
+	$this->horaInicioReal=$horaInicioReal;
 	return $this;
 }
 
 public function getHoraFin(){
 	return $this->horaFin;
+}
+
+public function setHoraFin($horaFin){
+	$this->horaFin=$horaFin;
+	return $this;
+}
+
+public function getComision(){
+	return $this->comision;
+}
+
+public function setComision($comision){
+	$this->comision=$comision;
+	return $this;
+}
+
+public function getPropinaDealer(){
+	return $this->propinaDealer;
+}
+
+public function setPropinaDealer($propinaDealer){
+	$this->horaFin=$propinaDealer;
+	return $this;
+}
+
+public function getPropinaServicio(){
+	return $this->propinaServicio;
+}
+
+public function setPropinaServicio($propinaServicio){
+	$this->horaFin=$propinaServicio;
+	return $this;
 }
 
 /* punto 7 de correcciones */
