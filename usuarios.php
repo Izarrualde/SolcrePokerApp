@@ -83,6 +83,15 @@ public function setMultiplicador($multiplicador){
 	return $this;
 }
 
+public function getActivo() {
+	return $this->activo;
+}
+
+public function setActivo($activo){
+	$this->activo = $activo;
+	return $this;
+}
+
 public function getHoras() {
 	return $this->horas;
 }
