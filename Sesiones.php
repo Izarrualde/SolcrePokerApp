@@ -28,7 +28,7 @@ class Sesion {
 	protected $buyins = array('Id', 'IdSesion', 'IdJugador', 'MontoCash', 'MontoCredito', 'Moneda', 'Hora', 'Aprobado');
 }
 
-public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0, $usuarios, $comisiones, $buyins){
+public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0){
 	$this->idSesion=setIdSesion($idSesion);
 	$this->fecha=setFecha($fecha);
 	$this->titulo=setTitulo($titulo);
@@ -43,9 +43,6 @@ public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion
 	$this->comision=setComision($comision);
 	$this->propinaDealer=setPropinaDealer($propinaDealer);
 	$this->propinaServicio=setPropinaServicio($propinaServicio);
-	$this->usuarios=setUsuarios($usuarios);
-	$this->comisiones=setComisiones($comisiones);
-	$this->buiyins=setBuyins($buiyins);
 }
 
 
@@ -171,7 +168,7 @@ public function getPropinaDealer(){
 }
 
 public function setPropinaDealer($propinaDealer){
-	$this->horaFin=$propinaDealer;
+	$this->propinaDealer=$propinaDealer;
 	return $this;
 }
 
@@ -180,42 +177,10 @@ public function getPropinaServicio(){
 }
 
 public function setPropinaServicio($propinaServicio){
-	$this->horaFin=$propinaServicio;
+	$this->$propinaServicio=$propinaServicio;
 	return $this;
 }
 
-public function getUsuarios(){
-return $this->usuarios;	
-}
-
-public function setUsuarios($usuarios){
-	for (i=0; i<9; i++){
-		$this->usuarios[i]=$usuarios[i]
-	}
-	return $this;
-}
-
-public function getComisiones(){
-	return $this->comisiones;
-}
-
-public function setComisiones($comisiones){
-	for (i=0; i<4: i++){
-		$this->comisiones[i]=$comisiones[i];
-	}
-	return $this;
-}
-
-public function getBuyins(){
-	return $this->buyins;
-}
-
-public function setBuyins($buyins){
-	for (i=0; i<8; i++){
-		$this->buyins[i]=$buyins[i];
-	}
-	return $this;
-}
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
