@@ -1,8 +1,8 @@
 <?php
-Namespace Solcre\PokerApp\Sesion;
+Namespace Solcre\PokerApp\Entity;
 
-class Sesion {
-	
+class SessionEntity {
+
 	protected $idSesion;
 	protected $fecha;
 	protected $titulo;
@@ -186,13 +186,13 @@ public function setPropinaServicio($propinaServicio){
 
 /* punto 7 de correcciones */
 protected function getResultado($sesionUsuario){
-	/* esta función recibe un array del tipo $usuarios y devuelve el resultado del usuario en esa sesión  */ 
+	/* esta función recibe un array del tipo $usuarios y devuelve el resultado del usuario en esa sesión  */
 $resultado = $sesionUsuario[6] - $sesionUsuario[5];
 return $resultado;
 }
 
 protected function getHorasJugadas($sesionUsuario){
-	/* esta función recibe un array del tipo $usuarios y devuelve la cantidad de horas jugadas del usuario en esa sesión  */ 
+	/* esta función recibe un array del tipo $usuarios y devuelve la cantidad de horas jugadas del usuario en esa sesión  */
 $horasJugadas = dateDiff($sesionUsuario[7], $sesionUsuario[8])
 return $horasJugadas;
 }
@@ -212,7 +212,7 @@ protected function calcularComision($sesionComision){
 
 /* -------------------------------------------------------------------------------------------------------------*/
 
-/* 10- En la clase Sesión tenes que agregar un método getTotalJugado() que lo que haga es iterar en los buyins y devolver la suma de todos los buyins para saber cuanto se jugó en total. */ 
+/* 10- En la clase Sesión tenes que agregar un método getTotalJugado() que lo que haga es iterar en los buyins y devolver la suma de todos los buyins para saber cuanto se jugó en total. */
 
 protected function agregarUsuario($usuario){
 $usuario = $this->usuarios;
@@ -227,7 +227,7 @@ If($buyin->getUsuario()->getId() == $this->getUsuario()->getId()) {
 $montoTotal = $montoTotal + $buyin->getMontoTotal();
 }
 
-/* DUDAS */ 
+/* DUDAS */
 }
 
 /* -----------------------------------------------------------------------------------------------------------*/
@@ -242,7 +242,7 @@ protected function getTotalCashout(){
 /* implementarla */
 }
 
-/* 12- En la clase Sesión tenés que agregar un método que sea validarSesion() que lo que haga es una serie de comprobaciones y devolver true si la sesión es válida o false si la sesión tiene errores.  
+/* 12- En la clase Sesión tenés que agregar un método que sea validarSesion() que lo que haga es una serie de comprobaciones y devolver true si la sesión es válida o false si la sesión tiene errores. 
 
 getTotalJugado() = getTotalCashout() + calcularComision()  + getPropinaDealer()  + getPropinaServicio()
 

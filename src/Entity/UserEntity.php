@@ -1,7 +1,7 @@
 <?php
-Namespace Solcre\PokerApp\Usuario;
+Namespace Solcre\PokerApp\Entity;
 
-class Usuario {
+class UserEntity {
 	protected $id;
 	protected $usuario;
 	protected $clave;
