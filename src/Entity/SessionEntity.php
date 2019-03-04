@@ -26,9 +26,9 @@ class SessionEntity {
 	protected $comisiones = array('Id', 'IdSesion', 'hora', 'comision');
 
 	protected $buyins = array('Id', 'IdSesion', 'IdJugador', 'MontoCash', 'MontoCredito', 'Moneda', 'Hora', 'Aprobado');
-}
 
-public function __contruct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0){
+
+public function __construct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0){
 	$this->idSesion=setIdSesion($idSesion);
 	$this->fecha=setFecha($fecha);
 	$this->titulo=setTitulo($titulo);
@@ -60,8 +60,9 @@ public function getFecha(){
 }
 
 
-public function getIdSesion(){
-	return $this->IdSesion;
+public function setFecha($fecha){
+	$this->fecha=$fecha;
+	return $this;
 }
 
 public function getTitulo(){
@@ -193,7 +194,7 @@ return $resultado;
 
 protected function getHorasJugadas($sesionUsuario){
 	/* esta función recibe un array del tipo $usuarios y devuelve la cantidad de horas jugadas del usuario en esa sesión  */
-$horasJugadas = dateDiff($sesionUsuario[7], $sesionUsuario[8])
+$horasJugadas = dateDiff($sesionUsuario[7], $sesionUsuario[8]);
 return $horasJugadas;
 }
 
@@ -223,12 +224,12 @@ protected function getTotalJugado($usuarios){
 $buyins = $this-> getSesion()->getBuyins();
 $montoTotal = 0;
 foreach ($buyins as $buyin) {
-If($buyin->getUsuario()->getId() == $this->getUsuario()->getId()) {
+If($buyin->getUsuario()->getId() == $this->getUsuario()->getId());}
 $montoTotal = $montoTotal + $buyin->getMontoTotal();
 }
 
 /* DUDAS */
-}
+
 
 /* -----------------------------------------------------------------------------------------------------------*/
 
@@ -250,7 +251,9 @@ Si esa ecuación se cumple, no diferencias en la venta de fichas, si no se cumpl
 
 
 protected function validarSesion($sesion){
-If (getTotalJugado() = getTotalCashout() + calcularComision()  + getPropinaDealer()  + getPropinaServicio())
+/*If (getTotalJugado()=getTotalCashout()+calcularComision()+getPropinaDealer()+getPropinaServicio()){
+return "ok";}*/
+}
 
 }
 
