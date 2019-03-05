@@ -29,20 +29,20 @@ class SessionEntity {
 
 
 public function __construct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $confirmados=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null, $comision=0, $propinaDealer=0, $propinaServicio=0){
-	$this->idSesion=setIdSesion($idSesion);
-	$this->fecha=setFecha($fecha);
-	$this->titulo=setTitulo($titulo);
-	$this->descripcion=setDescripcion($descripcion);
-	$this->foto=setFoto($foto);
-	$this->confirmados=setCofirmados($confirmados);
-	$this->lugaresEspera=setLugaresEspera($lugaresEspera);
-	$this->reservaEspera=setReservaEspera($reservaEspera);
-	$this->horaInicio=setHoraInicio($horaInicio);
-	$this->horaInicioReal=setHoraInicioReal($horaInicioReal);
-	$this->horaFin=setHoraFin($horaFin);
-	$this->comision=setComision($comision);
-	$this->propinaDealer=setPropinaDealer($propinaDealer);
-	$this->propinaServicio=setPropinaServicio($propinaServicio);
+	$this->setIdSesion($idSesion);
+	$this->setFecha($fecha);
+	$this->setTitulo($titulo);
+	$this->setDescripcion($descripcion);
+	$this->setFoto($foto);
+	$this->setConfirmados($confirmados);
+	$this->setLugaresEspera($lugaresEspera);
+	$this->setReservaEspera($reservaEspera);
+	$this->setHoraInicio($horaInicio);
+	$this->setHoraInicioReal($horaInicioReal);
+	$this->setHoraFin($horaFin);
+	$this->setComision($comision);
+	$this->setPropinaDealer($propinaDealer);
+	$this->setPropinaServicio($propinaServicio);
 }
 
 
