@@ -1,0 +1,16 @@
+		BuyinSession
+
+---------------------------------------------------------
+$id;
+$idSesion;
+$idJugador;
+$montoCash;
+$montoCredito;
+$moneda;
+$hora;
+$aprobado;
+
+----------------------------------------------------------
+
+__construct
+getters y setters.

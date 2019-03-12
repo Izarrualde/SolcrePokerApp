@@ -1,0 +1,12 @@
+		ComisionSession
+
+---------------------------------------------------
+$id
+$idSesion
+$hora
+$comision
+
+----------------------------------------------------
+__construct()
+getters y setters.
+

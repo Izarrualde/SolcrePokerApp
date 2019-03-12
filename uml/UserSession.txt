@@ -1,0 +1,21 @@
+		UserSession
+
+---------------------------------------------------------------
+
+$id;
+$idSesion;
+$idUsuario;
+$aprobado;
+$puntosAcumulados;
+$cashin;
+$cashout;
+$inicio;
+$fin;
+
+---------------------------------------------------------------
+
+__construct()
+getters y setters.
+getResultado()
+getHorasJugadas()
+dateDiff()
