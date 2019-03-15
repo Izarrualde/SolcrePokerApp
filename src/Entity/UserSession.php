@@ -4,22 +4,22 @@ Namespace Solcre\PokerApp\Entity;
 Class UserSession {
 	protected $id;
 	protected $session;
-	protected $idUsuario;
-	protected $aprobado;
-	protected $puntosAcumulados;
+	protected $idUser;
+	protected $approved;
+	protected $accumulatedPoints;
 	protected $cashout;
-	protected $inicio;
-	protected $fin;
+	protected $start;
+	protected $end;
 
-	public function __construct($id=null, SessionEntity $session = null, $idUsuario=null, $aprobado=null, $puntosAcumulados=0, $cashout=0, $inicio=null, $fin=null){
+	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $approved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null){
 		$this->setId($id);
 		$this->setSession($session);
-		$this->setIdUsuario($idUsuario);
-		$this->setAprobado($aprobado);
-		$this->setPuntosAcumulados($puntosAcumulados);
+		$this->setIdUser($idUser);
+		$this->setApproved($approved);
+		$this->setAccumulatedPoints($accumulatedPoints);
 		$this->setCashout($cashout);
-		$this->setInicio($inicio);
-		$this->setFin($fin);
+		$this->setStart($start);
+		$this->setEnd($end);
 	}
 
 	public function getId() {
@@ -45,31 +45,31 @@ Class UserSession {
 		return null;
 	}
 
-	public function getIdUsuario() {
-		return $this->idUsuario;
+	public function getIdUser() {
+		return $this->idUser;
 	}
 
-	public function setIdUsuario($idUsuario){
-		$this->idUsuario = $idUsuario;
+	public function setIdUser($idUser){
+		$this->idUser = $idUser;
 		return $this;
 	}
 
-	public function getAprobado() {
-		return $this->aprobado;
+	public function getApproved() {
+		return $this->approved;
 	}
 
-	public function setAprobado($aprobado){
-		$this->aprobado = $aprobado;
+	public function setApproved($approved){
+		$this->approved = $approved;
 		return $this;
 	}
 
 
-	public function getPuntosAcumulados() {
-		return $this->puntosAcumulados;
+	public function getAccumulatedPoints() {
+		return $this->AccumulatedPoints;
 	}
 
-	public function setPuntosAcumulados($puntosAcumulados){
-		$this->puntosAcumulados = $puntosAcumulados;
+	public function setAccumulatedPoints($AccumulatedPoints){
+		$this->AccumulatedPoints = $AccumulatedPoints;
 		return $this;
 	}
 
@@ -78,8 +78,8 @@ Class UserSession {
 		$session = $this->getSession();
 		if ($session instanceof SessionEntity) {
 			foreach($session->getBuyins() as $buyin) {
-				if ($buyin->getIdJugador() == $this->getId()) {
-					$cashin += $buyin->getMontoCash() + $buyin->getMontoCredito();
+				if ($buyin->getIdPlayer() == $this->getId()) {
+					$cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
 				}
 			}
 		} 
@@ -95,31 +95,31 @@ Class UserSession {
 		return $this;
 	}
 
-	public function getInicio() {
-		return $this->inicio;
+	public function getStart() {
+		return $this->start;
 	}
 
-	public function setInicio($inicio){
-		$this->inicio = $inicio;
+	public function setStart($start){
+		$this->start = $start;
 		return $this;
 	}
 
-	public function getFin() {
-		return $this->fin;
+	public function getEnd() {
+		return $this->end;
 	}
 
-	public function setFin($fin){
-		$this->fin = $fin;
+	public function setEnd($end){
+		$this->end = $end;
 		return $this;
 	}
 
 
-	public function getResultado(){
+	public function getResult(){
 		return $this->getCashout() - $this->getCashin();
 	}
 
-	protected function getHorasJugadas(){
-		return dateDiff($this->getFin(), $this->getInicio());
+	protected function getHourPlayed(){
+		return dateDiff($this->getEnd(), $this->getStart());
 	}
 
 	protected function dateDiff($horaInicio, $horaFin){

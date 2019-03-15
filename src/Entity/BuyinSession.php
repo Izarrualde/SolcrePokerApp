@@ -3,23 +3,23 @@ Namespace Solcre\PokerApp\Entity;
 
 class BuyinSession {
 	protected $id;
-	protected $idSesion;
-	protected $idJugador;
-	protected $montoCash;
-	protected $montoCredito;
-	protected $moneda;
-	protected $hora;
-	protected $aprobado;
+	protected $idSession;
+	protected $idPlayer;
+	protected $amountCash;
+	protected $amountCredit;
+	protected $currency;
+	protected $hour;
+	protected $approved;
 
-	public function __construct($id=null, $idSesion=null, $idJugador=null, $montoCash=null, $montoCredito=null, $moneda=null, $hora=null, $aprobado=null){
+	public function __construct($id=null, $idSession=null, $idPlayer=null, $amountCash=null, $amountCredito=null, $currency=null, $hour=null, $approved=null){
 		$this->setId($id);
-		$this->setIdSesion($idSesion);
-		$this->setIdJugador($idJugador);
-		$this->setMontoCash($montoCash);
-		$this->setMontoCredito($montoCredito);
-		$this->setMoneda($moneda);
-		$this->setHora($hora);
-		$this->setAprobado($aprobado);
+		$this->setIdSession($idSession);
+		$this->setIdPlayer($idPlayer);
+		$this->setamountCash($amountCash);
+		$this->setamountCredito($amountCredito);
+		$this->setCurrency($currency);
+		$this->setHour($hour);
+		$this->setApproved($approved);
 	}
 
 	public function getId(){
@@ -31,70 +31,71 @@ class BuyinSession {
 		return $this;
 	}
 
-	public function getIdSesion(){
-		return $this->idSesion;
+	public function getIdSession(){
+		return $this->idSession;
 	}
 
-	public function setIdSesion($idSesion){
-		$this->idSesion = $idSesion;
+	public function setIdSession($idSession){
+		$this->idSession = $idSession;
 		return $this;
 	}
 
-	public function getIdJugador() {
-		return $this->idJugador;
+	public function getIdPlayer() {
+		return $this->idPlayer;
 	}
 
-	public function setIdJugador($idJugador){
-		$this->idJugador = $idJugador;
+	public function setIdPlayer($idPlayer){
+		$this->idPlayer = $idPlayer;
 		return $this;
 	}
 
-	public function getMontoCash(){
-		return $this->montoCash;
+	public function getAmountCash(){
+		return $this->amountCash;
 	}
 
-	public function setMontoCash($montoCash){
-		$this->montoCash = $montoCash;
+	public function setAmountCash($amountCash){
+		$this->amountCash = $amountCash;
 		return $this;
 	}
 
-	public function getMontoCredito(){
-		return $this->montoCredito;
+	public function getamountCredit(){
+		return $this->amountCredit;
 	}
 
-	public function setMontoCredito($montoCredito){
-		$this->montoCredito = $montoCredito;
+	public function setAmountCredito($amountCredit){
+		$this->amountCredit = $amountCredit;
 		return $this;
 	}
 
-	public function getMoneda(){
-		return $this->moneda;
+	public function getCurrency(){
+		return $this->currency;
 	}
 
-	public function setMoneda($moneda){
-		$this->moneda = $moneda;
+	public function setCurrency($currency){
+		$this->currency = $currency;
 		return $this;
 	}
 
-	public function getHora(){
-		return $this->hora;
+	public function getHour(){
+		return $this->hour;
 	}
 
-	public function setHora($hora){
-		$this->hora = $hora;
+	public function setHour($hour){
+		$this->hour = $hour;
 		return $this;
 	}
 
-	public function getAprobado(){
-		return $this->aprobado;
+	public function getApproved(){
+		return $this->approved;
 	}
 
-	public function setAprobado($aprobado){
-		$this->aprobado = $aprobado;
+	public function setApproved($approved){
+		$this->approved = $approved;
 		return $this;
 	}
-
 }
+
+
 
 
 ?>

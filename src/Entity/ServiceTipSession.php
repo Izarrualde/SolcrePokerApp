@@ -1,17 +1,17 @@
 <?php
 Namespace Solcre\PokerApp\Entity;
 
-class ComissionSession{
+class ServiceTipSession {
 	protected $id;
 	protected $idSession;
 	protected $hour;
-	protected $comission;
+	protected $serviceTip;
 
-	public function __construct($id=null, $idSession=null, $hour=null, $comission=null){
+	public function __construct($id=null, $idSession=null, $hour="", $tip=null){
 		$this->setId($id);
 		$this->setIdSession($idSession);
 		$this->setHour($hour);
-		$this->setComission($comission);
+		$this->setServiceTip($tip);
 	}
 
 	public function getId(){
@@ -41,12 +41,12 @@ class ComissionSession{
 		return $this;
 	}
 
-	public function getComission(){
-		return $this->comission;
+	public function getServiceTip(){
+		return $this->serviceTip;
 	}
 
-	public function setComission($comission){
-		$this->comission = $comission;
+	public function setServiceTip($tip){
+		$this->serviceTip = $tip;
 		return $this;
 	}
 }

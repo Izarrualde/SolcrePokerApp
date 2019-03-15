@@ -6,383 +6,388 @@ use Solcre\PokerApp\Exception\SessionFullException;
 use Solcre\PokerApp\Exception\PlayerNotFoundException;
 use Solcre\PokerApp\Exception\InsufficientBuyinException;
 use Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
-use Solcre\PokerApp\Exception\PropinaDealerAlreadyAddedException;
-use Solcre\PokerApp\Exception\PropinaServicioAlreadyAddedException;
+use Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
+use Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
 class SessionEntity {
 
-	protected $idSesion;
-	protected $fecha;
-	protected $titulo;
-	protected $descripcion;
-	protected $foto;
-	protected $lugares;
-	protected $lugaresEspera;
-	protected $reservaEspera;
-	protected $horaInicio;
-	protected $horaInicioReal;
-	protected $horaFin;
-	protected $comision;
+	protected $idSession;
+	protected $date;
+	protected $title;
+	protected $description;
+	protected $photo;
+	protected $seats;
+	protected $seatsWaiting;
+	protected $reserveWaiting;
+	protected $startTime;
+	protected $starTimeReal;
+	protected $endTime;
+	//protected $comision;
 	
-	protected $sesionPropinasDealer = array();
-	protected $sesionPropinasServicio = array();
-
-	/* punto 6 de las correcciones, las siguientes variables deben ser cada una un array con objetos del tipo SesionBuyIn, SesionComision y SesionUsuario, respectivamente. HECHO. */
-
-	protected $sesionUsuarios = array();
-	protected $sesionComisiones = array();
-	protected $sesionBuyins = array();
+	public $sessionDealerTips = array();
+	public $sessionServiceTips = array();
+	public $sessionUsers = array();
+	public $sessionComissions = array();
+	public $sessionBuyins = array();
 
 
-	public function __construct($idSesion=null, $fecha=null, $titulo="", $descripcion="", $foto=null, $lugares=null, $lugaresEspera=null, $reservaEspera=null, $horaInicio=null, $horaInicioReal=null, $horaFin=null){
-		$this->setIdSesion($idSesion);
-		$this->setFecha($fecha);
-		$this->setTitulo($titulo);
-		$this->setDescripcion($descripcion);
-		$this->setFoto($foto);
-		$this->setLugares($lugares);
-		$this->setLugaresEspera($lugaresEspera);
-		$this->setReservaEspera($reservaEspera);
-		$this->setHoraInicio($horaInicio);
-		$this->setHoraInicioReal($horaInicioReal);
-		$this->setHoraFin($horaFin);
-	
-
-	
+	public function __construct($idSession=null, $date=null, $title="", $description="", $photo=null, $seats=null, $seatsWaiting=null, $reserveWaiting=null, $startTime=null, $startTimeReal=null, $endTime=null){
+		$this->setIdSession($idSession);
+		$this->setDate($date);
+		$this->setTitle($title);
+		$this->setDescription($description);
+		$this->setPhoto($photo);
+		$this->setSeats($seats);
+		$this->setSeatsWaiting($seatsWaiting);
+		$this->setReserveWaiting($reserveWaiting);
+		$this->setStartTime($startTime);
+		$this->setStartTimeReal($startTimeReal);
+		$this->setEndTime($endTime);	
 	}
 
 
-	public function getIdSesion(){
-		return $this->IdSesion;
+	public function getIdSession(){
+		return $this->IdSession;
 	}
 
-	public function setIdSesion($idSesion){
-		$this->idSesion=$idSesion;
+	public function setIdSession($idSession){
+		$this->idSession=$idSession;
 		return $this;
 	}
 
-	public function getFecha(){
-		return $this->fecha;
+	public function getDate(){
+		return $this->date;
 	}
 
 
-	public function setFecha($fecha){
-		$this->fecha=$fecha;
+	public function setDate($date){
+		$this->date=$date;
 		return $this;
 	}
 
-	public function getTitulo(){
-		return $this->titulo;
+	public function getTitle(){
+		return $this->title;
 	}
 
-	public function setTitulo($titulo){
-		$this->titulo=$titulo;
+	public function setTitle($title){
+		$this->title=$title;
 		return $this;
 	}
 
-	public function getDescripcion(){
-		return $this->descripcion;
+	public function getDescription(){
+		return $this->description;
 	}
 
-	public function setDescripcion($descripcion){
-		$this->descripcion=$descripcion;
+	public function setDescription($description){
+		$this->description=$description;
 		return $this;
 	}
 
-	public function getFoto(){
-		return $this->foto;
+	public function getPhoto(){
+		return $this->photo;
 	}
 
-	public function setFoto($foto){
-		$this->foto=$foto;
+	public function setPhoto($photo){
+		$this->photo=$photo;
 		return $this;
 	}
 
-	public function getLugares(){
-		return $this->lugares;
+	public function getSeats(){
+		return $this->seats;
 	}
 
-	public function setLugares($lugares){
-		$this->lugares=$lugares;
+	public function setSeats($seats){
+		$this->seats=$seats;
 		return $this;
 	}
 
-	public function getConfirmados(){
-		return count($this->sesionUsuarios);
+	public function getSeatsWaiting(){
+		return $this->seatsWaiting;
 	}
 
-	public function getLugaresEspera(){
-		return $this->lugaresEspera;
-	}
-
-	public function setLugaresEspera($lugaresEspera){
-		$this->lugaresEspera=$lugaresEspera;
+	public function setSeatsWaiting($seatsWaiting){
+		$this->SeatsWaiting=$seatsWaiting;
 	return $this;
 	}
 
-	public function getReservaEspera(){
-		return $this->reservaEspera;
+	public function getReserveWaiting(){
+		return $this->ReserveWaiting;
 	}
 
-	public function setReservaEspera($ReservaEspera){
-		$this->reservaEspera=$ReservaEspera;
+	public function setReserveWaiting($ReserveWaiting){
+		$this->ReserveWaiting=$ReserveWaiting;
 		return $this;
 	}
 
-	public function getHoraInicio(){
-		return $this->horaInicio;
+	public function getStartTime(){
+		return $this->startTime;
 	}
 
-	public function setHoraInicio($horaInicio){
-		$this->horaInicio=$horaInicio;
+	public function setStartTime($startTime){
+		$this->startTime=$startTime;
 		return $this;
 	}
 
-	public function getHoraInicioReal(){
-		return $this->horaInicioReal;
+	public function getStartTimeReal(){
+		return $this->startTimeReal;
 	}
 
-	public function setHoraInicioReal($horaInicioReal){
-		$this->horaInicioReal=$horaInicioReal;
+	public function setStartTimeReal($startTimeReal){
+		$this->startTimeReal=$startTimeReal;
 		return $this;
 	}
 
-	public function getHoraFin(){
-		return $this->horaFin;
+	public function getEndTime(){
+		return $this->endTime;
 	}
 
-	public function setHoraFin($horaFin){
-		$this->horaFin=$horaFin;
+	public function setEndTime($endTime){
+		$this->endTime=$endTime;
 		return $this;
 	}
 
-	public function getPropinasDealer(){
-		return $this->sesionPropinasDealer;
+	public function getConfirmedPlayers(){
+		return count($this->sessionUsers);
 	}
 
-	public function setPropinasDealer($propinaDealer){
-		$this->sesionPropinasDealer=$propinaDealer;
+	public function getDealerTips(){
+		return $this->sessionDealerTips;
+	}
+
+	public function setDealerTips($dealerTips){
+		$this->sessionDealerTips=$dealerTips;
 		return $this;
 	}
 
-	public function getPropinasServicio(){
-		return $this->sesionPropinasServicio;
+	public function getServiceTips(){
+		return $this->sessionServiceTips;
 	}
 
-	public function setPropinasServicio($propinaServicio){
-		$this->sesionPropinasServicio=$propinaServicio;
+	public function setServiceTips($ServiceTips){
+		$this->sesionServiceTips=$ServiceTips;
 		return $this;
 	}
 
     public function getUsers(){
-		return $this->sesionUsuarios;
+		return $this->sessionUsers;
 	}
     public function getBuyins(){
-		return $this->sesionBuyins;
+		return $this->sessionBuyins;
 	}
 	public function getComissions(){
-		return $this->sesionComisiones;
+		return $this->sessionComissions;
 	}
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-	//11- En la clase Sesión tenes que agregar un método que sea getTotalCashout() que lo haga es iterar en todos los jugadores que jugaron la sesión y devolver la suma total del cashout.
+
 	public function getTotalCashout(){
 		$cashout = 0;
-		foreach ($this->sesionUsuarios as $usuario) {
-			/** @var UserSession $usuario */
-			$cashout +=  $usuario->getCashout(); 
+		foreach ($this->sessionUsers as $user) {
+			/** @var UsersSession $user */
+			$cashout +=  $user->getCashout(); 
 		}
 		return $cashout;
 	}
 
 // --------------------------------------------------------------------------------------------------
 
-	public function getPropinaDealerTotal (){
-		$propinaDealerTotal = 0;
-		foreach ($this->sesionPropinasDealer as $propinaHora) {
-			$propinaDealerTotal += $propinaHora->getPropinaDealer();  //getComision() aparece en lista pero estaria usando el de esta clase no el de UserSesion !!!
+	public function getDealerTipTotal (){
+		$dealerTipTotal = 0;
+		foreach ($this->sessionDealerTips as $tipHour) {
+			$dealerTipTotal += $tipHour->getDealerTip();  
 		}
-		return $propinaDealerTotal;
+		return $dealerTipTotal;
 	}  
 
 
-	protected function getPropinaDealerIds() {
-		return array_map (function(PropinaDealerSession $propina) {
-			return $propina->getId();
+	protected function getDealerTipIds() {
+		return array_map (function(DealerTipSession $tip) {
+			return $tip->getId();
 
-		}, $this->sesionPropinasDealer);
+		}, $this->sessionDealerTips);
 	}
 
 
-	protected function isAddedPropinaDealer(PropinaDealerSession $propina){
-		$idsPropinasDealer = $this->getPropinaDealerIds();
-		return in_array($propina->getId(), $idsPropinasDealer);
+	protected function isAddedDealerTip(DealerTipSession $tip){
+		$idsDealerTips = $this->getDealerTipIds();
+		return in_array($tip->getId(), $idsDealerTips);
 	}
 
-	public function agregarPropinasDealer(array $propinas){
-		foreach ($propinas as $propina) {
-			$this->agregarPropinaDealer($propina);
+	public function addDealerTips(array $tips){
+		foreach ($tips as $tip) {
+			$this->addDealerTip($tip);
 		}
 	}
 
-	public function agregarPropinaDealer(PropinaDealerSession $propina) {
-		if ($this->isAddedPropinaDealer($propina)) {
-			throw new PropinaDealerAlreadyAddedException();	
-		} elseif (isset($this->sesionPropinasDealer[$propina->getHora()]) && $this->sesionPropinasDealer[$propina->getHora()] instanceof PropinaDealerSession) {
-			throw new PropinaDealerAlreadyAddedException();
+	public function addDealerTip(DealerTipSession $tip) {
+		if ($this->isAddedDealerTip($tip)) {
+			throw new DealerTipAlreadyAddedException();	
+		} elseif (isset($this->sessionDealerTips[$tip->getHour()]) && $this->sessionDealerTips[$tip->getHour()] instanceof DealerTipSession) {
+			throw new DealerTipAlreadyAddedException();
 		}
-		$this->sesionPropinasDealer[$propina->getHora()] = $propina;
+		$this->sessionDealerTips[$tip->getHour()] = $tip;
 	}
-
-//------------------------------------------------------------------------------------------------------
-
-	public function getPropinaServicioTotal (){
-		$propinaServicioTotal = 0;
-		foreach ($this->sesionPropinasServicio as $propinaHora) {
-			$propinaServicioTotal += $propinaHora->getPropinaServicio();  //getComision() aparece en lista pero estaria usando el de esta clase no el de UserSesion !!!
-		}
-		return $propinaServicioTotal;
-	}  
-
-
-	protected function getPropinaServicioIds() {
-		return array_map (function(PropinaServicioSession $propina) {
-			return $propina->getId();
-
-		}, $this->sesionPropinasServicio);
-	}
-
-
-	protected function isAddedPropinaServicio(PropinaServicioSession $propina){
-		$idsPropinasServicio = $this->getPropinaServicioIds();
-		return in_array($propina->getId(), $idsPropinasServicio);
-	}
-
-	public function agregarPropinasServicio(array $propinas){
-		foreach ($propinas as $propina) {
-			$this->agregarPropinaServicio($propina);
-		}
-	}
-
-	public function agregarPropinaServicio(PropinaServicioSession $propina) {
-		if ($this->isAddedPropinaServicio($propina)) {
-			throw new PropinaServicioAlreadyAddedException();	
-		} elseif (isset($this->sesionPropinasServicio[$propina->getHora()]) && $this->sesionPropinasServicio[$propina->getHora()] instanceof PropinaServicioSession) {
-			throw new PropinaServicioAlreadyAddedException();
-		}
-		$this->sesionPropinasServicio[$propina->getHora()] = $propina;
-	}
-
 
 
 
 //------------------------------------------------------------------------------------------------------
-	public function getComisionTotal (){
-		$comisionTotal = 0;
-		foreach ($this->sesionComisiones as $comisionHora) {
-			$comisionTotal += $comisionHora->getComision();  //getComision() aparece en lista pero estaria usando el de esta clase no el de UserSesion !!!
+
+	public function getServiceTipTotal (){
+		$serviceTipTotal = 0;
+		foreach ($this->sessionServiceTips as $tipHour) {
+			$serviceTipTotal += $tipHour->getServiceTip();  
 		}
-		return $comisionTotal;
+		return $serviceTipTotal;
+	}  
+
+
+	protected function getServiceTipIds() {
+		return array_map (function(ServiceTipSession $tip) {
+			return $tip->getId();
+
+		}, $this->sessionServiceTips);
+	}
+
+
+	protected function isAddedServiceTip(ServiceTipSession $tip){
+		$idsServiceTips = $this->getServiceTipIds();
+		return in_array($tip->getId(), $idsServiceTips);
+	}
+
+	public function addServiceTips(array $tips){
+		foreach ($tips as $tip) {
+			$this->addServiceTip($tip);
+		}
+	}
+
+	public function addServiceTip(ServiceTipSession $tip) {
+		if ($this->isAddedServiceTip($tip)) {
+			throw new ServiceTipAlreadyAddedException();	
+		} elseif (isset($this->sessionServiceTips[$tip->getHour()]) && $this->sessionServiceTips[$tip->getHour()] instanceof ServiceTipSession) {
+			throw new ServiceTipAlreadyAddedException();
+		}
+		$this->sessionServiceTips[$tip->getHour()] = $tip;
+	}
+
+//------------------------------------------------------------------------------------------------------
+	public function getComissionTotal (){
+		$comissionTotal = 0;
+		foreach ($this->sessionComissions as $comissionHour) {
+			$comissionTotal += $comissionHour->getComission();  //getComision() aparece en lista pero estaria usando el de esta clase no el de UserSesion !!!
+		}
+		return $comissionTotal;
 	}
 
 	protected function getComissionIds() {
-		return array_map (function(ComisionSession $comision) {
-			return $comision->getId();
+		return array_map (function(ComissionSession $comission) {
+			return $comission->getId();
 
-		}, $this->sesionComisiones);
+		}, $this->sessionComissions);
 	}
 
 
-	protected function isAddedComission(ComisionSession $comision){
-		$idsComisiones = $this->getComissionIds();
-		return in_array($comision->getId(), $idsComisiones);
+	protected function isAddedComission(ComissionSession $comission){
+		$ComissionsIds = $this->getComissionIds();
+		return in_array($comission->getId(), $ComissionsIds);
 	}
 
-	public function agregarComisiones(array $comisiones){
-		foreach ($comisiones as $comision) {
-			$this->agregarComision($comision);
+	public function addComissions(array $comissions){
+		foreach ($comissions as $comission) {
+			$this->addComission($comission);
 		}
 	}
 
-	protected function agregarComision(ComisionSession $comision) {
-		if ($this->isAddedComission($comision)) {
+	protected function addComission(ComissionSession $comission) {
+		if ($this->isAddedComission($comission)) {
 			throw new ComissionAlreadyAddedException();	
-		} elseif (isset($this->sesionComisiones[$comision->getHora()]) && $this->sesionComisiones[$comision->getHora()] instanceof ComisionSession) {
+		} elseif (isset($this->sessionComissions[$comission->getHour()]) && $this->sessionComissions[$comission->getHour()] instanceof ComissionSession) {
 			throw new ComissionAlreadyAddedException();
 		}
-		$this->sesionComisiones[$comision->getHora()] = $comision;
+		$this->sessionComissions[$comission->getHour()] = $comission;
 	}
+
+
+
+
+
 
 	private function getUserIds() {
-		return array_map(function (UserSession $usuario) {  
-		    		return $usuario->getId();
-		}, $this->sesionUsuarios);
+		return array_map(function (UserSession $user) {  
+		    		return $user->getId();
+		}, $this->sessionUsers);
 	}
 
-	protected function isAdded(UserSession $usuario) {
-		$idsUsuarios = $this->getUserIds();
-		return in_array($usuario->getId(), $idsUsuarios);
-
+	protected function isAdded(UserSession $user) {
+		$usersIds = $this->getUserIds();
+		return in_array($user->getId(), $usersIds);
 	}
 		
-	public function agregarUsuario(UserSession $usuario) {
-		if (($this->getLugares() - $this->getConfirmados()) == 0) {
+	public function addUser(UserSession $user) {
+		if (($this->getSeats() - $this->getConfirmedPlayers()) == 0) {
 			throw new SessionFullException();
-		} elseif ($this->isAdded($usuario, $this->sesionUsuarios)) {
+		} elseif ($this->isAdded($user, $this->sessionUsers)) {
 			throw new UserAlreadyAddedException();
 		}  
-		$this->sesionUsuarios[] = $usuario;
+		$this->sessionUsers[] = $user;
 	}
 
-	public function agregarUsuarios(array $usuarios) {
-	//hacer un bloque foreach que para cada item del array llame a agregarUsuario
-		foreach ($usuarios as $usuario) {
-			$this->agregarUsuario($usuario);
+	public function addUsers(array $users) {
+		foreach ($users as $user) {
+			$this->addUser($user);
 		}
 	}
-
 
 	public function isPlayer($id){
 		return in_array($id, $this->getUserIds());
 	}
 
 
-	public function agregarBuyin(BuyinSession $buyin){
-		if (!$this->isPlayer($buyin->getIdJugador())) {
+
+	public function totalBuyinPlayer (UserSession $user) {
+		$cashin = 0;
+		/*if (!isAdded($user)) {
+			throw new PlayerNotFoundException();			
+		}*/
+		foreach ($this->sessionBuyins as $idUserBuyin => $buyin) {
+			if ($buyin->getIdPlayer() == $idUserBuyin) {
+				$cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
+			}
+		}
+		return $cashin;
+	}
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+
+	public function addBuyin(BuyinSession $buyin){
+		if (!$this->isPlayer($buyin->getIdPlayer())) {
 			throw new PlayerNotFoundException();
 		}
-		elseif (($buyin->getMontoCash() + $buyin->getMontoCredito()) < 100) {
+		elseif (($buyin->getAmountCash() + $buyin->getAmountCredit()) < 100) {
 			throw new InsufficientBuyinException();
 		}
-		$this->sesionBuyins[] = $buyin;
+		$this->sessionBuyins[] = $buyin;
 	}
 
-	public function agregarBuyins(array $buyins){
+	public function addBuyins(array $buyins){
 		foreach ($buyins as $buyin){
-			$this->agregarBuyin($buyin);
+			$this->addBuyin($buyin);
 		}
 	}
 
-
-
-
-
-	/* 10- En la clase Sesión tenes que agregar un método getTotalJugado() que lo que haga es iterar en los buyins y devolver la suma de todos los buyins para saber cuanto se jugó en total. */
-
-	public function getTotalJugado(){
+	public function getTotalPlayed(){
 	/* esta funcion recibe el buyin de los jugadores de la sesion y devuelve el total jugado */
-		$montoTotal = 0;
-		foreach ($this->sesionBuyins as $buyin) {
-			$montoTotal += $buyin->getMontoCash() + $buyin->getMontoCredito();
+		$amountTotal = 0;
+		foreach ($this->sessionBuyins as $buyin) {
+			$amountTotal += $buyin->getAmountCash() + $buyin->getAmountCredit();
 		}
-		return $montoTotal;
+		return $amountTotal;
 	}
 
 
 
-	public function validarSesion($sesion){
-		If ($sesion->getTotalJugado() == $sesion->getTotalCashout() + $sesion->getComisionTotal() + $sesion->getPropinaDealerTotal()+ $sesion-> getPropinaServicioTotal()){
+	public function validateSession($session){
+		If ($session->getTotalPlayed() == $session->getTotalCashout() + $session->getComissionTotal() + $session->getDealerTipTotal()+ $session-> getServiceTipTotal()){
 			return true;
 		} else {
 			return false;
