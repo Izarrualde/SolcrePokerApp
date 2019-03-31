@@ -47,23 +47,28 @@ $dealerTip = 0;
 $serviceTip = 0;
 
 
+
+
 $session = new SessionEntity($idSession, $date, $title, $description, $photo, $seats, $seatsWaiting, $reserveWaiting, $startTime, $starTimeReal, $endTime, $comission, $dealerTip, $serviceTip);
 
 echo "-----------------------------------------------------------------------------------------------------"."\n";
 
 
 
+$usersSession[] = new UserSession("Destri", $session, 1, true, 0, 1500, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Nazar", $session, 2, true, 0, 200, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Zunino", $session, 3, true, 0, 1000, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Galle", $session, 4, true, 0, 0, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Cugurra", $session, 5, true, 0, 1000, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Altman", $session, 6, true, 0, 3500, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Guzman", $session, 7, true, 0, 1100, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
+$usersSession[] = new UserSession("Meyer", $session, 8, true, 0, 1000, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
 
-$usersSession[] = new UserSession("Destri", $session, 1, true, 0, 1000, 1500, null, null);
-$usersSession[] = new UserSession("Nazar", $session, 2, true, 0, 2000, 200, null, null);
-$usersSession[] = new UserSession("Zunino", $session, 3, true, 0, 1000, 1000, null, null);
-$usersSession[] = new UserSession("Galle", $session, 4, true, 0, 1500, 0, null, null);
-$usersSession[] = new UserSession("Cugurra", $session, 5, true, 0, 600, 1000, null, null);
-$usersSession[] = new UserSession("Altman", $session, 6, true, 0, 1500, 3500, null, null);
-$usersSession[] = new UserSession("Guzman", $session, 7, true, 0, 1000, 1100, null, null);
-$usersSession[] = new UserSession("Meyer", $session, 8, true, 0, 1000, 1000, null, null);
+
 
 $session->addUsers($usersSession);
+
+
 
 $buyins[] = new BuyinSession(1, 93, "Destri", 500, 50, "usd", "19.00", true);
 $buyins[] = new BuyinSession(11, 93, "Destri", 500, 0, "usd", "20.00", true);
@@ -79,9 +84,11 @@ $buyins[] = new BuyinSession(11, 93, "Destri", 500, 0, "usd", "20.00", true);
 
 $session->addBuyins($buyins);
 
-var_dump($session->sessionBuyins);
 
-echo $session->sessionUsers[0]->getCashin();
+//var_dump($session->sessionBuyins);
+
+
+//echo $session->sessionUsers[0]->getCashin();
 
 
 $comissions[] = new ComissionSession(1, 93, "18.00", 90);
@@ -113,7 +120,6 @@ $dealerTips[] = new DealerTipSession(10, 93, "03.00", 50);
 
 $session-> addDealerTips($dealerTips);
 
-
 //var_dump($dealerTips);
 //var_dump($session->sessionDealerTips);
 
@@ -134,58 +140,59 @@ $session-> addServiceTips($serviceTips);
 
 //var_dump($session->sessionServiceTips);
 
+//var_dump($session->sessionUsers[0]->start);
 
-
-/*
 //echo "-"."\n";
+echo "<br/>";
 $i = 1;
-foreach ($session->getUsers() as $jugador) {
-	echo $i.")".$jugador->getId()." Cashin: ".$jugador->getCashin()."	"."cashout: ".$jugador->getCashout()."	resultado: ".$jugador->getResultado()."\n";
+foreach ($session->getSessionUsers() as $jugador) {
+	$date1 = date_create($jugador->getStart());
+	$date2 = date_create($jugador->getEnd());
+	$hours = date_diff($date1, $date2);
+	echo $i.")".$jugador->getId()." Cashin: ".$jugador->getCashin()."	"."cashout: ".$jugador->getCashout()."	resultado: ".$jugador->getResult()."	hours: ".$hours->format("%d:%H:%i")."<br/>";
 	$i++;
 }
 
-echo "\n"."Comision por hora"."\n\n";
-*/
-/*
+echo "<br/>"."Comision por hora"."<br/>";
+
+
 
 $comissionTotal = 0;
-foreach ($session->getComissions() as $comission) {
-	echo $comission->getHour()."	"."usd"."	".$comission->getComission()."\n";
+foreach ($session->getSessionComissions() as $comission) {
+	echo $comission->getHour()."	"."usd"."	".$comission->getComission()."<br/>";
 	$comissionTotal += $comission->getComission();
 }
-echo "\n"."TOTAL 	".$comissionTotal."\n";
+echo "<br/>"."TOTAL 	".$comissionTotal."<br/>";
 
 //validar sesion
 
-echo "\n"."getTotalPlayed = ".$session->getTotalPlayed();
-echo "\n"."getTotalCashout = ".$session->getTotalCashout();
-echo "\n"."getComissionTotal = ".$session->getComissionTotal();
-echo "\n"."getDealerTipTotal = ".$session->getDealerTipTotal();
-echo "\n"."getServiceTipTotal = ".$session->getServiceTipTotal();
+echo "<br/>"."getTotalPlayed = ".$session->getTotalPlayed();
+echo "<br/>"."getTotalCashout = ".$session->getTotalCashout();
+echo "<br/>"."getComissionTotal = ".$session->getComissionTotal();
+echo "<br/>"."getDealerTipTotal = ".$session->getDealerTipTotal();
+echo "<br/>"."getServiceTipTotal = ".$session->getServiceTipTotal();
 
 
-*/
-/*
-echo "\n\n"."Propina Dealer"."\n";
-echo "\n\n";
-foreach ($session->getDealerTips() as $tip) {
-	echo $tip->getHour()."	"."usd 	".$tip->getDealerTip()."\n";
+
+
+echo "<br/>"."Propina Dealer"."<br/>";
+echo "<br/>";
+foreach ($session->getSessionDealerTips() as $tip) {
+	echo $tip->getHour()."	"."usd 	".$tip->getDealerTip()."<br/>";
 }
-echo "Total =	".$session->getDealerTipTotal()."\n";
+echo "Total =	".$session->getDealerTipTotal()."<br/>";
 //echo "\n"."TOTAL 	".$PropinaTotal."\n";
 
-echo "\n\n"."Propina Servicio"."\n";
-echo "\n\n";
-foreach ($session->getServiceTips() as $tip) {
-	echo $tip->getHour()."	"."usd 	".$tip->getServiceTip()."\n";
+echo "<br/>"."Propina Servicio"."<br/>";
+echo "<br/>";
+foreach ($session->getSessionServiceTips() as $tip) {
+	echo $tip->getHour()."	"."usd 	".$tip->getServiceTip()."<br/>";
 }
-echo "Total =	".$session->getServiceTipTotal()."\n";
+echo "Total =	".$session->getServiceTipTotal()."<br/>";
 
-echo "\n"."Validacion de Sesion:"."\n\n";
+echo "<br/>"."Validacion de Sesion:"."<br/>";
 if ($session->validateSession($session)) {
 	echo "sesion valida";
 	}	else {
 	echo "sesion no valida";
 }
-*/
-//agrego propinas de dealer
