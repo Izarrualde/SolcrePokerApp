@@ -1,38 +1,68 @@
 		SessionEntity
 -------------------------------------------
-$idSesion;
-$fecha;
-$titulo;
-$descripcion;
-$foto;
-$lugares;
-$lugaresEspera;
-$reservaEspera;
-$horaInicio;
-$horaInicioReal;
-$horaFin;
-$comision;
-$propinaDealer;
-$propinaServicio;
+$idSession;
+$date : string
+$title;
+$description;
+$photo;
+$seats;
+$seatsWainting;
+$reserveWaiting;
+$startTime : string;
+$startTimeReal : string;
+$endTime : string;
 
-$sesionUsuarios=array();
-$sesionComisiones=array();
-$sesionBuyins=array();
+$sessionDealerTips=array();
+$sessionServiceTips=array();
+$sessionUsers=array();
+$sessionComissions=array();
+$sessionBuyins=array();
 ------------------------------------------
 __construct()
 getters y setters de atributos.
-getConfirmados()
-getTotalCashout()
-calcularComision()
-getComissionIds()
-isAddedComission()
-agregarComisionSesion()
-getUsersIds()
-isAdded()
-agregarUsuario()
-isPlayer()
-agregarBuyin()
-agregarBuyins()
-agregarUsuarios()
-getTotalJugado()
-validarSesion()
+getDealerTips() : array
+setDealerTips(array $dealerTips);
+getServiceTips() : array;
+setServiceTips() : array;
+getUsers() : array;
+getBuyins() : array;
+getComissions() : array;
+getConfirmedPlayers() : integer
+
+getTotalCashout() : integer
+
+getDealerTipTotal() : integer
+getDealerTipIds() : array
+isAddedDealerTip(DealerTipSession) : boolean
+addDealerTips ($array)
+addDealerTip($DealerTipSession) 
+
+getServiceTipTotal() : integer
+getServiceTipIds() : array
+isAddedServiceTip($ServiceTipSession) : boolean
+addServiceTips ($array) 
+addServiceTip ($ServiceTipSession)
+
+
+getComissionTotal() : integer
+getComissionIds() : array
+isAddedComission($ComissionSession) : boolean
+addComissions($array)
+addComission ($ComissionSession) 
+
+getUserIds() : array
+isPlayer ($id) : boolean
+isAdded ($UserSession) : boolean
+addUsers ($array)
+addUser ($UserSession)
+
+//getBuyins(): array;
+//getBuyinsIds() : array;
+//isAddedBuyin() : boolean;
+addBuyin ($BuyinSession)
+addBuyins ($array)
+
+getTotalPlayed($session) : integer
+validateSession($session) : boolean
+
+--> que tipo de parametro lleva validateSession

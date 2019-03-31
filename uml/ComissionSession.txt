@@ -1,0 +1,12 @@
+		ComisionSession
+
+---------------------------------------------------
+$id;
+$idSession;
+$hour : string;
+$comission;
+
+----------------------------------------------------
+__construct()
+getters y setters.
+

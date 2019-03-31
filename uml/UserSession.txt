@@ -3,19 +3,18 @@
 ---------------------------------------------------------------
 
 $id;
-$idSesion;
-$idUsuario;
-$aprobado;
-$puntosAcumulados;
-$cashin;
+$session : SessionEntity;
+$idUser;
+$approved : boolean;
+$accumulatedPoints;
 $cashout;
-$inicio;
-$fin;
+$start : string;
+$end : string;
 
 ---------------------------------------------------------------
 
 __construct()
 getters y setters.
-getResultado()
-getHorasJugadas()
-dateDiff()
+getCashin() : integer
+getResult() : integer
+getHourPlayed() : date
