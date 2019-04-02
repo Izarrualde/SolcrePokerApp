@@ -8,6 +8,9 @@ include "src/Entity/BuyinSession.php";
 include "src/Entity/DealerTipSession.php";
 include "src/Entity/ServiceTipSession.php";
 
+include "src/MySQL/Connect.php";
+include "src/MySQL/ConnectAppPoker.php";
+
 include "src/Exception/UserAlreadyAddedException.php";
 include "src/Exception/SessionFullException.php";
 include "src/Exception/InsufficientBuyinException.php";
@@ -23,6 +26,9 @@ Use \Solcre\PokerApp\Entity\ComissionSession;
 Use \Solcre\PokerApp\Entity\DealerTipSession;
 Use \Solcre\PokerApp\Entity\ServiceTipSession;
 
+Use \Solcre\pokerApp\MySQL\Connect;
+Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+
 Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
 Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
 Use \Solcre\PokerApp\Exception\SessionFullException;
@@ -30,6 +36,266 @@ Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
 Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
 Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
+
+$session = new ConnectAppPoker;
+$datosUsers = $session->getDatosUsers();
+$datosBuyinSession = $session->getDatosBuyinSession();
+$datosComissionSession = $session->getDatosComissionSession();
+$datosDealerTipSession = $session->getDatosDealerTipSession();
+$datosServiceTipSession = $session->getDatosServiceTipSession();
+//var_dump($datos);
+
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title> appPoker </title>
+	<h1> INFORMACION </h1>
+</head>
+
+<body>
+	<section>
+		<h1> UserSession </h1>
+		<table class="table table-borderer" border=1pxl>
+			<thead>
+				
+				<th> <center>id</center> </th>
+				<th> idUser </th>
+				<th> approved </th>
+				<center> <th> accumulatedPoints </th> </center>
+				<th> cashout </th>
+				<th> <center> start </center> </th>
+				<th> end </th>
+
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($datosUsers as $dato) 
+				{
+				?>
+					<tr>
+						<td> <center> <?php echo $dato->id ?> </center> </td>
+						<td> <center> <?php echo $dato->idUser ?> </center> </td>
+						<td> <center> <?php echo $dato->approved ?> </center> </td>
+						<td> <center> <?php echo $dato->accumulatedPoints ?></center> </td>
+						<td> <center>  <?php echo $dato->cashout ?> </center> </td>
+						<td> <center> <?php echo $dato->start ?> </center> </td>
+						<td> <center> <?php echo $dato->end ?> </center>  </td>
+					</tr>
+					<?php
+				}
+				?>
+
+			</tbody>
+		</table>
+	</section>
+
+	<section>
+		<h1> BuyinSession </h1>
+		<table class="table table-borderer" border=1pxl>
+			<thead>
+				
+				<th> <center>idSession</center> </th>
+				<th> idPlayer </th>
+				<th> ammountCash </th>
+				<center> <th> amountCredit </th> </center>
+				<th> currency </th>
+				<th> <center> hour </center> </th>
+				<th> approved </th>
+
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($datosBuyinSession as $dato) 
+				{
+				?>
+					<tr>
+						<td> <center> <?php echo $dato->idSession ?> </center> </td>
+						<td> <center> <?php echo $dato->idPlayer ?> </center> </td>
+						<td> <center> <?php echo $dato->amountCash ?> </center> </td>
+						<td> <center> <?php echo $dato->amountCredit ?></center> </td>
+						<td> <center>  <?php echo $dato->currency ?> </center> </td>
+						<td> <center> <?php echo $dato->hour ?> </center> </td>
+						<td> <center> <?php echo $dato->approved ?> </center>  </td>
+					</tr>
+					<?php
+				}
+				?>
+
+			</tbody>
+		</table>
+	</section>
+
+	<section>
+		<h1> ComissionSession </h1>
+		<table class="table table-borderer" border=1pxl>
+			<thead>
+				
+				<th> <center>idSession</center> </th>
+				<th> hour </th>
+				<th> comission </th>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($datosComissionSession as $dato) 
+				{
+				?>
+					<tr>
+						<td> <center> <?php echo $dato->idSession ?> </center> </td>
+						<td> <center> <?php echo $dato->hour ?> </center> </td>
+						<td> <center> <?php echo $dato->comission ?> </center> </td>
+					</tr>
+					<?php
+				}
+				?>
+
+			</tbody>
+		</table>
+	</section>
+
+	<section>
+		<h1> DealerTipSession </h1>
+		<table class="table table-borderer" border=1pxl>
+			<thead>
+				
+				<th> <center>idSession</center> </th>
+				<th> hour </th>
+				<th> dealerTip </th>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($datosDealerTipSession as $dato) 
+				{
+				?>
+					<tr>
+						<td> <center> <?php echo $dato->idSession ?> </center> </td>
+						<td> <center> <?php echo $dato->hour ?> </center> </td>
+						<td> <center> <?php echo $dato->dealerTip ?> </center> </td>
+					</tr>
+					<?php
+				}
+				?>
+
+			</tbody>
+		</table>
+	</section>
+
+	<section>
+		<h1> ServiceTipSession </h1>
+		<table class="table table-borderer" border=1pxl>
+			<thead>
+				
+				<th> <center>idSession</center> </th>
+				<th> hour </th>
+				<th> serviceTip </th>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($datosServiceTipSession as $dato) 
+				{
+				?>
+					<tr>
+						<td> <center> <?php echo $dato->idSession ?> </center> </td>
+						<td> <center> <?php echo $dato->hour ?> </center> </td>
+						<td> <center> <?php echo $dato->servicetip ?> </center> </td>
+					</tr>
+					<?php
+				}
+				?>
+
+			</tbody>
+		</table>
+	</section>
+
+
+</body>
+</html>
+
+
+<?php
+
+// hasta aca exhibi datos proveniente de mysql, pero no hidrate objetos, esa informacion no quedo incluida en mis objetos, solo en variables array que cree temporalmente.
+
+//hidratar objetos
+// quiero crear un objeto de tipo SessionEntiry y en el almacenar toda la informacion de la sesion
+
+$session1 = new SessionEntity;
+
+//agregar dealerTipSession a la session1, $session1->sessionDealerTips es un array de objetos del tipo DealerTipSession
+//=> debo hidratar los objetos DealerTipSession, cada entrada de ese array es una linea de la tabla dealertipsession
+
+foreach ($datosDealerTipSession as $dealerTip) 
+{
+	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->idSession, $dealerTip->hour, $dealerTip->dealerTip);
+}
+
+foreach ($datosServiceTipSession as $serviceTip) 
+{
+	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->idSession, $serviceTip->hour, $serviceTip->servicetip);
+}
+
+foreach ($datosComissionSession as $comission) 
+{
+	$session1->sessionComissions[] = new ComissionSession($comission->id, $comission->idSession, $comission->hour, $comission->comission);
+}
+
+foreach ($datosBuyinSession as $buyin) 
+{
+	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->idSession, $buyin->idPlayer, $buyin->amountCash, $buyin->amountCredit, $buyin->currency, $buyin->hour, $buyin->approved);
+}
+
+foreach ($datosUsers as $user) 
+{
+	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->idUser, $user->approved, $user->accumulatedPoints, $user->cashout, $user->start, $user->end);
+}
+
+echo "<br/>"."- objeto session1->sessionDealerTips hidratado"."<br/>";
+echo "a continuacion verifico que objeto este hidratado"."<br/>";
+?>
+
+
+<table class="table table-borderer" border=1pxl>
+			<thead>
+				
+				<th> <center>idSession</center> </th>
+				<th> hour </th>
+				<th> dealerTip </th>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($session1->sessionDealerTips as $dealerTip) 
+				{
+				?>
+					<tr>
+						<td> <center> <?php echo $dealerTip->getIdSession() ?> </center> </td>
+						<td> <center> <?php echo $dealerTip->getHour() ?> </center> </td>
+						<td> <center> <?php echo $dealerTip->getDealerTip() ?> </center> </td>
+					</tr>
+					<?php
+				}
+				?>
+
+			</tbody>
+		</table>
+
+<?php
+//var_dump($session1->sessionDealerTips);
+//$session1"->sessionDealerTips[] = 
+
+
+
+//$session1->sessionServiceTips =
+//$session1->sessionUsers =
+//$session1->sessionComissions =
+//$session1->sessionBuyins = 
+
+
+
+/*
 // variables inicializadas para crear una instancia de tipo SessionEntity
 $idSession = 93;
 $date = "25/03/2019";
@@ -46,9 +312,9 @@ $comission = 0;
 $dealerTip = 0;
 $serviceTip = 0;
 
+*/
 
-
-
+/*
 $session = new SessionEntity($idSession, $date, $title, $description, $photo, $seats, $seatsWaiting, $reserveWaiting, $startTime, $starTimeReal, $endTime, $comission, $dealerTip, $serviceTip);
 
 echo "-----------------------------------------------------------------------------------------------------"."\n";
@@ -196,3 +462,4 @@ if ($session->validateSession($session)) {
 	}	else {
 	echo "sesion no valida";
 }
+*/
