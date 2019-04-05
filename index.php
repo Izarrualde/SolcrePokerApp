@@ -46,177 +46,8 @@ $datosServiceTipSession = $session->getDatosServiceTipSession();
 //var_dump($datos);
 
 
-?>
 
 
-<!DOCTYPE html>
-<html>
-<head>
-
-	<title> appPoker </title>
-	<h1> INFORMACION </h1>
-</head>
-
-<body>
-	<section>
-		<h1> UserSession </h1>
-		<table class="table table-borderer" border=1pxl>
-			<thead>
-				
-				<th> <center>id</center> </th>
-				<th> idUser </th>
-				<th> approved </th>
-				<center> <th> accumulatedPoints </th> </center>
-				<th> cashout </th>
-				<th> <center> start </center> </th>
-				<th> end </th>
-
-			</thead>
-			<tbody>
-				<?php 
-				foreach ($datosUsers as $dato) 
-				{
-				?>
-					<tr>
-						<td> <center> <?php echo $dato->id ?> </center> </td>
-						<td> <center> <?php echo $dato->idUser ?> </center> </td>
-						<td> <center> <?php echo $dato->approved ?> </center> </td>
-						<td> <center> <?php echo $dato->accumulatedPoints ?></center> </td>
-						<td> <center>  <?php echo $dato->cashout ?> </center> </td>
-						<td> <center> <?php echo $dato->start ?> </center> </td>
-						<td> <center> <?php echo $dato->end ?> </center>  </td>
-					</tr>
-					<?php
-				}
-				?>
-
-			</tbody>
-		</table>
-	</section>
-
-	<section>
-		<h1> BuyinSession </h1>
-		<table class="table table-borderer" border=1pxl>
-			<thead>
-				
-				<th> <center>idSession</center> </th>
-				<th> idPlayer </th>
-				<th> ammountCash </th>
-				<center> <th> amountCredit </th> </center>
-				<th> currency </th>
-				<th> <center> hour </center> </th>
-				<th> approved </th>
-
-			</thead>
-			<tbody>
-				<?php 
-				foreach ($datosBuyinSession as $dato) 
-				{
-				?>
-					<tr>
-						<td> <center> <?php echo $dato->idSession ?> </center> </td>
-						<td> <center> <?php echo $dato->idPlayer ?> </center> </td>
-						<td> <center> <?php echo $dato->amountCash ?> </center> </td>
-						<td> <center> <?php echo $dato->amountCredit ?></center> </td>
-						<td> <center>  <?php echo $dato->currency ?> </center> </td>
-						<td> <center> <?php echo $dato->hour ?> </center> </td>
-						<td> <center> <?php echo $dato->approved ?> </center>  </td>
-					</tr>
-					<?php
-				}
-				?>
-
-			</tbody>
-		</table>
-	</section>
-
-	<section>
-		<h1> ComissionSession </h1>
-		<table class="table table-borderer" border=1pxl>
-			<thead>
-				
-				<th> <center>idSession</center> </th>
-				<th> hour </th>
-				<th> comission </th>
-			</thead>
-			<tbody>
-				<?php 
-				foreach ($datosComissionSession as $dato) 
-				{
-				?>
-					<tr>
-						<td> <center> <?php echo $dato->idSession ?> </center> </td>
-						<td> <center> <?php echo $dato->hour ?> </center> </td>
-						<td> <center> <?php echo $dato->comission ?> </center> </td>
-					</tr>
-					<?php
-				}
-				?>
-
-			</tbody>
-		</table>
-	</section>
-
-	<section>
-		<h1> DealerTipSession </h1>
-		<table class="table table-borderer" border=1pxl>
-			<thead>
-				
-				<th> <center>idSession</center> </th>
-				<th> hour </th>
-				<th> dealerTip </th>
-			</thead>
-			<tbody>
-				<?php 
-				foreach ($datosDealerTipSession as $dato) 
-				{
-				?>
-					<tr>
-						<td> <center> <?php echo $dato->idSession ?> </center> </td>
-						<td> <center> <?php echo $dato->hour ?> </center> </td>
-						<td> <center> <?php echo $dato->dealerTip ?> </center> </td>
-					</tr>
-					<?php
-				}
-				?>
-
-			</tbody>
-		</table>
-	</section>
-
-	<section>
-		<h1> ServiceTipSession </h1>
-		<table class="table table-borderer" border=1pxl>
-			<thead>
-				
-				<th> <center>idSession</center> </th>
-				<th> hour </th>
-				<th> serviceTip </th>
-			</thead>
-			<tbody>
-				<?php 
-				foreach ($datosServiceTipSession as $dato) 
-				{
-				?>
-					<tr>
-						<td> <center> <?php echo $dato->idSession ?> </center> </td>
-						<td> <center> <?php echo $dato->hour ?> </center> </td>
-						<td> <center> <?php echo $dato->servicetip ?> </center> </td>
-					</tr>
-					<?php
-				}
-				?>
-
-			</tbody>
-		</table>
-	</section>
-
-
-</body>
-</html>
-
-
-<?php
 
 // hasta aca exhibi datos proveniente de mysql, pero no hidrate objetos, esa informacion no quedo incluida en mis objetos, solo en variables array que cree temporalmente.
 
@@ -253,34 +84,52 @@ foreach ($datosUsers as $user)
 	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->idUser, $user->approved, $user->accumulatedPoints, $user->cashout, $user->start, $user->end);
 }
 
-echo "<br/>"."- objeto session1->sessionDealerTips hidratado"."<br/>";
-echo "a continuacion verifico que objeto este hidratado"."<br/>";
+
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title> SESSION </title>
+	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<h1> <center> SESSION </center> </h1>
 
-<table class="table table-borderer" border=1pxl>
-			<thead>
-				
-				<th> <center>idSession</center> </th>
-				<th> hour </th>
-				<th> dealerTip </th>
-			</thead>
-			<tbody>
-				<?php 
-				foreach ($session1->sessionDealerTips as $dealerTip) 
-				{
-				?>
-					<tr>
-						<td> <center> <?php echo $dealerTip->getIdSession() ?> </center> </td>
-						<td> <center> <?php echo $dealerTip->getHour() ?> </center> </td>
-						<td> <center> <?php echo $dealerTip->getDealerTip() ?> </center> </td>
-					</tr>
-					<?php
-				}
-				?>
+</head>
+<body>
+	<div class="container-fluid">
+		<section class="container row">
+			<article class="col-md-8">
+				<ul>
+					<br>
+					<br>
+					<br>
+					<a href="tips.php" class="btn btn-lg btn-block btn-danger"> tips </a> 
+					<br>
+					<a href="comissions.php" class="btn btn-lg btn-block btn-success"> comissions </a> 
+					<br>
+					<a href="buyins.php" class="btn btn-lg btn-block btn-primary"> buyins </a> 
+					<br>
+					<a href="users.php" class="btn btn-lg btn-block btn-info"> users </a>
+					<br>
+				</ul>
+			</article>	
+		</section>
+	</div>
 
-			</tbody>
-		</table>
+
+
+
+		<script src=”js/jquery.js”> </script>
+		<script src=”js/bootstrap.min.js”> </script>		
+</body>
+</html>
+
+
+
+
+
 
 <?php
 //var_dump($session1->sessionDealerTips);

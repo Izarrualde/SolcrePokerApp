@@ -15,7 +15,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosUsers()
 	{
-		$sql="SELECT * FROM users";
+		$sql="SELECT id, idUser, approved, accumulatedPoints, cashout, DATE_FORMAT(start, '%d-%m-%Y %H:%i') as start, DATE_FORMAT(end, '%d-%m-%Y %H:%i') as end FROM users";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -27,7 +27,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosServiceTipSession()
 	{
-		$sql="SELECT * FROM servicetipsession";
+		$sql="SELECT id, idSession, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, servicetip  FROM servicetipsession";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -37,9 +37,10 @@ class ConnectAppPoker extends Connect
 		return $arreglo;
 	}
 
+
 	public function getDatosDealerTipSession()
 	{
-		$sql="SELECT * FROM dealertipsession";
+		$sql="SELECT id, idSession, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, dealerTip FROM dealertipsession";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -51,7 +52,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosComissionSession()
 	{
-		$sql="SELECT * FROM comissionsession";
+		$sql="SELECT id, idSession, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, comission FROM comissionsession";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -63,7 +64,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosBuyinSession()
 	{
-		$sql="SELECT * FROM buyinsession";
+		$sql="SELECT id, idSession, idPlayer, amountCash, amountCredit, currency, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, approved FROM buyinsession";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
