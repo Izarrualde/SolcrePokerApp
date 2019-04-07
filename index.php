@@ -94,26 +94,52 @@ foreach ($datosUsers as $user)
 	<title> SESSION </title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<h1> <center> SESSION </center> </h1>
+	<h1> SESSIONES </h1>
+	
 
 </head>
 <body>
 	<div class="container-fluid">
 		<section class="container row">
+
 			<article class="col-md-8">
-				<ul>
-					<br>
-					<br>
-					<br>
-					<a href="tips.php" class="btn btn-lg btn-block btn-danger"> tips </a> 
-					<br>
-					<a href="comissions.php" class="btn btn-lg btn-block btn-success"> comissions </a> 
-					<br>
-					<a href="buyins.php" class="btn btn-lg btn-block btn-primary"> buyins </a> 
-					<br>
-					<a href="users.php" class="btn btn-lg btn-block btn-info"> users </a>
-					<br>
-				</ul>
+				<table class="table table-bordered table-hover text-center">
+					<thead class="text-center bg-danger">
+						<th> IdSession </th>
+						<th> Fecha </th>
+						<th> Inicio </th>
+						<th> Fin </th>
+						<th> Horas Jugadas </th>
+						<th> Total Jugado </th>
+					</thead>
+					<tbody>
+						<tr>
+							<td> miercoles </td>
+							<td> <a href="src/links/Session.php"> 03-04-19 </a> </td>
+							<td> xxx</td>
+							<td> xxx </td>
+							<td> xxx</td>
+							<td> xxx </td>
+						</tr>
+						<tr>
+							<td> jueves </td>
+							<td> 04-04-19 </td>
+							<td> xxx </td>
+							<td> xxx </td>
+							<td> xxx </td>
+							<td> xxx </td>							
+						</tr>
+						<tr>
+							<td> viernes </td>
+							<td> 04-04-19 </td>
+							<td> xxx </td>
+							<td> xxx </td>
+							<td> xxx </td>
+							<td> xxx </td>
+						</tr>
+
+					</tbody>
+				</table>
 			</article>	
 		</section>
 	</div>
