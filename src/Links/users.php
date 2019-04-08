@@ -123,7 +123,7 @@ foreach ($datosUsers as $user)
 								<td> <?php echo $user->getCashout() ?>  </td>
 								<td> <?php echo $user->getStart() ?>  </td>
 								<td> <?php echo $user->getEnd() ?> </td>
-								<td> ?? </td>
+								<td> <?php echo date_diff(date_create($user->getStart()), date_create($user->getEnd()))->format('%H:%M'); ?> </td>
 							</tr>
 						<?php
 						}
@@ -146,3 +146,5 @@ foreach ($datosUsers as $user)
 		
 </body>
 </html>
+
+

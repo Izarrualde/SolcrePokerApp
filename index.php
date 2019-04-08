@@ -140,6 +140,12 @@ foreach ($datosUsers as $user)
 
 					</tbody>
 				</table>
+
+				<br>
+				<br>
+				<br>
+
+				<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-dark"> new session </a>								
 			</article>	
 		</section>
 	</div>

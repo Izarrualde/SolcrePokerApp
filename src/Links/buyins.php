@@ -104,8 +104,8 @@ foreach ($datosUsers as $user)
 				<table class="table table-bordered table-hover table-condensed">
 					<thead class="text-center bg-success">
 						<tr class="bg-secondary">
-							<th> Buyins </th>
-							<th> <?php echo date_format(date_create($datosBuyinSession[0]->hour), 'd-m-y'); ?> </th>
+							<th colspan="5"> Buyins </th>
+							<th colspan="2"> <?php echo date_format(date_create($datosBuyinSession[0]->hour), 'd-m-y'); ?> </th>
 						</tr>
 						<tr>
 							<th> id </th>

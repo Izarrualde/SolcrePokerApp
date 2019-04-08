@@ -103,7 +103,7 @@ foreach ($datosUsers as $user)
 				<table class="table table-bordered table-hover table-condensed">
 					<thead>
 						<tr class="text-center bg-secondary">
-							<th> DEALER </th>
+							<th colspan="2"> DEALER </th>
 							<th> <?php echo date_format(date_create($datosDealerTipSession[0]->hour), 'd-m-y'); ?> </th>
 						</tr>
 						<tr class="text-center bg-success">
@@ -128,7 +128,7 @@ foreach ($datosUsers as $user)
 							<tr class="text-center bg-secondary">
 								<th> TOTAL </th>
 								<th> </th>
-								<th> </th>
+								<th> <?php echo $session1->getDealerTipTotal() ?> </th>
 							</tr>	
 					</tbody>  
 				</table>
@@ -138,7 +138,7 @@ foreach ($datosUsers as $user)
 				<table class="table table-bordered table-hover table-condensed">
 					<thead >
 						<tr class="text-center bg-secondary">
-							<th> SERVICE </th>
+							<th colspan="2"> SERVICE </th>
 							<th> <?php echo date_format(date_create($datosServiceTipSession[0]->hour), 'd-m-y'); ?> </th>
 						</tr>
 						<tr class="text-center bg-success">
@@ -163,7 +163,7 @@ foreach ($datosUsers as $user)
 							<tr class="text-center bg-secondary">
 								<th> TOTAL </th>
 								<th> </th>
-								<th> </th>
+								<th> <?php echo $session1->getServiceTipTotal() ?> </th>
 							</tr>	
 				
 					</tbody>  

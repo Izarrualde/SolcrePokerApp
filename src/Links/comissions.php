@@ -105,7 +105,7 @@ foreach ($datosUsers as $user)
 				<table class="table table-bordered table-hover table-condensed">
 					<thead class="text-center bg-secondary">
 						<tr>
-							<th> Comission </th>
+							<th colspan="2"> Comission </th>
 							<th> <?php echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y'); ?>
 						</tr>
 						<tr class="bg-success">
@@ -131,7 +131,7 @@ foreach ($datosUsers as $user)
 							<tr class="text-center bg-secondary">
 								<th> TOTAL </th>
 								<th> </th>
-								<th> </th>
+								<th> <?php echo $session1->getComissionTotal() ?></th>
 							</tr>				
 					</tbody>  
 				</table>
