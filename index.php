@@ -94,67 +94,80 @@ foreach ($datosUsers as $user)
 	<title> SESSION </title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<h1> SESSIONES </h1>
-	
-
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">	
 </head>
 <body>
-	<div class="container-fluid">
-		<section class="container row">
+	<div class="container">
+		<div class="col-md-8">
+			<nav aria-label="breadcrumb">
+				 <ol class="breadcrumb">
+				    <li class="breadcrumb-item active" aria-current="page">Home</li>
+				  </ol>
+			</nav>
 
-			<article class="col-md-8">
-				<table class="table table-bordered table-hover text-center">
-					<thead class="text-center bg-danger">
-						<th> IdSession </th>
-						<th> Fecha </th>
-						<th> Inicio </th>
-						<th> Fin </th>
-						<th> Horas Jugadas </th>
-						<th> Total Jugado </th>
-					</thead>
-					<tbody>
-						<tr>
-							<td> miercoles </td>
-							<td> <a href="src/links/Session.php"> 03-04-19 </a> </td>
-							<td> xxx</td>
-							<td> xxx </td>
-							<td> xxx</td>
-							<td> xxx </td>
-						</tr>
-						<tr>
-							<td> jueves </td>
-							<td> 04-04-19 </td>
-							<td> xxx </td>
-							<td> xxx </td>
-							<td> xxx </td>
-							<td> xxx </td>							
-						</tr>
-						<tr>
-							<td> viernes </td>
-							<td> 04-04-19 </td>
-							<td> xxx </td>
-							<td> xxx </td>
-							<td> xxx </td>
-							<td> xxx </td>
-						</tr>
+		
 
-					</tbody>
-				</table>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					SESIONES
+				</div>
+				<div class="card-body">
+					<section class="container row">
+						<article class="col-md-12">
+						<table class="table table-bordered table-hover text-center">
+							<thead class="text-center bg-danger">
+								<th> IdSession </th>
+								<th> Fecha </th>
+								<th> Inicio </th>
+								<th> Fin </th>
+								<th> Horas Jugadas </th>
+								<th> Total Jugado </th>
+							</thead>
+							<tbody>
+								<tr>
+									<td> miercoles </td>
+									<td> <a href="src/links/Session.php"> 03-04-19 </a> </td>
+									<td> xxx</td>
+									<td> xxx </td>
+									<td> xxx</td>
+									<td> xxx </td>
+								</tr>
+								<tr>
+									<td> jueves </td>
+									<td> 04-04-19 </td>
+									<td> xxx </td>
+									<td> xxx </td>
+									<td> xxx </td>
+									<td> xxx </td>							
+								</tr>
+								<tr>
+									<td> viernes </td>
+									<td> 04-04-19 </td>
+									<td> xxx </td>
+									<td> xxx </td>
+									<td> xxx </td>
+									<td> xxx </td>
+								</tr>
 
-				<br>
-				<br>
-				<br>
+							</tbody>
+						</table>
 
-				<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-dark"> new session </a>								
-			</article>	
-		</section>
+						<br>
+						<br>
+						<br>
+
+						<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new session </a>								
+						</article>	
+					</section>
+				</div>
+			</div>
+		</div>
+	
 	</div>
 
 
-
-
-		<script src=”js/jquery.js”> </script>
-		<script src=”js/bootstrap.min.js”> </script>		
+	<script src=”js/jquery.js”> </script>
+	<script src=”js/bootstrap.min.js”> </script>		
 </body>
 </html>
 

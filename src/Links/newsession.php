@@ -5,6 +5,7 @@
 	<title>Document</title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 <body>
 	<div class="container-fluid">
@@ -29,13 +30,13 @@
 								<br>
 								<br>
 								<br>
-								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> new tips </a> 
+								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-hand-holding-usd"></i> new tips </a> 
 								<br>
-								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> new comissions </a> 
+								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> <i class="fas fa-dollar-sign"></i> new comissions </a> 
 								<br>
-								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> new buyins </a> 
+								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> <i class="fas fa-money-bill"></i> new buyins </a> 
 								<br>
-								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> new users </a>
+								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> <i class="fas fa-user-plus"></i> new users </a>
 								<br>
 							</ul>
 						</article>	

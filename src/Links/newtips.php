@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+
 <?php
 include "../MySQL/Connect.php";
 include "../MySQL/ConnectAppPoker.php";
@@ -7,38 +17,23 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 if (isset($_POST['idSession']))
 {
 	$session = new ConnectAppPoker;
-	$session->insertarDealerTip();
+	$session->insertDealerTip();
 	//header();
-	echo "el registro fue ingresado exitosamente";
 	?>
-	<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Document</title>
-	</head>
-	<body>
-		<br><br>
-		<a class="btn" href="newsession.php"> volver </a>
-	</body>
-	</html>
+
+	<mark> <i class="far fa-grin-alt"></i> <code> El tip se ingresó exitosamente </code></mark>
+
+	<br> <br>
+	<a class="btn btn-primary" href="newsession.php"> volver </a>
+	
 	<?php
 	exit;
 }
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
-	<link rel="stylesheet" href="../../css/bootstrap.min.css">
-</head>
-<body>
 
-	
+<body>
 	<div class="container">
 		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
@@ -76,8 +71,9 @@ if (isset($_POST['idSession']))
 									<input class="form-control" name="dealerTip" id="tip" type="text" placeholder="DealerTip" required="true">
 								</div>
 
-								<p><input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" /></p>
-								<br><br><br><br>
+								<div class="form-group">
+									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />
+								</div>
 							</form>
 						</article>
 					</section>
