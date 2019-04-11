@@ -8,48 +8,44 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<section class="container row">
+	<div class="row">
+		<div class="col-md-8">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Nueva Sesion</li>
+			  </ol>
+			</nav>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Ingresar datos
+				</div>
+				<div class="card-body">
 
-			<article class="col-md-8">
-				<ul>
-					<br>
-					<br>
-					<br>
-					<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> new tips </a> 
-					<br>
-					<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> new comissions </a> 
-					<br>
-					<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-primary"> new buyins </a> 
-					<br>
-					<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> new users </a>
-					<br>
-				</ul>
-			</article>	
-		</section>
+					<section class="container row">
+
+						<article class="col-md-8">
+							<ul>
+								<br>
+								<br>
+								<br>
+								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> new tips </a> 
+								<br>
+								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> new comissions </a> 
+								<br>
+								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> new buyins </a> 
+								<br>
+								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> new users </a>
+								<br>
+							</ul>
+						</article>	
+					</section>
+				</div>
+			</div>
+		</div>
 	</div>
 	<br><br><br>
-	<div class="container">
-		<section class="container row">
-			<article>
-				<form>
-					<div class="form-group">
-						<label for="nombre">  Nombre: </label>
-						<input class="form-control" id="nombre" type="text" placeholder="Nombre">
-					</div>
-					
-					<div class="form-group">
-						<label for="apellido"> Apellido: </label>
-						<input class="form-control" id="apellido" type="text" placeholder="Apellido">
-					</div>
 
-					<div class="form-group">
-						<label for="tel"> Telefono: </label>
-						<input class="form-control" id="tel" type="text" placeholder="Telefono">
-					</div>
-				</form>
-			</article>
-		</section>
-	</div>
 	
 	
 </body>

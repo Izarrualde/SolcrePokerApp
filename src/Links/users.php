@@ -95,47 +95,61 @@ foreach ($datosUsers as $user)
 
 </head>
 <body>
-	<br> <br><br> <br><br> <br><br> <br>
 	<div class="container">
-		<section class="container row">
-			<article class="col-md-11">
-				<table class="table table-bordered table-hover table-condensed">
-					<thead class="text-center bg-success">
-						<th> id </th>
-						<th> idUser </th>
-						<th> approved </th>
-						<th> accumulatedPoints </th>
-						<th> cashout </th>
-						<th> start </th>
-						<th> end </th>
-						<th> horas jugadas </th>
-					</thead>
-					<tbody>
-						<?php 
-						foreach ($session1->sessionUsers as $user) 
-						{
-						?>
-							<tr class="text-center">
-								<td> <?php echo $user->getId() ?>  </td>
-								<td> <?php echo $user->getIdUser() ?>  </td>
-								<td> <?php echo $user->getApproved() ?>  </td>
-								<td> <?php echo $user->getAccumulatedPoints() ?>  </td>
-								<td> <?php echo $user->getCashout() ?>  </td>
-								<td> <?php echo $user->getStart() ?>  </td>
-								<td> <?php echo $user->getEnd() ?> </td>
-								<td> <?php echo date_diff(date_create($user->getStart()), date_create($user->getEnd()))->format('%H:%M'); ?> </td>
-							</tr>
-						<?php
-						}
-						?>
-				
-					</tbody>  
-				</table>
-			</article>	
+		<div class="col-md-11">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Users</li>
+			  </ol>
+			</nav>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Users
+				</div>
+				<div class="card-body">
+					<section class="container row">
+						<article class="col-md-11">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="text-center bg-success">
+									<th> id </th>
+									<th> idUser </th>
+									<th> approved </th>
+									<th> accumulatedPoints </th>
+									<th> cashout </th>
+									<th> start </th>
+									<th> end </th>
+									<th> horas jugadas </th>
+								</thead>
+								<tbody>
+									<?php 
+									foreach ($session1->sessionUsers as $user) 
+									{
+									?>
+										<tr class="text-center">
+											<td> <?php echo $user->getId() ?>  </td>
+											<td> <?php echo $user->getIdUser() ?>  </td>
+											<td> <?php echo $user->getApproved() ?>  </td>
+											<td> <?php echo $user->getAccumulatedPoints() ?>  </td>
+											<td> <?php echo $user->getCashout() ?>  </td>
+											<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
+											<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
+											<td> <?php echo date_diff(date_create($user->getStart()), date_create($user->getEnd()))->format('%H:%M'); ?> </td>
+										</tr>
+									<?php
+									}
+									?>
+							
+								</tbody>  
+							</table>
+						</article>	
 
 
 
-		</section>
+					</section>
+				</div>
+			</div>
+		</div>
 	</div>
 
 

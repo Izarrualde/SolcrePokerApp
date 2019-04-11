@@ -74,7 +74,11 @@ class ConnectAppPoker extends Connect
 		return $arreglo;
 	}
 
-
+	public function insertarDealerTip()
+	{
+		$sql="INSERT into dealertipsession VALUES (null, '$_POST[idSession]', '$_POST[hora]', '$_POST[dealerTip]')"; 
+		$this->db->query($sql);
+	}
 }
 
 ?>

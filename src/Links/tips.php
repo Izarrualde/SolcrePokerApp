@@ -96,82 +96,97 @@ foreach ($datosUsers as $user)
 
 </head>
 <body>
-	<br> <br><br> <br><br> <br><br> <br>
+	
 	<div class="container">
-		<section class="container row">
-			<article class="col-md-6">
-				<table class="table table-bordered table-hover table-condensed">
-					<thead>
-						<tr class="text-center bg-secondary">
-							<th colspan="2"> DEALER </th>
-							<th> <?php echo date_format(date_create($datosDealerTipSession[0]->hour), 'd-m-y'); ?> </th>
-						</tr>
-						<tr class="text-center bg-success">
-							<th> id </th>
-							<th> hour</th>
-							<th> Tips </th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php 
-						foreach ($session1->sessionDealerTips as $dealerTip) 
-						{
-						?>
-							<tr class="text-center">
-								<td> <?php echo $dealerTip->getId() ?>  </td>
-								<td> <?php echo date_format(date_create($dealerTip->getHour()), 'H:i') ?>  </td>
-								<td> <?php echo $dealerTip->getDealerTip() ?>  </td>
-							</tr>
-						<?php
-						}
-						?>
-							<tr class="text-center bg-secondary">
-								<th> TOTAL </th>
-								<th> </th>
-								<th> <?php echo $session1->getDealerTipTotal() ?> </th>
-							</tr>	
-					</tbody>  
-				</table>
-			</article>	
+		<div class="col-md-12">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Tips</li>
+			  </ol>
+			</nav>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Dealer Tips & Service Tips
+				</div>
+				<div class="card-body">
+					<section class="container row">
+						<article class="col-md-6">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead>
+									<tr class="text-center bg-secondary">
+										<th colspan="2"> DEALER </th>
+										<th> <?php echo date_format(date_create($datosDealerTipSession[0]->hour), 'd-m-y'); ?> </th>
+									</tr>
+									<tr class="text-center bg-success">
+										<th> id </th>
+										<th> hour</th>
+										<th> Tips </th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php 
+									foreach ($session1->sessionDealerTips as $dealerTip) 
+									{
+									?>
+										<tr class="text-center">
+											<td> <?php echo $dealerTip->getId() ?>  </td>
+											<td> <?php echo date_format(date_create($dealerTip->getHour()), 'H:i') ?>  </td>
+											<td> <?php echo $dealerTip->getDealerTip() ?>  </td>
+										</tr>
+									<?php
+									}
+									?>
+										<tr class="text-center bg-secondary">
+											<th> TOTAL </th>
+											<th> </th>
+											<th> <?php echo $session1->getDealerTipTotal() ?> </th>
+										</tr>	
+								</tbody>  
+							</table>
+						</article>	
 
-			<aside class="col-md-6">
-				<table class="table table-bordered table-hover table-condensed">
-					<thead >
-						<tr class="text-center bg-secondary">
-							<th colspan="2"> SERVICE </th>
-							<th> <?php echo date_format(date_create($datosServiceTipSession[0]->hour), 'd-m-y'); ?> </th>
-						</tr>
-						<tr class="text-center bg-success">
-							<th> id </th>
-							<th> hour</th>
-							<th> ServiceTip </th>
-						</tr>
-					</thead>
-					<tbody class="text-center">
-						<?php 
-						foreach ($session1->sessionServiceTips as $ServiceTip) 
-						{
-						?>
-							<tr>
-								<td> <?php echo $ServiceTip->getId() ?>  </td>
-								<td> <?php echo date_format(date_create($ServiceTip->getHour()), 'H:i') ?>  </td>
-								<td> <?php echo $ServiceTip->getServiceTip() ?>  </td>
-							</tr>
-						<?php
-						}
-						?>
-							<tr class="text-center bg-secondary">
-								<th> TOTAL </th>
-								<th> </th>
-								<th> <?php echo $session1->getServiceTipTotal() ?> </th>
-							</tr>	
-				
-					</tbody>  
-				</table>
-			</aside>	
+						<aside class="col-md-6">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead >
+									<tr class="text-center bg-secondary">
+										<th colspan="2"> SERVICE </th>
+										<th> <?php echo date_format(date_create($datosServiceTipSession[0]->hour), 'd-m-y'); ?> </th>
+									</tr>
+									<tr class="text-center bg-success">
+										<th> id </th>
+										<th> hour</th>
+										<th> ServiceTip </th>
+									</tr>
+								</thead>
+								<tbody class="text-center">
+									<?php 
+									foreach ($session1->sessionServiceTips as $ServiceTip) 
+									{
+									?>
+										<tr>
+											<td> <?php echo $ServiceTip->getId() ?>  </td>
+											<td> <?php echo date_format(date_create($ServiceTip->getHour()), 'H:i') ?>  </td>
+											<td> <?php echo $ServiceTip->getServiceTip() ?>  </td>
+										</tr>
+									<?php
+									}
+									?>
+										<tr class="text-center bg-secondary">
+											<th> TOTAL </th>
+											<th> </th>
+											<th> <?php echo $session1->getServiceTipTotal() ?> </th>
+										</tr>	
+							
+								</tbody>  
+							</table>
+						</aside>	
 
 
-		</section>
+					</section>
+				</div>
+			</div>
+		</div>
 	</div>
 
 
@@ -182,6 +197,3 @@ foreach ($datosUsers as $user)
 		
 </body>
 </html>
-
-<?php
-

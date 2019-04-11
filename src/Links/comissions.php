@@ -98,48 +98,65 @@ foreach ($datosUsers as $user)
 
 </head>
 <body>
-	<br> <br><br> <br><br> <br><br> <br>
+	
 	<div class="container">
-		<section class="container row">
-			<article class="col-md-6">
-				<table class="table table-bordered table-hover table-condensed">
-					<thead class="text-center bg-secondary">
-						<tr>
-							<th colspan="2"> Comission </th>
-							<th> <?php echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y'); ?>
-						</tr>
-						<tr class="bg-success">
-							<th> id </th>
-							<th> hour</th>
-							<th> comisision </th>							
-						</tr>
+		<div class="col-md-8">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Comissions</li>
+			  </ol>
+			</nav>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Comissions
+				</div>
+				<div class="card-body">
+					<section class="container row">
+						<article class="col-md-6">
+							
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="text-center bg-secondary">
+									<tr>
+										<th colspan="2"> Comission </th>
+										<th> <?php echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y'); ?>
+									</tr>
+									<tr class="bg-success">
+										<th> id </th>
+										<th> hour</th>
+										<th> comisision </th>							
+									</tr>
 
-					</thead>
-					<tbody class="text-center">
-						<?php 
-						foreach ($session1->sessionComissions as $comission) 
-						{
-						?>
-							<tr>
-								<td> <?php echo $comission->getId() ?> </td>
-								<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
-								<td> <?php echo $comission->getComission() ?> </td>
-							</tr>
-						<?php
-						}
-						?>
-							<tr class="text-center bg-secondary">
-								<th> TOTAL </th>
-								<th> </th>
-								<th> <?php echo $session1->getComissionTotal() ?></th>
-							</tr>				
-					</tbody>  
-				</table>
-			</article>	
+								</thead>
+								<tbody class="text-center">
+									<?php 
+									foreach ($session1->sessionComissions as $comission) 
+									{
+									?>
+										<tr>
+											<td> <?php echo $comission->getId() ?> </td>
+											<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
+											<td> <?php echo $comission->getComission() ?> </td>
+										</tr>
+									<?php
+									}
+									?>
+										<tr class="text-center bg-secondary">
+											<th> TOTAL </th>
+											<th> </th>
+											<th> <?php echo $session1->getComissionTotal() ?></th>
+										</tr>			
+								</tbody>  
+							</table>
+						
+						</article>	
 
 
 
-		</section>
+					</section>
+				</div>
+			</div>
+		</div>
 	</div>
 
 

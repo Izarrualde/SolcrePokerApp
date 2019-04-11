@@ -97,51 +97,66 @@ foreach ($datosUsers as $user)
 
 </head>
 <body>
-		<br> <br><br> <br><br> <br><br> <br>
+	
 	<div class="container">
-		<section class="container row">
-			<article class="col-md-9">
-				<table class="table table-bordered table-hover table-condensed">
-					<thead class="text-center bg-success">
-						<tr class="bg-secondary">
-							<th colspan="5"> Buyins </th>
-							<th colspan="2"> <?php echo date_format(date_create($datosBuyinSession[0]->hour), 'd-m-y'); ?> </th>
-						</tr>
-						<tr>
-							<th> id </th>
-							<th> idPlayer</th>
-							<th> amountCash </th>
-							<th> amountCredit </th>
-							<th> currency </th>
-							<th> hour </th>
-							<th> approved </th>
-						</tr>
-					</thead>
-					<tbody class="text-center">
-						<?php 
-						foreach ($session1->sessionBuyins as $buyin) 
-						{
-						?>
-							<tr>
-								<td> <?php echo $buyin->getId() ?>  </td>
-								<td> <?php echo $buyin->getIdPlayer() ?>  </td>
-								<td> <?php echo $buyin->getAmountCash() ?>  </td>
-								<td> <?php echo $buyin->getAmountCredit() ?>  </td>
-								<td> <?php echo $buyin->getCurrency() ?>  </td>
-								<td> <?php echo $buyin->getHour() ?>  </td>
-								<td> <?php echo $buyin->getApproved() ?>  </td>
-							</tr>
-						<?php
-						}
-						?>
-				
-					</tbody>  
-				</table>
-			</article>	
+		<div class="col-md-10">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Buyins</li>
+			  </ol>
+			</nav>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Buyins
+				</div>
+				<div class="card-body">
+					<section class="container row">
+						<article class="col-md-10">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="text-center bg-success">
+									<tr class="bg-secondary">
+										<th colspan="5"> Buyins </th>
+										<th colspan="2"> <?php echo date_format(date_create($datosBuyinSession[0]->hour), 'd-m-y'); ?> </th>
+									</tr>
+									<tr>
+										<th> id </th>
+										<th> idPlayer</th>
+										<th> amountCash </th>
+										<th> amountCredit </th>
+										<th> currency </th>
+										<th> hour </th>
+										<th> approved </th>
+									</tr>
+								</thead>
+								<tbody class="text-center">
+									<?php 
+									foreach ($session1->sessionBuyins as $buyin) 
+									{
+									?>
+										<tr>
+											<td> <?php echo $buyin->getId() ?>  </td>
+											<td> <?php echo $buyin->getIdPlayer() ?>  </td>
+											<td> <?php echo $buyin->getAmountCash() ?>  </td>
+											<td> <?php echo $buyin->getAmountCredit() ?>  </td>
+											<td> <?php echo $buyin->getCurrency() ?>  </td>
+											<td> <?php echo date_format(date_create($buyin->getHour()), 'H:i') ?> </td>
+											<td> <?php echo $buyin->getApproved() ?>  </td>
+										</tr>
+									<?php
+									}
+									?>
+							
+								</tbody>  
+							</table>
+						</article>	
 
 
 
-		</section>
+					</section>
+				</div>
+			</div>
+		</div>
 	</div>
 
 
