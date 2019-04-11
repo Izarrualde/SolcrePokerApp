@@ -49,7 +49,7 @@ if (isset($_POST['idSession']))
 				<div class="card-body">
 					<section class="container row">
 						<article>
-							<form action="" method="post">
+							<form class="was-validated" action="" method="post">
 								<div class="form-group has-success">
 									<label class="sr-only" for="id" class="control-label">  Id: </label>
 									<input class="form-control" name="id" id="id" type="text" placeholder="id" required="true" autofocus="true">

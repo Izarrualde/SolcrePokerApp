@@ -51,36 +51,36 @@ if (isset($_POST['idUser']))
 				<div class="card-body">
 					<section class="container row">
 						<article>
-							<form action="" method="post">
+							<form class="was-validated" action="" method="post">
 								<div class="form-group">
 									<label class="sr-only" for="id">  Id: </label>
-									<input class="form-control" name="id" id="id" type="text" placeholder="id" autofocus="true">
+									<input class="form-control" name="id" id="id" type="text" placeholder="id" autofocus="true" required="true">
 								</div>
-								
+
 								<div class="form-group">
 									<label class="sr-only" for="idUser"> IdUser: </label>
-									<input class="form-control" name="idUser" id="idUser" type="text" placeholder="IdUser">
+									<input class="form-control" name="idUser" id="idUser" type="text" placeholder="IdUser" required="true">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="accumulatedPoints"> Puntos Acumulados: </label>
-									<input class="form-control"name="accumulatedPoints" id="accumulatedPoints" type="text" placeholder="Puntos Acumulados">
+									<input class="form-control"name="accumulatedPoints" id="accumulatedPoints" type="text" placeholder="Puntos Acumulados" required="true">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="cashout"> Cashout: </label>
-									<input class="form-control" name="cashout" id="cashout" type="text" placeholder="Cashout">
+									<input class="form-control" name="cashout" id="cashout" type="text" placeholder="Cashout" required="true">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="horaInicio"> hora inicio: </label>
-									<input class="form-control" name="start" id="horaInicio" type="datetime-local" placeholder="hora de inicio">
+									<input class="form-control" name="start" id="horaInicio" type="datetime-local" placeholder="hora de inicio" required="true">
 									<small id="horaInicio" class="form-tet text-muted"> Fecha y hora de inicio </small>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="horaFin"> hora fin: </label>
-									<input class="form-control" name="end" id="horaFin" type="datetime-local" placeholder="hora de fin">
+									<input class="form-control" name="end" id="horaFin" type="datetime-local" placeholder="hora de fin" required="true">
 									<small id="horaFin" class="form-tet text-muted"> Fecha y hora de finalización </small>
 								</div>
 
