@@ -95,6 +95,7 @@ foreach ($datosUsers as $user)
 	<title> info comissions </title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 <body>
@@ -113,18 +114,19 @@ foreach ($datosUsers as $user)
 				</div>
 				<div class="card-body">
 					<section class="container row">
-						<article class="col-md-6">
+						<article class="col-md-9">
 							
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-secondary">
 									<tr>
-										<th colspan="2"> Comission </th>
+										<th colspan="3"> Comission </th>
 										<th> <?php echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y'); ?>
 									</tr>
 									<tr class="bg-success">
 										<th> id </th>
 										<th> hour</th>
-										<th> comisision </th>							
+										<th> comisision </th>	
+										<th> acciones </th>						
 									</tr>
 
 								</thead>
@@ -137,6 +139,7 @@ foreach ($datosUsers as $user)
 											<td> <?php echo $comission->getId() ?> </td>
 											<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
 											<td> <?php echo $comission->getComission() ?> </td>
+											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
 										</tr>
 									<?php
 									}
@@ -145,6 +148,7 @@ foreach ($datosUsers as $user)
 											<th> TOTAL </th>
 											<th> </th>
 											<th> <?php echo $session1->getComissionTotal() ?></th>
+											<th> </th>
 										</tr>			
 								</tbody>  
 							</table>

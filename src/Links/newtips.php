@@ -13,11 +13,13 @@ include "../MySQL/Connect.php";
 include "../MySQL/ConnectAppPoker.php";
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 if (isset($_POST['idSession']))
 {
 	$session = new ConnectAppPoker;
 	$session->insertDealerTip();
+	$session->insertServiceTip();
 	//header();
 	?>
 
@@ -52,7 +54,7 @@ if (isset($_POST['idSession']))
 							<form class="was-validated" action="" method="post">
 								<div class="form-group">
 									<label class="sr-only" for="id">  Id: </label>
-									<input class="form-control" name="id" id="id" type="text" placeholder="id" autofocus="true" required="true">
+									<input class="form-control" name="id" id="id" type="text" placeholder="id" autofocus="true" required="true" value="1">
 								</div>
 								
 								<div class="form-group">
@@ -62,13 +64,18 @@ if (isset($_POST['idSession']))
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hour: </label>
-									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true">
+									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
 									<small id="hour" class="form-tet text-muted"> Hora </small>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="tip"> dealerTip: </label>
-									<input class="form-control" name="dealerTip" id="tip" type="text" placeholder="DealerTip" required="true">
+									<input class="form-control" name="dealerTip" id="dealertip" type="text" placeholder="DealerTip" required="true">
+								</div>
+
+								<div class="form-group">
+									<label class="sr-only" for="tip"> serviceTip: </label>
+									<input class="form-control" name="servicetip" id="servicetip" type="text" placeholder="ServiceTip" required="true">
 								</div>
 
 								<div class="form-group">

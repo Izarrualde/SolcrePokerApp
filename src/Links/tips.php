@@ -93,6 +93,7 @@ foreach ($datosUsers as $user)
 	<title> info tips </title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 <body>
@@ -115,13 +116,14 @@ foreach ($datosUsers as $user)
 							<table class="table table-bordered table-hover table-condensed">
 								<thead>
 									<tr class="text-center bg-secondary">
-										<th colspan="2"> DEALER </th>
+										<th colspan="3"> DEALER </th>
 										<th> <?php echo date_format(date_create($datosDealerTipSession[0]->hour), 'd-m-y'); ?> </th>
 									</tr>
 									<tr class="text-center bg-success">
 										<th> id </th>
 										<th> hour</th>
-										<th> Tips </th>
+										<th> DealerTips </th>
+										<th> acciones </th>
 									</tr>
 								</thead>
 								<tbody>
@@ -133,6 +135,7 @@ foreach ($datosUsers as $user)
 											<td> <?php echo $dealerTip->getId() ?>  </td>
 											<td> <?php echo date_format(date_create($dealerTip->getHour()), 'H:i') ?>  </td>
 											<td> <?php echo $dealerTip->getDealerTip() ?>  </td>
+											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
 										</tr>
 									<?php
 									}
@@ -141,6 +144,7 @@ foreach ($datosUsers as $user)
 											<th> TOTAL </th>
 											<th> </th>
 											<th> <?php echo $session1->getDealerTipTotal() ?> </th>
+											<th> </th>
 										</tr>	
 								</tbody>  
 							</table>
@@ -150,13 +154,14 @@ foreach ($datosUsers as $user)
 							<table class="table table-bordered table-hover table-condensed">
 								<thead >
 									<tr class="text-center bg-secondary">
-										<th colspan="2"> SERVICE </th>
+										<th colspan="3"> SERVICE </th>
 										<th> <?php echo date_format(date_create($datosServiceTipSession[0]->hour), 'd-m-y'); ?> </th>
 									</tr>
 									<tr class="text-center bg-success">
 										<th> id </th>
 										<th> hour</th>
 										<th> ServiceTip </th>
+										<th> acciones </th>
 									</tr>
 								</thead>
 								<tbody class="text-center">
@@ -168,6 +173,7 @@ foreach ($datosUsers as $user)
 											<td> <?php echo $ServiceTip->getId() ?>  </td>
 											<td> <?php echo date_format(date_create($ServiceTip->getHour()), 'H:i') ?>  </td>
 											<td> <?php echo $ServiceTip->getServiceTip() ?>  </td>
+											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
 										</tr>
 									<?php
 									}
@@ -176,6 +182,7 @@ foreach ($datosUsers as $user)
 											<th> TOTAL </th>
 											<th> </th>
 											<th> <?php echo $session1->getServiceTipTotal() ?> </th>
+											<th> </th>
 										</tr>	
 							
 								</tbody>  

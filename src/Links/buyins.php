@@ -94,6 +94,7 @@ foreach ($datosUsers as $user)
 	<title> info buyins </title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 <body>
@@ -117,7 +118,7 @@ foreach ($datosUsers as $user)
 								<thead class="text-center bg-success">
 									<tr class="bg-secondary">
 										<th colspan="5"> Buyins </th>
-										<th colspan="2"> <?php echo date_format(date_create($datosBuyinSession[0]->hour), 'd-m-y'); ?> </th>
+										<th colspan="3"> <?php echo date_format(date_create($datosBuyinSession[0]->hour), 'd-m-y'); ?> </th>
 									</tr>
 									<tr>
 										<th> id </th>
@@ -127,6 +128,7 @@ foreach ($datosUsers as $user)
 										<th> currency </th>
 										<th> hour </th>
 										<th> approved </th>
+										<th> acciones </th>
 									</tr>
 								</thead>
 								<tbody class="text-center">
@@ -142,6 +144,7 @@ foreach ($datosUsers as $user)
 											<td> <?php echo $buyin->getCurrency() ?>  </td>
 											<td> <?php echo date_format(date_create($buyin->getHour()), 'H:i') ?> </td>
 											<td> <?php echo $buyin->getApproved() ?>  </td>
+											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
 										</tr>
 									<?php
 									}

@@ -92,6 +92,7 @@ foreach ($datosUsers as $user)
 	<title> info users </title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 <body>
@@ -109,7 +110,7 @@ foreach ($datosUsers as $user)
 				</div>
 				<div class="card-body">
 					<section class="container row">
-						<article class="col-md-11">
+						<article class="col-md-12">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-success">
 									<th> id </th>
@@ -120,6 +121,7 @@ foreach ($datosUsers as $user)
 									<th> start </th>
 									<th> end </th>
 									<th> horas jugadas </th>
+									<th> acciones </th>
 								</thead>
 								<tbody>
 									<?php 
@@ -135,6 +137,7 @@ foreach ($datosUsers as $user)
 											<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
 											<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
 											<td> <?php echo date_diff(date_create($user->getStart()), date_create($user->getEnd()))->format('%H:%M'); ?> </td>
+											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
 										</tr>
 									<?php
 									}

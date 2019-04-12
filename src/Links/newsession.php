@@ -30,13 +30,13 @@
 								<br>
 								<br>
 								<br>
-								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-hand-holding-usd"></i> new tips </a> 
+								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> new  <i class="fas fa-hand-holding-usd"></i> tips </a> 
 								<br>
-								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> <i class="fas fa-dollar-sign"></i> new comissions </a> 
+								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> new  <i class="fas fa-dollar-sign"></i> comissions </a> 
 								<br>
-								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> <i class="fas fa-money-bill"></i> new buyins </a> 
+								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> new  <i class="fas fa-money-bill"></i> buyins </a> 
 								<br>
-								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> <i class="fas fa-user-plus"></i> new users </a>
+								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> new  <i class="fas fa-user-plus"></i> users </a>
 								<br>
 							</ul>
 						</article>	

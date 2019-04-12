@@ -14,6 +14,8 @@ include "../MySQL/ConnectAppPoker.php";
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+
 if (isset($_POST['idSession']))
 {
 	$session = new ConnectAppPoker;
@@ -78,7 +80,7 @@ if (isset($_POST['idSession']))
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true">
+									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 
