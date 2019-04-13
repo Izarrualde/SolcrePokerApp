@@ -38,16 +38,12 @@ Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
 
 $session = new ConnectAppPoker;
-$datosUsers = $session->getDatosUsers();
+$datosUsers = $session->getDatosUsersSession();
 $datosBuyinSession = $session->getDatosBuyinSession();
 $datosComissionSession = $session->getDatosComissionSession();
 $datosDealerTipSession = $session->getDatosDealerTipSession();
 $datosServiceTipSession = $session->getDatosServiceTipSession();
 //var_dump($datos);
-
-
-
-
 
 // hasta aca exhibi datos proveniente de mysql, pero no hidrate objetos, esa informacion no quedo incluida en mis objetos, solo en variables array que cree temporalmente.
 
@@ -95,6 +91,13 @@ foreach ($datosUsers as $user)
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">	
+
+	<!--<script type="text/javascript" src=”js/jquery-3.4.0.min.js”> </script>-->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<!--<script src=”js/bootstrap.min.js”> </script>-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
 </head>
 <body>
 	<div class="container">
@@ -112,7 +115,7 @@ foreach ($datosUsers as $user)
 					SESIONES
 				</div>
 				<div class="card-body">
-					<section class="container row">
+					<section class="container row"  style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 						<table class="table table-bordered table-hover text-center">
 							<thead class="text-center bg-danger">
@@ -166,9 +169,10 @@ foreach ($datosUsers as $user)
 	</div>
 
 
-	<script src=”js/jquery.js”> </script>
-	<script src=”js/bootstrap.min.js”> </script>		
+		
 </body>
+
+
 </html>
 
 

@@ -96,6 +96,10 @@ foreach ($datosUsers as $user)
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<!--<script type="text/javascript" src=”js/jquery-3.4.0.min.js”> </script>-->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src=”js/bootstrap.min.js”> </script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -105,22 +109,42 @@ foreach ($datosUsers as $user)
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+				<li class="breadcrumb-item"><a href="Session.php">Session</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Comissions</li>
 			  </ol>
 			</nav>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
+					<?php
+					if (isset($_GET["m"]))
+					{
+						switch ($_GET["m"]) 
+						{
+							case '1':
+								?>
+								<div class="alert alert-success">
+								<button type="button" class="close" data-dismiss="alert">x</button>
+									La comisión se ha eliminado exitosamente.
+								</div>
+								<?php
+								break;
+						}
+					}
+					?>
 					Comissions
 				</div>
 				<div class="card-body">
 					<section class="container row">
-						<article class="col-md-9">
+						<article class="col-md-9"  style="width: auto; margin: auto auto;">
 							
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-secondary">
 									<tr>
 										<th colspan="3"> Comission </th>
-										<th> <?php echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y'); ?>
+										<th> <?php if (isset($datosComissionSession[0])) 
+											 {
+											 	echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y');
+											 } ?> </th>
 									</tr>
 									<tr class="bg-success">
 										<th> id </th>
@@ -132,24 +156,36 @@ foreach ($datosUsers as $user)
 								</thead>
 								<tbody class="text-center">
 									<?php 
-									foreach ($session1->sessionComissions as $comission) 
+									if (sizeof($session1->sessionComissions)==0)
 									{
-									?>
+										?>
 										<tr>
-											<td> <?php echo $comission->getId() ?> </td>
-											<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
-											<td> <?php echo $comission->getComission() ?> </td>
-											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
+											<td colspan="4"> sin registros </td>
 										</tr>
 									<?php
+									} else
+									{ 
+										foreach ($session1->sessionComissions as $comission) 
+										{
+										?>
+											<tr>
+												<td> <?php echo $comission->getId() ?> </td>
+												<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
+												<td> <?php echo $comission->getComission() ?> </td>
+												<td> <a href="actions/editComission.php?id= <?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteComission.php?id= <?php echo $comission->getId(); ?>"> <i class="fas fa-trash-alt"> </i> </a></td>
+											</tr>
+										<?php
+										}
+										?>
+											<tr class="text-center bg-secondary">
+												<th> TOTAL </th>
+												<th> </th>
+												<th> <?php echo $session1->getComissionTotal() ?></th>
+												<th> </th>
+											</tr>	
+									<?php
 									}
-									?>
-										<tr class="text-center bg-secondary">
-											<th> TOTAL </th>
-											<th> </th>
-											<th> <?php echo $session1->getComissionTotal() ?></th>
-											<th> </th>
-										</tr>			
+									?>		
 								</tbody>  
 							</table>
 						

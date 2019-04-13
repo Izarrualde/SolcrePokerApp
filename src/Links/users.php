@@ -37,7 +37,7 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 
 $session = new ConnectAppPoker;
-$datosUsers = $session->getDatosUsers();
+$datosUsers = $session->getDatosUsersSession();
 //$datosBuyinSession = $session->getDatosBuyinSession();
 //$datosComissionSession = $session->getDatosComissionSession();
 //$datosDealerTipSession = $session->getDatosDealerTipSession();
@@ -93,6 +93,10 @@ foreach ($datosUsers as $user)
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<!--<script type="text/javascript" src=”js/jquery-3.4.0.min.js”> </script>-->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src=”js/bootstrap.min.js”> </script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -101,15 +105,32 @@ foreach ($datosUsers as $user)
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item"><a href="Session.php">Session</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Users</li>
 			  </ol>
 			</nav>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
+					<?php
+					if (isset($_GET["m"]))
+					{
+						switch ($_GET["m"]) 
+						{
+							case '1':
+								?>
+								<div class="alert alert-success">
+								<button type="button" class="close" data-dismiss="alert">x</button>
+									El usuario se ha eliminado exitosamente.
+								</div>
+								<?php
+								break;
+						}
+					}
+					?>
 					Users
 				</div>
 				<div class="card-body">
-					<section class="container row">
+					<section class="container row" style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-success">
@@ -123,25 +144,35 @@ foreach ($datosUsers as $user)
 									<th> horas jugadas </th>
 									<th> acciones </th>
 								</thead>
-								<tbody>
+								<tbody class="text-center">
 									<?php 
-									foreach ($session1->sessionUsers as $user) 
+									if (sizeof($session1->sessionBuyins)==0)
 									{
-									?>
-										<tr class="text-center">
-											<td> <?php echo $user->getId() ?>  </td>
-											<td> <?php echo $user->getIdUser() ?>  </td>
-											<td> <?php echo $user->getApproved() ?>  </td>
-											<td> <?php echo $user->getAccumulatedPoints() ?>  </td>
-											<td> <?php echo $user->getCashout() ?>  </td>
-											<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
-											<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
-											<td> <?php echo date_diff(date_create($user->getStart()), date_create($user->getEnd()))->format('%H:%M'); ?> </td>
-											<td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"> </i> </a></td>
+										?>
+										<tr>
+											<td colspan="9"> sin registros </td>
 										</tr>
 									<?php
+									} else
+									{
+										foreach ($session1->sessionUsers as $user) 
+										{
+											?>
+												<tr class="text-center">
+													<td> <?php echo $user->getId() ?>  </td>
+													<td> <?php echo $user->getIdUser() ?>  </td>
+													<td> <?php echo $user->getApproved() ?>  </td>
+													<td> <?php echo $user->getAccumulatedPoints() ?>  </td>
+													<td> <?php echo $user->getCashout() ?>  </td>
+													<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
+													<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
+													<td> <?php echo date_diff(date_create($user->getStart()), date_create($user->getEnd()))->format('%H:%M'); ?> </td>
+													<td> <a href="actions/editUser.php?id= <?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?id= <?php echo $user->getId(); ?>"> <i class="fas fa-trash-alt"> </i> </a></td>
+												</tr>
+											<?php
+										}
 									}
-									?>
+											?>
 							
 								</tbody>  
 							</table>

@@ -9,9 +9,9 @@
 
 </head>
 <body>
-	<div class="container-fluid">
+	<div class="container">
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-12">
 				<nav aria-label="breadcrumb">
 				  <ol class="breadcrumb">
 				    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
@@ -23,14 +23,13 @@
 						Visualizar datos
 					</div>
 					<div class="card-body">
-			<section class="container row">
-
-				<article class="col-md-8">
+			<section class="container row" >
+				<article class="col-md-8"  style="width: auto; margin: auto auto;">
 					<ul>
 						<br>
 						<br>
 						<br>
-						<a href="../../src/links/tips.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-hand-holding-usd"></i> tips </a> 
+						<a href="../../src/links/tips.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-hand-holding-usd"></i> tips </a>
 						<br>
 						<a href="../../src/links/comissions.php" class="btn btn-lg btn-block btn-success"> <i class="fas fa-dollar-sign"></i> comissions </a> 
 						<br>
