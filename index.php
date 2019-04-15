@@ -130,6 +130,18 @@ foreach ($datosUsers as $user)
 								<tr>
 									<td> miercoles </td>
 									<td> <a href="src/links/Session.php"> 03-04-19 </a> </td>
+									<?php
+									/*
+									$idsSessions = extractIdsSessions() : $array;
+									getSessionForId : array;
+									foreach ($idsSessions as $idSession) 
+									{
+										$session = getSessionForId($idSession);
+									}
+									*/
+									?>
+
+
 									<td> xxx</td>
 									<td> xxx </td>
 									<td> xxx</td>

@@ -1,3 +1,12 @@
+<?php
+
+//recibo por GET el numero de la ultima session
+//idSession= $_GET(pasar a entero) + 1   la variable idSession en las tablas debe ser un integer
+// cuando doy click en tip paso tips.php?idSession
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,13 +39,13 @@
 								<br>
 								<br>
 								<br>
-								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> new  <i class="fas fa-hand-holding-usd"></i> tips </a> 
+								<a href="../../src/links/newtips.php" class="btn btn-lg btn-block btn-danger"> <b>+<b>  <i class="fas fa-hand-holding-usd"></i> tips </a> 
 								<br>
-								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> new  <i class="fas fa-dollar-sign"></i> comissions </a> 
+								<a href="../../src/links/newcomissions.php" class="btn btn-lg btn-block btn-success"> <b>+<b>  <i class="fas fa-dollar-sign"></i> comissions </a> 
 								<br>
-								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> new  <i class="fas fa-money-bill"></i> buyins </a> 
+								<a href="../../src/links/newbuyins.php" class="btn btn-lg btn-block btn-secondary"> <b>+<b>  <i class="fas fa-money-bill"></i> buyins </a> 
 								<br>
-								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> new  <i class="fas fa-user-plus"></i> users </a>
+								<a href="../../src/links/newusers.php" class="btn btn-lg btn-block btn-info"> <b>+<b>  <i class="fas fa-user-plus"></i> users </a>
 								<br>
 							</ul>
 						</article>	

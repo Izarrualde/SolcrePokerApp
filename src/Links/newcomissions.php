@@ -49,7 +49,7 @@ if (isset($_POST['idSession']))
 					Ingresar Comision
 				</div>
 				<div class="card-body">
-					<section class="container row">
+					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
 								<div class="form-group has-success">
