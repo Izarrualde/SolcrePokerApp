@@ -49,7 +49,6 @@ foreach ($datosServiceTipSession as $serviceTip)
 {
 	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->hour, $serviceTip->service_tip);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -67,13 +66,11 @@ foreach ($datosServiceTipSession as $serviceTip)
 
 </head>
 <body>
-	
 	<div class="container">
 		<div class="col-md-12">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
-			    <li class="breadcrumb-item"><a href="Session.php">Session</a></li>
+			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Tips</li>
 			  </ol>
 			</nav>
@@ -103,13 +100,13 @@ foreach ($datosServiceTipSession as $serviceTip)
 						}
 					}
 					?>
-					Dealer Tips & Service Tips
+					(Dealer & Service) Tips
 				</div>
 				<div class="card-body">
 					<section class="container row"  style="width: auto; margin: auto auto;">
 						<article class="col-md-6">
 							<table class="table table-bordered table-hover table-condensed">
-								<thead>
+								<thead class="thead-dark">
 									<tr class="text-center bg-secondary">
 										<th colspan="3"> DEALER </th>
 										<th> <?php if (isset($datosSessionDealerTips[0])) 
@@ -147,7 +144,7 @@ foreach ($datosServiceTipSession as $serviceTip)
 										<?php
 										}
 										?>
-										<tr class="text-center bg-secondary">
+										<tr class="text-center bg-dark text-white">
 											<th> TOTAL </th>
 											<th> </th>
 											<th> <?php echo $session1->getDealerTipTotal() ?> </th>
@@ -162,8 +159,8 @@ foreach ($datosServiceTipSession as $serviceTip)
 
 						<aside class="col-md-6">
 							<table class="table table-bordered table-hover table-condensed">
-								<thead >
-									<tr class="text-center bg-secondary">
+								<thead class="thead-dark">
+									<tr class="text-center">
 										<th colspan="3"> SERVICE </th>
 										<th> <?php if (isset($datosSessionServiceTips[0])) 
 											 {
@@ -202,7 +199,7 @@ foreach ($datosServiceTipSession as $serviceTip)
 										<?php
 										}
 										?>
-											<tr class="text-center bg-secondary">
+											<tr class="text-center bg-dark text-white">
 												<th> TOTAL </th>
 												<th> </th>
 												<th> <?php echo $session1->getServiceTipTotal(); ?> </th>
@@ -218,7 +215,7 @@ foreach ($datosServiceTipSession as $serviceTip)
 					<table class="table table-bordered table-hover table-condensed">
 						<thead>
 							<td colspan="8">
-								<a href="newtips.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new tips </a>
+								<a href="newtips.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 							</td>
 						</thead>
 					</table>

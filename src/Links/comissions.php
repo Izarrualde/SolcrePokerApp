@@ -6,35 +6,16 @@ include "../Entity/ComisionSession.php";
 include "../Entity/BuyinSession.php";
 include "../Entity/DealerTipSession.php";
 include "../Entity/ServiceTipSession.php";
-
 include "../MySQL/Connect.php";
 include "../MySQL/ConnectAppPoker.php";
-
-//include "src/Exception/UserAlreadyAddedException.php";
-//include "src/Exception/SessionFullException.php";
-//include "src/Exception/InsufficientBuyinException.php";
 //include "src/Exception/PlayerNotFoundException.php";
 //include "src/Exception/ComissionAlreadyAddedException.php";
-//include "src/Exception/ServiceTipAlreadyAddedException.php";
-//include "src/Exception/DealerTipAlreadyAddedException.php";
-
 Use \Solcre\PokerApp\Entity\SessionEntity;
-//Use \Solcre\PokerApp\Entity\UserSession;
-//Use \Solcre\PokerApp\Entity\BuyinSession;
 Use \Solcre\PokerApp\Entity\ComissionSession;
-//Use \Solcre\PokerApp\Entity\DealerTipSession;
-//Use \Solcre\PokerApp\Entity\ServiceTipSession;
-
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
-//Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
-//Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
-//Use \Solcre\PokerApp\Exception\SessionFullException;
 //Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
-//Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
-//Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
-
 
 $session = new ConnectAppPoker;
 
@@ -69,27 +50,21 @@ foreach ($datosComissionsSession as $comission)
 		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
-				<li class="breadcrumb-item"><a href="Session.php">Session</a></li>
-			    <li class="breadcrumb-item active" aria-current="page">Comissions</li>
+			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Comisiones</li>
 			  </ol>
 			</nav>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
-					if (isset($_GET["m"]))
+					if (isset($_GET["m"]) and $_GET["m"]==1)
 					{
-						switch ($_GET["m"]) 
-						{
-							case '1':
-								?>
-								<div class="alert alert-success">
-								<button type="button" class="close" data-dismiss="alert">x</button>
-									La comisión se ha eliminado exitosamente.
-								</div>
-								<?php
-								break;
-						}
+						?>
+						<div class="alert alert-success">
+						<button type="button" class="close" data-dismiss="alert">x</button>
+						La comisión se ha eliminado exitosamente.
+						</div>
+					<?php
 					}
 					?>
 					Comissions
@@ -97,9 +72,8 @@ foreach ($datosComissionsSession as $comission)
 				<div class="card-body">
 					<section class="container row">
 						<article class="col-md-9"  style="width: auto; margin: auto auto;">
-							
 							<table class="table table-bordered table-hover table-condensed">
-								<thead class="text-center bg-secondary">
+								<thead class="thead-dark text-center bg-secondary">
 									<tr>
 										<th colspan="3"> Comission </th>
 										<th> <?php if (isset($datosSessionComissions[0])) 
@@ -133,12 +107,12 @@ foreach ($datosComissionsSession as $comission)
 												<td> <?php echo $comission->getId() ?> </td>
 												<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
 												<td> <?php echo $comission->getComission() ?> </td>
-												<td> <a href="actions/editComission.php?id= <?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
+												<td> <a href="actions/editComission.php?id=<?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
 											</tr>
 										<?php
 										}
 										?>
-											<tr class="text-center bg-secondary">
+											<tr class="text-center bg-dark text-white">
 												<th> TOTAL </th>
 												<th> </th>
 												<th> <?php echo $session1->getComissionTotal() ?></th>
@@ -149,7 +123,7 @@ foreach ($datosComissionsSession as $comission)
 									?>		
 											<tr>
 												<td colspan="8">
-												<a href="newcomissions.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new comission </a>
+												<a href="newcomissions.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 												</td>
 											</tr>
 								</tbody>  

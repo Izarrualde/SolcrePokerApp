@@ -7,10 +7,8 @@ include "src/Entity/ComisionSession.php";
 include "src/Entity/BuyinSession.php";
 include "src/Entity/DealerTipSession.php";
 include "src/Entity/ServiceTipSession.php";
-
 include "src/MySQL/Connect.php";
 include "src/MySQL/ConnectAppPoker.php";
-
 include "src/Exception/UserAlreadyAddedException.php";
 include "src/Exception/SessionFullException.php";
 include "src/Exception/InsufficientBuyinException.php";
@@ -25,10 +23,8 @@ Use \Solcre\PokerApp\Entity\BuyinSession;
 Use \Solcre\PokerApp\Entity\ComissionSession;
 Use \Solcre\PokerApp\Entity\DealerTipSession;
 Use \Solcre\PokerApp\Entity\ServiceTipSession;
-
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
-
 Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
 Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
 Use \Solcre\PokerApp\Exception\SessionFullException;
@@ -36,30 +32,13 @@ Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
 Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
 Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
-
 $session = new ConnectAppPoker;
-
 $datosUsers = $session->getDatosSessionUsers();
 $datosBuyinSession = $session->getDatosSessionBuyins();
 $datosComissionSession = $session->getDatosSessionComissions();
 $datosDealerTipSession = $session->getDatosSessionDealerTips();
 $datosServiceTipSession = $session->getDatosSessionServiceTips();
-
 $datosSessions = $session->getDatosSessions();
-
-echo "<br>";
-print_r($datosSessions);
-echo "<br>";
-print $datosSessions[0]->start_time_real;
-if (empty($datosSessions[0]->start_time_real))
-{
-	echo "es vacia";
-} else
-{
-	echo "no es vacia";
-	print ($datosSessions[0]->start_time_real);
-}
-echo "<br>";
 
 
 if (!empty($_POST))
@@ -67,7 +46,6 @@ if (!empty($_POST))
 	$session->insertSession();
 	$mensaje = "La sesion se agregó exitosamente";
 }
-
 
 $session1 = new SessionEntity;
 
@@ -121,7 +99,7 @@ foreach ($datosUsers as $user)
 		<div class="col-md-12">
 			<nav aria-label="breadcrumb">
 				 <ol class="breadcrumb">
-				    <li class="breadcrumb-item active" aria-current="page">Home</li>
+				    <li class="breadcrumb-item active" aria-current="page">Inicio</li>
 				  </ol>
 			</nav>
 			<div class="card">
@@ -145,7 +123,7 @@ foreach ($datosUsers as $user)
 					<section class="container row"  style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 						<table class="table table-bordered table-hover text-center">
-							<thead class="text-center bg-primary">
+							<thead class="text-center bg-dark text-white">
 								<th> Id </th>
 								<th> Fecha </th>
 								<th> Dia </th>
@@ -193,7 +171,7 @@ foreach ($datosUsers as $user)
 									</tr>
 									<tr>
 										<td colspan="7">
-										<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new session </a>
+										<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 										</td>
 									</tr>
 							</tbody>
@@ -202,6 +180,9 @@ foreach ($datosUsers as $user)
 					</section>
 				</div>
 			</div>
+		<br>
+		<br>
+		<br>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					Bloque Datos Sesion
@@ -210,98 +191,12 @@ foreach ($datosUsers as $user)
 					<section class="container row"  style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 
-
 						</article>
-					</section>
-				</div>
-
-
-
-		</div>
-	</div>
-
-
-
-
-
-			<br>
-			<br>
-			<br> 
-			<!--
-			<div class="card">
-				<div class="card-header bg-primary text-white">
-					SESIONES
-				</div>
-				<div class="card-body">
-					<section class="container row"  style="width: auto; margin: auto auto;">
-						<article class="col-md-12">
-						<table class="table table-bordered table-hover text-center">
-							<thead class="text-center bg-danger">
-								<th> IdSession </th>
-								<th> Fecha </th>
-								<th> Inicio </th>
-								<th> Fin </th>
-								<th> Horas Jugadas </th>
-								<th> Total Jugado </th>
-							</thead>
-							<tbody>
-								<tr>
-									<td> miercoles </td>
-									<td> <a href="src/links/Session.php"> 03-04-19 </a> </td>
-									<?php
-									/*
-									$idsSessions = getIdsSessions() : $array;
-									getSessionForId()= : array;
-									foreach ($idsSessions as $idSession) 
-									{
-										imprimir en pantalla: idSession, fecha, start, end, total jugado
-
-										$session = getSessionForId($idSession);
-									}
-									*/
-									?>
-
-
-									<td> xxx</td>
-									<td> xxx </td>
-									<td> xxx</td>
-									<td> xxx </td>
-								</tr>
-								<tr>
-									<td> jueves </td>
-									<td> 04-04-19 </td>
-									<td> xxx </td>
-									<td> xxx </td>
-									<td> xxx </td>
-									<td> xxx </td>							
-								</tr>
-								<tr>
-									<td> viernes </td>
-									<td> 04-04-19 </td>
-									<td> xxx </td>
-									<td> xxx </td>
-									<td> xxx </td>
-									<td> xxx </td>
-								</tr>
-
-							</tbody>
-						</table>
-
-						<br>
-						<br>
-						<br>
-
-						<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new session </a>								
-						</article>	
 					</section>
 				</div>
 			</div>
 		</div>
-		-->
 	</div>
-
-
-		
 </body>
 
 

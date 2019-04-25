@@ -1,55 +1,23 @@
 <?php
 include "../Entity/SessionEntity.php";
-//include "src/Entity/UserEntity.php";
-//include "src/Entity/UserSession.php";
-//include "src/Entity/ComisionSession.php";
 include "../Entity/BuyinSession.php";
-//include "src/Entity/DealerTipSession.php";
-//include "src/Entity/ServiceTipSession.php";
-
 include "../MySQL/Connect.php";
 include "../MySQL/ConnectAppPoker.php";
-
-//include "src/Exception/UserAlreadyAddedException.php";
-//include "src/Exception/SessionFullException.php";
 //include "src/Exception/InsufficientBuyinException.php";
-//include "src/Exception/PlayerNotFoundException.php";
-//include "src/Exception/ComissionAlreadyAddedException.php";
-//include "src/Exception/ServiceTipAlreadyAddedException.php";
-//include "src/Exception/DealerTipAlreadyAddedException.php";
-
 Use \Solcre\PokerApp\Entity\SessionEntity;
-//Use \Solcre\PokerApp\Entity\UserSession;
 Use \Solcre\PokerApp\Entity\BuyinSession;
-//Use \Solcre\PokerApp\Entity\ComissionSession;
-//Use \Solcre\PokerApp\Entity\DealerTipSession;
-//Use \Solcre\PokerApp\Entity\ServiceTipSession;
-
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
-
 //Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
-//Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
-//Use \Solcre\PokerApp\Exception\SessionFullException;
-//Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
-//Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
-//Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
-
 
 $session = new ConnectAppPoker;
-
 $datosSessionBuyins = $session->getDatosSessionBuyins();
-
-
-
 $session1 = new SessionEntity;
-
 
 foreach ($datosSessionBuyins as $buyin) 
 {
 	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->session_id, $buyin->player_id, $buyin->amount_cash, $buyin->amount_credit, $buyin->currency, $buyin->hour, $buyin->approved);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -68,37 +36,31 @@ foreach ($datosSessionBuyins as $buyin)
 		<div class="col-md-10">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
-			    <li class="breadcrumb-item"><a href="Session.php">Session</a></li>
+			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Buyins</li>
 			  </ol>
 			</nav>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
-					if (isset($_GET["m"]))
+					if (isset($_GET["m"]) and ($_GET["m"]==1))
 					{
-						switch ($_GET["m"]) 
-						{
-							case '1':
-								?>
-								<div class="alert alert-success">
-								<button type="button" class="close" data-dismiss="alert">x</button>
-									El buyin se ha eliminado exitosamente.
-								</div>
-								<?php
-								break;
-						}
+						?>
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">x</button>
+							El buyin se ha eliminado exitosamente.
+						</div>
+						<?php
 					}
-					?>
+						?>
 					Buyins
 				</div>
 				<div class="card-body">
 					<section class="container row">
 						<article class="col-md-10" style="width: auto; margin: auto auto;">
 							<table class="table table-bordered table-hover table-condensed">
-								<thead class="text-center bg-success">
-									<tr class="bg-secondary">
+								<thead class="text-center bg-dark text-white">
+									<tr>
 										<th colspan="5"> Buyins </th>
 										<th colspan="3"> <?php if (isset($datosSessionBuyins[0])) 
 											 {
@@ -147,7 +109,7 @@ foreach ($datosSessionBuyins as $buyin)
 										?>
 											<tr>
 												<td colspan="8">
-												<a href="newbuyins.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new buyin </a>
+												<a href="newbuyins.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 												</td>
 											</tr>
 							

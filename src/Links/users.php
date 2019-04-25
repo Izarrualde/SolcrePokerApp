@@ -2,52 +2,25 @@
 include "../Entity/SessionEntity.php";
 //include "src/Entity/UserEntity.php";
 include "../Entity/UserSession.php";
-//include "src/Entity/ComisionSession.php";
-//include "src/Entity/BuyinSession.php";
-//include "src/Entity/DealerTipSession.php";
-//include "src/Entity/ServiceTipSession.php";
-
 include "../MySQL/Connect.php";
 include "../MySQL/ConnectAppPoker.php";
-
 //include "src/Exception/UserAlreadyAddedException.php";
 //include "src/Exception/SessionFullException.php";
-//include "src/Exception/InsufficientBuyinException.php";
 //include "src/Exception/PlayerNotFoundException.php";
-//include "src/Exception/ComissionAlreadyAddedException.php";
-//include "src/Exception/ServiceTipAlreadyAddedException.php";
-//include "src/Exception/DealerTipAlreadyAddedException.php";
-
 Use \Solcre\PokerApp\Entity\SessionEntity;
 Use \Solcre\PokerApp\Entity\UserSession;
-//Use \Solcre\PokerApp\Entity\BuyinSession;
-//Use \Solcre\PokerApp\Entity\ComissionSession;
-//Use \Solcre\PokerApp\Entity\DealerTipSession;
-//Use \Solcre\PokerApp\Entity\ServiceTipSession;
-
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
-
-//Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
-//Use \Solcre\PokerApp\Exception\SessionFullException;
-//Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
-//Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
-//Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
-
 
 $session = new ConnectAppPoker;
 $datosUsers = $session->getDatosSessionUsers();
-
 $session1 = new SessionEntity;
 
 foreach ($datosUsers as $user) 
 {
 	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->user_id, $user->approved, $user->accumulated_points, $user->cashout, $user->start, $user->end);
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -62,43 +35,37 @@ foreach ($datosUsers as $user)
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src=”js/bootstrap.min.js”> </script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
 </head>
+
 <body>
 	<div class="container">
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
-			    <li class="breadcrumb-item"><a href="Session.php">Session</a></li>
-			    <li class="breadcrumb-item active" aria-current="page">Users</li>
+			    <li class="breadcrumb-item"><a href="../../index.php">inicio</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
 			  </ol>
 			</nav>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
-					if (isset($_GET["m"]))
+					if (isset($_GET["m"]) and ($_GET["m"])==1)
 					{
-						switch ($_GET["m"]) 
-						{
-							case '1':
-								?>
-								<div class="alert alert-success">
-								<button type="button" class="close" data-dismiss="alert">x</button>
-									El usuario se ha eliminado exitosamente.
-								</div>
-								<?php
-								break;
-						}
+						?>
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">x</button>
+								El usuario se ha eliminado exitosamente.
+						</div>
+					<?php
 					}
 					?>
-					Users
+					Usuarios
 				</div>
 				<div class="card-body">
 					<section class="container row" style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 							<table class="table table-bordered table-hover table-condensed">
-								<thead class="text-center bg-success">
+								<thead class="text-center bg-dark text-white">
 									<th> id </th>
 									<th> idUser </th>
 									<th> approved </th>
@@ -142,7 +109,7 @@ foreach ($datosUsers as $user)
 											?>
 												<tr>
 													<td colspan="9">
-													<a href="newusers.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new user</a>
+													<a href="newusers.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 													</td>
 												</tr>
 							
