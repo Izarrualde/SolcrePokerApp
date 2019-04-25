@@ -22,7 +22,7 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosComissionSessionForId($_GET["id"]);
+$datos = $session->getDatosSessionComissionForId($_GET["id"]);
 
 if (sizeof($datos)==0)
 {
@@ -68,7 +68,7 @@ if (isset($_POST["id"]))
 								
 								<div class="form-group">
 									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->idSession; ?>">
+									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->session_id; ?>">
 
 								</div>
 

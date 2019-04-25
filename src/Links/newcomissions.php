@@ -25,7 +25,7 @@ if (isset($_POST['idSession']))
 	<mark> <i class="far fa-grin-alt"></i> <code> La comisión se ingresó exitosamente </code></mark>
 
 	<br> <br>
-	<a class="btn btn-primary" href="newsession.php"> volver </a>
+	<a class="btn btn-primary" href="comissions.php"> volver </a>
 	
 	<?php
 	exit;
@@ -52,20 +52,14 @@ if (isset($_POST['idSession']))
 					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
-								<div class="form-group has-success">
-									<label class="sr-only" for="id" class="control-label">  Id: </label>
-									<input class="form-control" name="id" id="id" type="text" placeholder="id" required="true" autofocus="true">
-								</div>
-								
-								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" placeholder="IdSession" required="true">
 
-								</div>
+									<input type="hidden" class="form-control" name="id" id="id" type="text" required="true" value="null">
+								
+									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hour: </label>
-									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 

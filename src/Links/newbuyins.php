@@ -24,7 +24,7 @@ if (isset($_POST['idSession']))
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El buyin se ingresó exitosamente </code></mark>
 	<br> <br>
-	<a class="btn btn-primary" href="newsession.php"> volver </a>
+	<a class="btn btn-primary" href="buyins.php"> volver </a>
 	
 	<?php
 	exit;
@@ -53,19 +53,17 @@ if (isset($_POST['idSession']))
 					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
-								<div class="form-group">
-									<label class="sr-only" for="id">  Id: </label>
-									<input class="form-control" name="id" id="id" type="text" placeholder="id" required="true" autofocus="true">
-								</div>
+
+									<input class="form-control" name="id" id="id" type="hidden" required="true" value="null">
 								
-								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" placeholder="IdSession" required="true">
-								</div>
+
+									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
+
+
 
 								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idPlayer" id="idSession" type="text" placeholder="IdPlayer" required="true">
+									<label class="sr-only" for="idSession"> IdPlayer: </label>
+									<input class="form-control" name="idPlayer" id="idPlayer" type="text" placeholder="IdPlayer" required="true">
 								</div>
 
 								<div class="form-group">
@@ -80,7 +78,7 @@ if (isset($_POST['idSession']))
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 

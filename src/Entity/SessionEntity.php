@@ -11,7 +11,7 @@ use Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
 class SessionEntity 
 {
-	protected $idSession;
+	protected $idSession; //solo id
 	protected $date;
 	protected $title;
 	protected $description;

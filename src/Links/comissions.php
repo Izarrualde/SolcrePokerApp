@@ -37,55 +37,16 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 
 $session = new ConnectAppPoker;
-//$datosUsers = $session->getDatosUsers();
-//$datosBuyinSession = $session->getDatosBuyinSession();
-$datosComissionSession = $session->getDatosComissionSession();
-//$datosDealerTipSession = $session->getDatosDealerTipSession();
-//$datosServiceTipSession = $session->getDatosServiceTipSession();
-//var_dump($datos);
 
-
-
-
-
-// hasta aca exhibi datos proveniente de mysql, pero no hidrate objetos, esa informacion no quedo incluida en mis objetos, solo en variables array que cree temporalmente.
-
-//hidratar objetos
-// quiero crear un objeto de tipo SessionEntiry y en el almacenar toda la informacion de la sesion
+$datosComissionsSession = $session->getDatosSessionComissions();
 
 $session1 = new SessionEntity;
 
-//agregar dealerTipSession a la session1, $session1->sessionDealerTips es un array de objetos del tipo DealerTipSession
-//=> debo hidratar los objetos DealerTipSession, cada entrada de ese array es una linea de la tabla dealertipsession
-
-/*
-foreach ($datosDealerTipSession as $dealerTip) 
+foreach ($datosComissionsSession as $comission) 
 {
-	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->idSession, $dealerTip->hour, $dealerTip->dealerTip);
+	$session1->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->hour, $comission->comission);
 }
 
-foreach ($datosServiceTipSession as $serviceTip) 
-{
-	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->idSession, $serviceTip->hour, $serviceTip->servicetip);
-}
-*/
-
-foreach ($datosComissionSession as $comission) 
-{
-	$session1->sessionComissions[] = new ComissionSession($comission->id, $comission->idSession, $comission->hour, $comission->comission);
-}
-
-/*
-foreach ($datosBuyinSession as $buyin) 
-{
-	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->idSession, $buyin->idPlayer, $buyin->amountCash, $buyin->amountCredit, $buyin->currency, $buyin->hour, $buyin->approved);
-}
-
-foreach ($datosUsers as $user) 
-{
-	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->idUser, $user->approved, $user->accumulatedPoints, $user->cashout, $user->start, $user->end);
-}
-*/
 ?>
 
 <!DOCTYPE html>
@@ -141,16 +102,16 @@ foreach ($datosUsers as $user)
 								<thead class="text-center bg-secondary">
 									<tr>
 										<th colspan="3"> Comission </th>
-										<th> <?php if (isset($datosComissionSession[0])) 
+										<th> <?php if (isset($datosSessionComissions[0])) 
 											 {
-											 	echo date_format(date_create($datosComissionSession[0]->hour), 'd-m-y');
+											 	echo date_format(date_create($datosSessionComissions[0]->hour), 'd-m-y');
 											 } ?> </th>
 									</tr>
 									<tr class="bg-success">
 										<th> id </th>
 										<th> hour</th>
 										<th> comisision </th>	
-										<th> acciones </th>						
+										<th> actions </th>						
 									</tr>
 
 								</thead>
@@ -172,7 +133,7 @@ foreach ($datosUsers as $user)
 												<td> <?php echo $comission->getId() ?> </td>
 												<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
 												<td> <?php echo $comission->getComission() ?> </td>
-												<td> <a href="actions/editComission.php?id= <?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteComission.php?id= <?php echo $comission->getId(); ?>"> <i class="fas fa-trash-alt"> </i> </a></td>
+												<td> <a href="actions/editComission.php?id= <?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
 											</tr>
 										<?php
 										}
@@ -186,6 +147,11 @@ foreach ($datosUsers as $user)
 									<?php
 									}
 									?>		
+											<tr>
+												<td colspan="8">
+												<a href="newcomissions.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new comission </a>
+												</td>
+											</tr>
 								</tbody>  
 							</table>
 						
@@ -201,7 +167,7 @@ foreach ($datosUsers as $user)
 
 
 
-
+		<script src="../../js/functions.js"></script>
 		<script src=”/../../js/jquery.js”> </script>
 		<script src=”/../../js/bootstrap.min.js”> </script>
 		

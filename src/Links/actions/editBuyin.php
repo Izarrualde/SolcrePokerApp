@@ -22,7 +22,7 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosBuyinSessionForId($_GET["id"]);
+$datos = $session->getDatosSessionBuyinById($_GET["id"]);
 
 if (sizeof($datos)==0)
 {
@@ -67,22 +67,22 @@ if (isset($_POST["id"]))
 								
 								<div class="form-group">
 									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->idSession; ?>">
+									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->session_id; ?>">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="idPlayer"> IdPlayer: </label>
-									<input class="form-control" name="idPlayer" id="idPlayer" type="text" placeholder="IdPlayer" required="true" value="<?php echo $datos[0]->idPlayer; ?>">
+									<input class="form-control" name="idPlayer" id="idPlayer" type="text" placeholder="IdPlayer" required="true" value="<?php echo $datos[0]->player_id; ?>">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> amountCash: </label>
-									<input class="form-control" name="amountCash" id="amountCash" type="text" placeholder="amountCash" required="true" value="<?php echo $datos[0]->amountCash; ?>">
+									<input class="form-control" name="amountCash" id="amountCash" type="text" placeholder="amountCash" required="true" value="<?php echo $datos[0]->amount_cash; ?>">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCredit"> amountCredit: </label>
-									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="amountCredit" required="true" value="<?php echo $datos[0]->amountCredit; ?>">
+									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="amountCredit" required="true" value="<?php echo $datos[0]->amount_credit; ?>">
 								</div>
 
 								<div class="form-group">

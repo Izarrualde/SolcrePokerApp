@@ -22,7 +22,7 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosServiceTipSessionForId($_GET["id"]);
+$datos = $session->getDatosSessionServiceTipForId($_GET["id"]);
 
 if (sizeof($datos)==0)
 {
@@ -67,19 +67,19 @@ if (isset($_POST["id"]))
 								
 								<div class="form-group">
 									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->idSession; ?>">
+									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->session_id; ?>">
 
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hora" id="hora" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
+									<input class="form-control" name="hour" id="hora" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="servicetip"> serviceTip: </label>
-									<input class="form-control" name="servicetip" id="servicetip" type="text" placeholder="servicetip" required="true" value="<?php echo $datos[0]->servicetip; ?>">
+									<input class="form-control" name="serviceTip" id="serviceTip" type="text" placeholder="serviceTip" required="true" value="<?php echo $datos[0]->service_tip; ?>">
 								</div>
 
 								<div class="form-group">

@@ -19,21 +19,17 @@ if (isset($_POST['idUser']))
 {
 	$session = new ConnectAppPoker;
 	$session->insertUser();
-	//header();
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El usuario se ingresó exitosamente </code></mark>
 	<br> <br>
-	<a class="btn btn-primary" href="newsession.php"> volver </a>
+	<a class="btn btn-primary" href="users.php"> volver </a>
 	
+
 	<?php
 	exit;
 }
 
 ?>
-
-
-
-
 
 <body>
 	<div class="container">
@@ -52,14 +48,14 @@ if (isset($_POST['idUser']))
 					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
-								<div class="form-group">
-									<label class="sr-only" for="id">  Id: </label>
-									<input class="form-control" name="id" id="id" type="text" placeholder="id" autofocus="true" required="true">
-								</div>
+
+									<input class="form-control" name="id" id="id" type="hidden" value="null" required="true">
+
+									<input class="form-control" name="idSession" id="idSession" type="hidden" value="null" required="true" value="<?php echo $_GET['id']; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="idUser"> IdUser: </label>
-									<input class="form-control" name="idUser" id="idUser" type="text" placeholder="IdUser" required="true">
+									<input class="form-control" name="idUser" id="idUser" type="text" placeholder="IdUser" required="true" autofocus="true">
 								</div>
 
 								<div class="form-group">
@@ -74,14 +70,14 @@ if (isset($_POST['idUser']))
 
 								<div class="form-group">
 									<label class="sr-only" for="horaInicio"> hora inicio: </label>
-									<input class="form-control" name="start" id="horaInicio" type="datetime-local" placeholder="hora de inicio" required="true">
-									<small id="horaInicio" class="form-tet text-muted"> Fecha y hora de inicio </small>
+									<input class="form-control" name="start" id="start" type="datetime-local" placeholder="hora de inicio" required="true">
+									<small id="end" class="form-tet text-muted"> Fecha y hora de inicio </small>
 								</div>
 
 								<div class="form-group">
-									<label class="sr-only" for="horaFin"> hora fin: </label>
-									<input class="form-control" name="end" id="horaFin" type="datetime-local" placeholder="hora de fin" required="true">
-									<small id="horaFin" class="form-tet text-muted"> Fecha y hora de finalización </small>
+									<label class="sr-only" for="end"> hora fin: </label>
+									<input class="form-control" name="end" id="end" type="datetime-local" placeholder="hora de fin" required="true">
+									<small id="end" class="form-tet text-muted"> Fecha y hora de finalización </small>
 								</div>
 
 								<div class="form-group">

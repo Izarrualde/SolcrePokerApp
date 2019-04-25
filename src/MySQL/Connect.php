@@ -7,7 +7,7 @@ abstract class Connect
 
 	public function connection()
 	{
-		$this->mysqli = new \mysqli("localhost", "root", "", "appPoker");
+		$this->mysqli = new \mysqli("localhost", "root", "", "apppoker");
 		return $this->mysqli;
 	}
 

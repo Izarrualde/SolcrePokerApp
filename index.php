@@ -38,48 +38,65 @@ Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
 
 $session = new ConnectAppPoker;
-$datosUsers = $session->getDatosUsersSession();
-$datosBuyinSession = $session->getDatosBuyinSession();
-$datosComissionSession = $session->getDatosComissionSession();
-$datosDealerTipSession = $session->getDatosDealerTipSession();
-$datosServiceTipSession = $session->getDatosServiceTipSession();
-//var_dump($datos);
 
-// hasta aca exhibi datos proveniente de mysql, pero no hidrate objetos, esa informacion no quedo incluida en mis objetos, solo en variables array que cree temporalmente.
+$datosUsers = $session->getDatosSessionUsers();
+$datosBuyinSession = $session->getDatosSessionBuyins();
+$datosComissionSession = $session->getDatosSessionComissions();
+$datosDealerTipSession = $session->getDatosSessionDealerTips();
+$datosServiceTipSession = $session->getDatosSessionServiceTips();
 
-//hidratar objetos
-// quiero crear un objeto de tipo SessionEntiry y en el almacenar toda la informacion de la sesion
+$datosSessions = $session->getDatosSessions();
+
+echo "<br>";
+print_r($datosSessions);
+echo "<br>";
+print $datosSessions[0]->start_time_real;
+if (empty($datosSessions[0]->start_time_real))
+{
+	echo "es vacia";
+} else
+{
+	echo "no es vacia";
+	print ($datosSessions[0]->start_time_real);
+}
+echo "<br>";
+
+
+if (!empty($_POST))
+{
+	$session->insertSession();
+	$mensaje = "La sesion se agregó exitosamente";
+}
+
 
 $session1 = new SessionEntity;
 
-//agregar dealerTipSession a la session1, $session1->sessionDealerTips es un array de objetos del tipo DealerTipSession
-//=> debo hidratar los objetos DealerTipSession, cada entrada de ese array es una linea de la tabla dealertipsession
-
+/*
 foreach ($datosDealerTipSession as $dealerTip) 
 {
-	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->idSession, $dealerTip->hour, $dealerTip->dealerTip);
+	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->hour, $dealerTip->dealer_tip);
 }
 
 foreach ($datosServiceTipSession as $serviceTip) 
 {
-	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->idSession, $serviceTip->hour, $serviceTip->servicetip);
+	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->hour, $serviceTip->service_tip);
 }
 
 foreach ($datosComissionSession as $comission) 
 {
-	$session1->sessionComissions[] = new ComissionSession($comission->id, $comission->idSession, $comission->hour, $comission->comission);
+	$session1->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->hour, $comission->comission);
 }
 
 foreach ($datosBuyinSession as $buyin) 
 {
-	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->idSession, $buyin->idPlayer, $buyin->amountCash, $buyin->amountCredit, $buyin->currency, $buyin->hour, $buyin->approved);
+	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->session_id, $buyin->player_id, $buyin->amount_cash, $buyin->amount_credit, $buyin->currency, $buyin->hour, $buyin->approved);
 }
 
 foreach ($datosUsers as $user) 
 {
-	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->idUser, $user->approved, $user->accumulatedPoints, $user->cashout, $user->start, $user->end);
+	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->user_id, $user->approved, $user->accumulated_points, $user->cashout, $user->start, $user->end);
 }
-
+*/
 
 ?>
 
@@ -96,20 +113,121 @@ foreach ($datosUsers as $user)
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<!--<script src=”js/bootstrap.min.js”> </script>-->
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+	<script src="js/functions.js"></script>
 
 </head>
 <body>
 	<div class="container">
-		<div class="col-md-8">
+		<div class="col-md-12">
 			<nav aria-label="breadcrumb">
 				 <ol class="breadcrumb">
 				    <li class="breadcrumb-item active" aria-current="page">Home</li>
 				  </ol>
 			</nav>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					<?php
+					if ((isset($_POST["id"])) and (isset($mensaje)))
+					{
+					?>
+					<div class="alert alert-success">
+						<button type="button" class="close" data-dismiss="alert">x</button>
+							<?php echo $mensaje; ?>
+						</div>
+						<?php
+					}
+					?>
 
-		
 
+					Listado Sesiones
+				</div>
+				<div class="card-body">
+					<section class="container row"  style="width: auto; margin: auto auto;">
+						<article class="col-md-12">
+						<table class="table table-bordered table-hover text-center">
+							<thead class="text-center bg-primary">
+								<th> Id </th>
+								<th> Fecha </th>
+								<th> Dia </th>
+								<th> Descrip. </th>
+								<th> inicio </th>
+								<th> fin </th>
+								<th> Acciones</th>
+							</thead>
+							<tbody>
+									<?php 
+									foreach ($datosSessions AS $thisSession) 
+									{
+									?>
+									<tr>
+											<td> <?php echo $thisSession->id; ?>  </td>
+											<td> <?php echo date_format(date_create($thisSession->date), 'd-m-Y'); ?> </td>
+											<td> <?php if ($thisSession->date != '0000-00-00 00:00:00') 
+												       {
+												       		echo date_format(date_create($thisSession->date), 'l');
+												       } 
+												 ?> 
+											</td>
+											<td> <?php echo $thisSession->description; ?> </td>
+											<td> <?php 
+												 if (($thisSession->start_time_real) != '0000-00-00 00:00:00') 
+												 	echo substr($thisSession->start_time_real, 11, 5) ; 
+												 ?> 
+											</td>
+											<td> <?php 
+												 if (($thisSession->start_time_real) != '0000-00-00 00:00:00')
+												 	echo substr($thisSession->end_time, 11, 5) ; 
+												 ?> 
+											</td>
+											<td> 
+											
+												<a href="src/links/tips.php?id=<?php echo $thisSession->id; ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
+												<a href="src/links/comissions.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
+												<a href="src/links/buyins.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
+												<a href="src/links/users.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
+
+											</td>
+											<?php
+										}
+										?>
+									</tr>
+									<tr>
+										<td colspan="7">
+										<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-dark"> <i class="fas fa-plus"></i> new session </a>
+										</td>
+									</tr>
+							</tbody>
+						</table>
+					    </article>
+					</section>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Bloque Datos Sesion
+				</div>
+				<div class="card-body">
+					<section class="container row"  style="width: auto; margin: auto auto;">
+						<article class="col-md-12">
+
+
+						</article>
+					</section>
+				</div>
+
+
+
+		</div>
+	</div>
+
+
+
+
+
+			<br>
+			<br>
+			<br> 
+			<!--
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					SESIONES
@@ -132,10 +250,12 @@ foreach ($datosUsers as $user)
 									<td> <a href="src/links/Session.php"> 03-04-19 </a> </td>
 									<?php
 									/*
-									$idsSessions = extractIdsSessions() : $array;
-									getSessionForId : array;
+									$idsSessions = getIdsSessions() : $array;
+									getSessionForId()= : array;
 									foreach ($idsSessions as $idSession) 
 									{
+										imprimir en pantalla: idSession, fecha, start, end, total jugado
+
 										$session = getSessionForId($idSession);
 									}
 									*/
@@ -177,7 +297,7 @@ foreach ($datosUsers as $user)
 				</div>
 			</div>
 		</div>
-	
+		-->
 	</div>
 
 
@@ -186,190 +306,3 @@ foreach ($datosUsers as $user)
 
 
 </html>
-
-
-
-
-
-
-<?php
-//var_dump($session1->sessionDealerTips);
-//$session1"->sessionDealerTips[] = 
-
-
-
-//$session1->sessionServiceTips =
-//$session1->sessionUsers =
-//$session1->sessionComissions =
-//$session1->sessionBuyins = 
-
-
-
-/*
-// variables inicializadas para crear una instancia de tipo SessionEntity
-$idSession = 93;
-$date = "25/03/2019";
-$title = null;
-$description = null;
-$photo = null;
-$seats = 9;
-$seatsWaiting = 0;
-$reserveWaiting = 0;
-$startTime = "18.00";
-$starTimeReal = "20.00";
-$endTime = "03.00";
-$comission = 0;
-$dealerTip = 0;
-$serviceTip = 0;
-
-*/
-
-/*
-$session = new SessionEntity($idSession, $date, $title, $description, $photo, $seats, $seatsWaiting, $reserveWaiting, $startTime, $starTimeReal, $endTime, $comission, $dealerTip, $serviceTip);
-
-echo "-----------------------------------------------------------------------------------------------------"."\n";
-
-
-
-$usersSession[] = new UserSession("Destri", $session, 1, true, 0, 1500, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Nazar", $session, 2, true, 0, 200, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Zunino", $session, 3, true, 0, 1000, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Galle", $session, 4, true, 0, 0, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Cugurra", $session, 5, true, 0, 1000, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Altman", $session, 6, true, 0, 3500, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Guzman", $session, 7, true, 0, 1100, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-$usersSession[] = new UserSession("Meyer", $session, 8, true, 0, 1000, "15-03-2019 20:00:00", "16-03-2019 02:30:00");
-
-
-
-$session->addUsers($usersSession);
-
-
-
-$buyins[] = new BuyinSession(1, 93, "Destri", 500, 50, "usd", "19.00", true);
-$buyins[] = new BuyinSession(11, 93, "Destri", 500, 0, "usd", "20.00", true);
-//$buyins[] = new BuyinSession(2, 93, "Destri", 2000, 0, "usd", "20.00", true);
-//$buyins[] = new BuyinSession(3, 93, "Nazar", 1000, 1000, "usd", "19.00", true);
-//$buyins[] = new BuyinSession(4, 93, "Zunino", 500, 0, "usd", "19.00", true);
-//$buyins[] = new BuyinSession(5, 93, "Galle", 2000, 3000, "usd", "19.00", true);
-//$buyins[] = new BuyinSession(6, 93, "Cugurra", 2000, 0, "usd", "19.00", true);
-//$buyins[] = new BuyinSession(7, 93, "Altman", 200, 600, "usd", "19.00", true);
-//$buyins[] = new BuyinSession(8, 93, "Guzman", 0, 500, "usd", "19.00", true);
-//$buyins[] = new BuyinSession(9, 93, "Meyer", 1000, 0, "usd", "19.00", true);
-
-
-$session->addBuyins($buyins);
-
-
-//var_dump($session->sessionBuyins);
-
-
-//echo $session->sessionUsers[0]->getCashin();
-
-
-$comissions[] = new ComissionSession(1, 93, "18.00", 90);
-$comissions[] = new ComissionSession(2, 93, "19.00", 60);
-$comissions[] = new ComissionSession(3, 93, "20.00", 30);
-$comissions[] = new ComissionSession(4, 93, "21.00", 40);
-$comissions[] = new ComissionSession(5, 93, "22.00", 60);
-$comissions[] = new ComissionSession(6, 93, "23.00", 60);
-$comissions[] = new ComissionSession(7, 93, "00.00", 50);
-$comissions[] = new ComissionSession(8, 93, "01.00", 70);
-$comissions[] = new ComissionSession(9, 93, "02.00", 40);
-$comissions[] = new ComissionSession(10, 93, "03.00", 100);
-
-
-$session-> addComissions($comissions);
-
-
-$dealerTips[] = new DealerTipSession(1, 93, "18.00", 30);
-$dealerTips[] = new DealerTipSession(2, 93, "19.00", 40);
-$dealerTips[] = new DealerTipSession(3, 93, "20.00", 40);
-$dealerTips[] = new DealerTipSession(4, 93, "21.00", 15);
-$dealerTips[] = new DealerTipSession(5, 93, "22.00", 20);
-$dealerTips[] = new DealerTipSession(6, 93, "23.00", 10);
-$dealerTips[] = new DealerTipSession(7, 93, "00.00", 30);
-$dealerTips[] = new DealerTipSession(8, 93, "01.00", 30);
-$dealerTips[] = new DealerTipSession(9, 93, "02.00", 10);
-$dealerTips[] = new DealerTipSession(10, 93, "03.00", 50);
-
-
-$session-> addDealerTips($dealerTips);
-
-//var_dump($dealerTips);
-//var_dump($session->sessionDealerTips);
-
-
-$serviceTips[] = new ServiceTipSession(1, 93, "18.00", 3516);
-$serviceTips[] = new ServiceTipSession(2, 93, "19.00", 0);
-$serviceTips[] = new ServiceTipSession(3, 93, "20.00", 5);
-$serviceTips[] = new ServiceTipSession(4, 93, "21.00", 8);
-$serviceTips[] = new ServiceTipSession(5, 93, "22.00", 6);
-$serviceTips[] = new ServiceTipSession(6, 93, "23.00", 9);
-$serviceTips[] = new ServiceTipSession(7, 93, "00.00", 8);
-$serviceTips[] = new ServiceTipSession(8, 93, "01.00", 7);
-$serviceTips[] = new ServiceTipSession(9, 93, "02.00", 6);
-$serviceTips[] = new ServiceTipSession(10, 93, "03.00", 10);
-
-
-$session-> addServiceTips($serviceTips);
-
-//var_dump($session->sessionServiceTips);
-
-//var_dump($session->sessionUsers[0]->start);
-
-//echo "-"."\n";
-echo "<br/>";
-$i = 1;
-foreach ($session->getSessionUsers() as $jugador) {
-	$date1 = date_create($jugador->getStart());
-	$date2 = date_create($jugador->getEnd());
-	$hours = date_diff($date1, $date2);
-	echo $i.")".$jugador->getId()." Cashin: ".$jugador->getCashin()."	"."cashout: ".$jugador->getCashout()."	resultado: ".$jugador->getResult()."	hours: ".$hours->format("%d:%H:%i")."<br/>";
-	$i++;
-}
-
-echo "<br/>"."Comision por hora"."<br/>";
-
-
-
-$comissionTotal = 0;
-foreach ($session->getSessionComissions() as $comission) {
-	echo $comission->getHour()."	"."usd"."	".$comission->getComission()."<br/>";
-	$comissionTotal += $comission->getComission();
-}
-echo "<br/>"."TOTAL 	".$comissionTotal."<br/>";
-
-//validar sesion
-
-echo "<br/>"."getTotalPlayed = ".$session->getTotalPlayed();
-echo "<br/>"."getTotalCashout = ".$session->getTotalCashout();
-echo "<br/>"."getComissionTotal = ".$session->getComissionTotal();
-echo "<br/>"."getDealerTipTotal = ".$session->getDealerTipTotal();
-echo "<br/>"."getServiceTipTotal = ".$session->getServiceTipTotal();
-
-
-
-
-echo "<br/>"."Propina Dealer"."<br/>";
-echo "<br/>";
-foreach ($session->getSessionDealerTips() as $tip) {
-	echo $tip->getHour()."	"."usd 	".$tip->getDealerTip()."<br/>";
-}
-echo "Total =	".$session->getDealerTipTotal()."<br/>";
-//echo "\n"."TOTAL 	".$PropinaTotal."\n";
-
-echo "<br/>"."Propina Servicio"."<br/>";
-echo "<br/>";
-foreach ($session->getSessionServiceTips() as $tip) {
-	echo $tip->getHour()."	"."usd 	".$tip->getServiceTip()."<br/>";
-}
-echo "Total =	".$session->getServiceTipTotal()."<br/>";
-
-echo "<br/>"."Validacion de Sesion:"."<br/>";
-if ($session->validateSession($session)) {
-	echo "sesion valida";
-	}	else {
-	echo "sesion no valida";
-}
-*/

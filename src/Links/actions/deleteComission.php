@@ -10,8 +10,8 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosComissionSessionForId($_GET["id"]);
-$datos1 = $session->getDatosComissionSession();
+$datos = $session->getDatosSessionComissionForId($_GET["id"]);
+$datos1 = $session->getDatosSessionComission();
 if (sizeof($datos)==0)
 {
 	echo "<br>";

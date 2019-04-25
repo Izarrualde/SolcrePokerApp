@@ -27,7 +27,7 @@ echo "<br>"."valor de mensaje2=".$mensaje2;
 
 if (isset($_POST['enviado']))
 {
-	if ((is_numeric($_POST['dealerTip'])) and (is_numeric($_POST['servicetip'])))
+	if ((is_numeric($_POST['dealerTip'])) and (is_numeric($_POST['serviceTip'])))
 	{
 		
 		echo "<br>"."dealerTip es visto como entero"."<br>";
@@ -36,13 +36,16 @@ if (isset($_POST['enviado']))
 		$session = new ConnectAppPoker;
 		$session->insertDealerTip();
 		$session->insertServiceTip();
+		echo "<br>";
+		var_dump($_POST);
+		echo "<br>";
 		//header();
 		?>
 
 		<mark> <i class="far fa-grin-alt"></i> <code> Los tips se ingresaron exitosamente </code></mark>
 
 		<br> <br>
-		<a class="btn btn-primary" href="newsession.php"> volver </a>
+		<a class="btn btn-primary" href="tips.php"> volver </a>
 	
 		<?php
 		exit;
@@ -55,7 +58,7 @@ if (isset($_POST['enviado']))
 				$mensaje1='dealerTip debe ser un valor entero';
 				break;
 		}
-		switch (!is_numeric($_POST['servicetip'])) 
+		switch (!is_numeric($_POST['serviceTip'])) 
 		{
 			case 'false':
 				$mensaje2='serviceTip debe ser un valor entero';
@@ -91,19 +94,22 @@ echo "<br>";
 					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
-								<div class="form-group">
-									<label class="sr-only" for="id">  Id: </label>
-									<input class="form-control" name="id" id="id" type="text" placeholder="id" autofocus="true" required="true" value="<?php if (($mensaje1!='') or ($mensaje1!='')) echo $_POST['id'];?>">
-								</div>
+
+									<input type="hidden" class="form-control" name="id" id="id" type="text"  required="true" value="<?php if (($mensaje1!='') or ($mensaje2!='')) echo $_POST['id'];?>">
 								
-								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" placeholder="IdSession" required="true" value="<?php if (($mensaje1!='') or ($mensaje1!='')) echo $_POST['idSession'];?>" >
-								</div>
+									<input type="hidden" class="form-control" name="idSession" id="idSession" type="text" placeholder="IdSession" required="true" value="<?php 
+									if (($mensaje1!='') or ($mensaje2!='')) 
+									{
+										echo $_POST['idSession'];
+									} else 
+									  {
+									  	echo $_GET['id'];
+									  }
+									  	?>" >
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hour: </label>
-									<input class="form-control" name="hora" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
 									<small id="hour" class="form-tet text-muted"> Hora </small>
 								</div>
 
@@ -122,7 +128,7 @@ echo "<br>";
 
 								<div class="form-group">
 									<label class="sr-only" for="tip"> serviceTip: </label>
-									<input class="form-control" name="servicetip" id="servicetip" type="text" placeholder="ServiceTip" required="true" value="<?php if ($mensaje1!='') echo $_POST["servicetip"];?>">
+									<input class="form-control" name="serviceTip" id="serviceTip" type="text" placeholder="ServiceTip" required="true" value="<?php if ($mensaje1!='') echo $_POST["serviceTip"];?>">
 									<?php 
 									if ($mensaje2!='')
 									{
