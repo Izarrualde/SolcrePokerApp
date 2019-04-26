@@ -40,7 +40,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessionServiceTips()
 	{
-		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, service_tip  FROM session_service_tips";
+		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, service_tip  FROM session_service_tips WHERE session_id='$_GET[id]'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -64,7 +64,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessionDealerTips()
 	{
-		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, dealer_tip FROM session_dealer_tips";
+		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, dealer_tip FROM session_dealer_tips WHERE session_id='$_GET[id]'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -181,8 +181,10 @@ class ConnectAppPoker extends Connect
 
 	public function insertUser()
 	{
-		$sql="INSERT into session_users VALUES (null, '$_POST[idUser]', '1', '$_POST[accumulatedPoints]', '$_POST[cashout]', '$_POST[start]', '$_POST[end]')"; 
-		$this->db->query($sql);
+		$sql="INSERT into session_users VALUES (null, '1', '1', '1', '1', '1', '$_POST[start]', '$_POST[end]')"; 
+		$this->db->query($sql);		
+		/*$sql="INSERT into session_users VALUES (null, '$_POST[idUser]', '$_POST[idSession]', '1', '$_POST[accumulatedPoints]', '$_POST[cashout]', '$_POST[start]', '$_POST[end]')"; 
+		$this->db->query($sql);*/
 	}
 
 	public function insertSession()
@@ -224,31 +226,31 @@ class ConnectAppPoker extends Connect
 
 	public function deleteComission()
 	{
-		$sql = "DELETE from session_comissions WHERE id='$_GET[id]'";
+		$sql = "DELETE from session_comissions WHERE id='$_GET[idC]'";
 		$this->db->query($sql);
 	}
 
 	public function deleteBuyin()
 	{
-		$sql = "DELETE from session_buyins WHERE id='$_GET[id]'";
+		$sql = "DELETE from session_buyins WHERE id='$_GET[idB]'";
 		$this->db->query($sql);
 	}
 
 	public function deleteDealerTip()
 	{
-		$sql = "DELETE from session_dealer_tips WHERE id='$_GET[id]'";
+		$sql = "DELETE from session_dealer_tips WHERE id='$_GET[idT]'";
 		$this->db->query($sql);
 	}
 
 		public function deleteServiceTip()
 	{
-		$sql = "DELETE from session_service_tips WHERE id='$_GET[id]'";
+		$sql = "DELETE from session_service_tips WHERE id='$_GET[idT]'";
 		$this->db->query($sql);
 	}
 
 		public function deleteUser()
 	{
-		$sql = "DELETE from ssession_users WHERE id='$_GET[id]'";
+		$sql = "DELETE from ssession_users WHERE id='$_GET[idU]'";
 		$this->db->query($sql);
 	}
 

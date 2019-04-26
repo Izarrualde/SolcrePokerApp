@@ -13,6 +13,12 @@ Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
 
+if (!isset($_GET['id']))
+{
+	header('Location: ../../index.php');
+	exit;
+}
+
 $session = new ConnectAppPoker;
 $datosUsers = $session->getDatosSessionUsers();
 $session1 = new SessionEntity;

@@ -35,6 +35,13 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 //Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
 //Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
+/*if (!isset($_GET['id']))
+{
+	header('Location: ../../index.php');
+	exit;
+}*/
+
+
 $session = new ConnectAppPoker;
 $datosSessionDealerTips = $session->getDatosSessionDealerTips();
 $datosServiceTipSession = $session->getDatosSessionServiceTips();
@@ -139,7 +146,9 @@ foreach ($datosServiceTipSession as $serviceTip)
 											<td> <?php echo $dealerTip->getId() ?>  </td>
 											<td> <?php echo date_format(date_create($dealerTip->getHour()), 'H:i') ?>  </td>
 											<td> <?php echo $dealerTip->getDealerTip() ?>  </td>
-											<td> <a href="actions/editDealerTip.php?id= <?php echo $dealerTip->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteDealerTip.php?id= <?php echo $dealerTip->getId(); ?>');"> <i class="fas fa-trash-alt"></i> </a></td>
+											<td> <a href="actions/editDealerTip.php?id=<?php echo $dealerTip->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteDealerTip.php?idT=<?php echo $dealerTip->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+												<!--<i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" 
+												onclick="eliminar('actions/deleteDealerTip.php?id=<?php echo $dealerTip->getId(); ?>');"> <i class="fas fa-trash-alt"></i> </a></td>-->
 										</tr>
 										<?php
 										}
@@ -194,7 +203,10 @@ foreach ($datosServiceTipSession as $serviceTip)
 												<td> <?php echo $serviceTip->getId() ?>  </td>
 												<td> <?php echo date_format(date_create($serviceTip->getHour()), 'H:i') ?>  </td>
 												<td> <?php echo $serviceTip->getServiceTip() ?>  </td>
-												<td> <a href="actions/editServiceTip.php?id= <?php echo $serviceTip->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteServiceTip.php?id= <?php echo $serviceTip->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
+												<td> <a href="actions/editServiceTip.php?id= <?php echo $serviceTip->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteServiceTip.php?idT=<?php echo $serviceTip->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+
+
+													<!--<a href="javascript:void(0);" onclick="eliminar('actions/deleteServiceTip.php?id= <?php echo $serviceTip->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>-->
 											</tr>
 										<?php
 										}

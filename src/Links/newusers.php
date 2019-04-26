@@ -14,6 +14,12 @@ include "../MySQL/ConnectAppPoker.php";
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
+echo "<br>";
+var_dump($_POST);
+
+echo "<br>";
+
+echo "<br>";
 
 if (isset($_POST['idUser']))
 {
@@ -22,9 +28,8 @@ if (isset($_POST['idUser']))
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El usuario se ingresó exitosamente </code></mark>
 	<br> <br>
-	<a class="btn btn-primary" href="users.php"> volver </a>
+	<a class="btn btn-primary" href="users.php?id=<?php echo $_GET['id']; ?>"> volver </a>
 	
-
 	<?php
 	exit;
 }
@@ -51,12 +56,14 @@ if (isset($_POST['idUser']))
 
 									<input class="form-control" name="id" id="id" type="hidden" value="null" required="true">
 
-									<input class="form-control" name="idSession" id="idSession" type="hidden" value="null" required="true" value="<?php echo $_GET['id']; ?>">
+									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
+
+									<input class="form-control" name="idUser" id="idUser" type="hidden" placeholder="IdUser" required="true" value="12" > <!-- poner un getidUserbyNickname -->
 
 								<div class="form-group">
-									<label class="sr-only" for="idUser"> IdUser: </label>
-									<input class="form-control" name="idUser" id="idUser" type="text" placeholder="IdUser" required="true" autofocus="true">
-								</div>
+									<label class="sr-only" for="nickname"> Jugador </label>
+									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true"> 
+								</div>									
 
 								<div class="form-group">
 									<label class="sr-only" for="accumulatedPoints"> Puntos Acumulados: </label>

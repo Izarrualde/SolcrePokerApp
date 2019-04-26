@@ -17,6 +17,12 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 //Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
 
+if (!isset($_GET['id']))
+{
+	header('Location: ../../index.php');
+	exit;
+}
+
 $session = new ConnectAppPoker;
 
 $datosComissionsSession = $session->getDatosSessionComissions();

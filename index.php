@@ -33,11 +33,11 @@ Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
 Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
 $session = new ConnectAppPoker;
-$datosUsers = $session->getDatosSessionUsers();
-$datosBuyinSession = $session->getDatosSessionBuyins();
-$datosComissionSession = $session->getDatosSessionComissions();
-$datosDealerTipSession = $session->getDatosSessionDealerTips();
-$datosServiceTipSession = $session->getDatosSessionServiceTips();
+//$datosUsers = $session->getDatosSessionUsers();
+//$datosBuyinSession = $session->getDatosSessionBuyins();
+//$datosComissionSession = $session->getDatosSessionComissions();
+//$datosDealerTipSession = $session->getDatosSessionDealerTips();
+//$datosServiceTipSession = $session->getDatosSessionServiceTips();
 $datosSessions = $session->getDatosSessions();
 
 
@@ -161,7 +161,7 @@ foreach ($datosUsers as $user)
 											
 												<a href="src/links/tips.php?id=<?php echo $thisSession->id; ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
 												<a href="src/links/comissions.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-												<a href="src/links/buyins.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
+												<a href="src/links/buyins.php?id=<?php echo $thisSession->id;?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
 												<a href="src/links/users.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
 
 											</td>

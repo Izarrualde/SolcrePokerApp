@@ -10,6 +10,14 @@ Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 //Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
 
+var_dump($_GET);
+
+if (!isset($_GET['id']))
+{
+	header('Location: ../../index.php');
+	exit;
+}
+
 $session = new ConnectAppPoker;
 $datosSessionBuyins = $session->getDatosSessionBuyins();
 $session1 = new SessionEntity;
