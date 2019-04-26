@@ -22,7 +22,7 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionUsersForId($_GET["id"]);
+$datos = $session->getDatosSessionUsersById($_GET["id"]);
 
 if (sizeof($datos)==0)
 {

@@ -26,7 +26,7 @@ class ConnectAppPoker extends Connect
 	}
 
 
-	public function getDatosSessionUsersForId($id)
+	public function getDatosSessionUsersById($id)
 	{
 		$sql="SELECT id, session_id, user_id, approved, accumulated_points, cashout, DATE_FORMAT(start, '%d-%m-%Y %H:%i') as start, DATE_FORMAT(end, '%d-%m-%Y %H:%i') as end FROM session_users WHERE id='".$id."'";
 		$datos = $this->db->query($sql);
@@ -50,7 +50,7 @@ class ConnectAppPoker extends Connect
 		return $arreglo;
 	}
 
-	public function getDatosSessionServiceTipForId($id)
+	public function getDatosSessionServiceTipById($id)
 	{
 		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, service_tip FROM session_service_tips WHERE id='".$id."'";
 		$datos = $this->db->query($sql);
@@ -74,7 +74,7 @@ class ConnectAppPoker extends Connect
 		return $arreglo;
 	}
 
-	public function getDatosSessionDealerTipForId($id)
+	public function getDatosSessionDealerTipById($id)
 	{
 		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, dealer_tip FROM session_dealer_tips WHERE id='".$id."'";
 		$datos = $this->db->query($sql);
@@ -103,7 +103,7 @@ class ConnectAppPoker extends Connect
 		return $arreglo;
 	}
 
-	public function getDatosSessionComissionsForId($id)
+	public function getDatosSessionComissionById($id)
 	{
 		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, comission FROM session_comissions WHERE id='".$id."'";
 		$datos = $this->db->query($sql);

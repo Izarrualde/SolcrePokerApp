@@ -16,24 +16,25 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-if (isset($_POST['idSession']))
+$mensaje1 = '';
+if (isset($_POST['idSession'])) 
 {
-	$session = new ConnectAppPoker;
-	$session->insertComission();
-	//header();
-	?>
-	<mark> <i class="far fa-grin-alt"></i> <code> La comisión se ingresó exitosamente </code></mark>
-
-	<br> <br>
-	<a class="btn btn-primary" href="comissions.php"> volver </a>
-	
-	<?php
-	exit;
+	if (is_numeric($_POST['comission']))
+	{
+		$session = new ConnectAppPoker;
+		$session->insertComission();
+		?>
+		<mark> <i class="far fa-grin-alt"></i> <code> La comisión se ingresó exitosamente </code></mark>
+		<br> <br>
+		<a class="btn btn-primary" href="comissions.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+		<?php
+		exit;
+	}else
+	{
+		$mensaje1='Comisión debe ser un valor entero';
+	}
 }
-
 ?>
-
-
 
 <body>
 	<div class="container">
@@ -66,6 +67,14 @@ if (isset($_POST['idSession']))
 								<div class="form-group">
 									<label class="sr-only" for="comission"> comission: </label>
 									<input class="form-control" name="comission" id="comission" type="text" placeholder="Comission" required="true">
+									<?php 
+									if ($mensaje1!='')
+									{
+										?>
+										<small id="comission" class="form-tet text-muted"><div class="alert alert-danger"> <?php echo $mensaje1 ?> </div></small>
+										<?php
+									}	 
+										?>
 								</div>
 
 								<div class="form-group">

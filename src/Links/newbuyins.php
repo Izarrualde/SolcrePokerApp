@@ -15,33 +15,43 @@ Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
+$mensaje1 = '';
+$mensaje2 = '';
 
 if (isset($_POST['idSession']))
 {
-	$session = new ConnectAppPoker;
-	$session->insertBuyin(); 
-	//header();
-	?>
-	<mark> <i class="far fa-grin-alt"></i> <code> El buyin se ingresó exitosamente </code></mark>
-	<br> <br>
-	<a class="btn btn-primary" href="buyins.php"> volver </a>
-	
-	<?php
-	exit;
+	if ((is_numeric($_POST['amountCash'])) and (is_numeric($_POST['amountCredit'])))
+	{
+		$session = new ConnectAppPoker;
+		$session->insertBuyin(); 
+		//header();
+		?>
+		<mark> <i class="far fa-grin-alt"></i> <code> El buyin se ingresó exitosamente </code></mark>
+		<br> <br>
+		<a class="btn btn-primary" href="buyins.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+		<?php
+		exit;
+	} else
+	{
+		if (!is_numeric($_POST['amountCash']))
+		{
+			$mensaje1 = 'El monto en efectivo ingresado no es valido';
+		}
+		if (!is_numeric($_POST['amountCredit']))
+		{
+			$mensaje2 = 'El monto en credito ingresado no es valido';
+		}
+	}
 }
 
 ?>
-
-
-
-
 
 <body>
 	<div class="container">
 		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Nuevo Buyin</li>
 			  </ol>
 			</nav>
@@ -68,12 +78,28 @@ if (isset($_POST['idSession']))
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> monto cash: </label>
-									<input class="form-control" name="amountCash" id="amountCash" type="text" placeholder="monto cash" required="true">
+									<input class="form-control" name="amountCash" id="amountCash" type="text" placeholder="monto cash" required="true" value="<?php if ((isset($_POST['amountCash'])) and ($mensaje1=='')) echo $_POST['amountCash'];?>">
+									<?php 
+									if ($mensaje1!='')
+									{
+										?>
+										<small id="amountCash" class="form-tet text-muted"><div class="alert alert-danger"> <?php echo $mensaje1 ?> </div></small>
+										<?php
+									}
+									?>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCredit"> monto credito: </label>
-									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="monto credito" required="true">
+									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="monto credito" required="true" value="<?php if ((isset($_POST['amountCredit'])) and ($mensaje2=='')) echo $_POST['amountCredit'];?>">
+									<?php 
+									if ($mensaje2!='')
+									{
+										?>
+										<small id="amountCredit" class="form-tet text-muted"><div class="alert alert-danger"> <?php echo $mensaje2 ?> </div></small>
+										<?php
+									}
+									?>
 								</div>
 
 								<div class="form-group">
