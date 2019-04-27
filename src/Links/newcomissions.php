@@ -16,13 +16,25 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
+echo "<br>";
+var_dump($_POST);
+echo "<br>";
+var_dump($_GET);
+echo "<br>";
+
+
 $mensaje1 = '';
 if (isset($_POST['idSession'])) 
 {
 	if (is_numeric($_POST['comission']))
 	{
 		$session = new ConnectAppPoker;
+		echo "la comision es numerica y se va a ingresar";
+		echo "<br>";
 		$session->insertComission();
+		echo "la comision fue insertada";
+		echo "<br>";
+
 		?>
 		<mark> <i class="far fa-grin-alt"></i> <code> La comisión se ingresó exitosamente </code></mark>
 		<br> <br>

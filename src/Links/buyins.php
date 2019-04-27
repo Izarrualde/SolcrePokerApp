@@ -109,7 +109,10 @@ foreach ($datosSessionBuyins as $buyin)
 												<td> <?php echo $buyin->getCurrency() ?>  </td>
 												<td> <?php echo date_format(date_create($buyin->getHour()), 'H:i') ?> </td>
 												<td> <?php echo $buyin->getApproved() ?>  </td>
-												<td> <a href="actions/editBuyin.php?id=<?php echo $buyin->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteBuyin.php?id= <?php echo $buyin->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
+												<td> <a href="actions/editBuyin.php?id=<?php echo $buyin->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a></a><a href="actions/deleteBuyin.php?idB=<?php echo $buyin->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td> 
+
+
+												<!-- <a href="javascript:void(0);" onclick="eliminar('actions/deleteBuyin.php?id= <?php echo $buyin->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td> -->
 											</tr>
 										<?php
 										}

@@ -17,12 +17,12 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $session = new ConnectAppPoker;
-if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
+if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idT"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionServiceTipById($_GET["id"]);
+$datos = $session->getDatosSessionServiceTipById($_GET["idT"]);
 
 if (sizeof($datos)==0)
 {
@@ -36,7 +36,7 @@ if (isset($_POST["id"]))
 	<mark> <i class="far fa-grin-alt"></i> <code> El serviceTip se actualizó exitosamente </code></mark>
 
 	<br> <br>
-	<a class="btn btn-primary" href="../tips.php"> volver </a>
+	<a class="btn btn-primary" href="../tips.php?id=<?php echo $_GET['id']; ?>"> volver </a>
 	
 	<?php
 	exit;	
@@ -50,7 +50,7 @@ if (isset($_POST["id"]))
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../../index.php">Home</a></li>
-			    <li class="breadcrumb-item"><a href="../tips.php">Tips</a></li>
+			    <li class="breadcrumb-item"><a href="../tips.php?id=<?php echo $_GET['id']; ?>">Tips</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Editar serviceTip</li>
 			  </ol>
 			</nav>
@@ -65,11 +65,7 @@ if (isset($_POST["id"]))
 								
 								<input name="id" type="hidden" value="<?php echo $datos[0]->id; ?>">
 								
-								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->session_id; ?>">
-
-								</div>
+								<input name="idSession" type="hidden" id="idSession" type="text" required="true" value="<?php echo $datos[0]->session_id; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>

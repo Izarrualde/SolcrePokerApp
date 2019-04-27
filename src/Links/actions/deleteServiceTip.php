@@ -21,5 +21,5 @@ if (sizeof($datos)==0)
 $session->deleteServiceTip();
 
 //header("Location: ultrapro.php?var1=".$_GET['var1']."&var2=".$_GET['var2']."&var3=".$_GET['var3']);
-header("Location: ../tips.php?m=".'1'."&id=".$_GET['id']); // &id=$_GET['id']");
+header("Location: ../tips.php?m=".'2'."&id=".$_GET['id']); // &id=$_GET['id']");
 ?>

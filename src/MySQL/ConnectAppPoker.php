@@ -93,7 +93,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessionComissions()
 	{
-		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, comission FROM session_comissions";
+		$sql="SELECT id, session_id, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, comission FROM session_comissions WHERE session_id='$_GET[id]'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -117,7 +117,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessionBuyins()
 	{
-		$sql="SELECT id, session_id, player_id, amount_cash, amount_credit, currency, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, approved FROM session_buyins";
+		$sql="SELECT id, session_id, player_id, amount_cash, amount_credit, currency, DATE_FORMAT(hour, '%d-%m-%Y %H:%i') as hour, approved FROM session_buyins WHERE session_id='$_GET[id]'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -165,6 +165,10 @@ class ConnectAppPoker extends Connect
 
 	public function insertComission()
 	{
+		echo "estoy en function insertComission";
+		echo "<br>";
+		var_dump($_POST);
+		echo "<br>";
 		$sql="INSERT into session_comissions VALUES (null, '$_POST[idSession]', '$_POST[hour]', '$_POST[comission]')"; 
 		$this->db->query($sql);
 	}

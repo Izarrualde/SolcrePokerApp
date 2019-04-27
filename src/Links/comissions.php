@@ -113,7 +113,10 @@ foreach ($datosComissionsSession as $comission)
 												<td> <?php echo $comission->getId() ?> </td>
 												<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
 												<td> <?php echo $comission->getComission() ?> </td>
-												<td> <a href="actions/editComission.php?id=<?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
+												<td> <a href="actions/editComission.php?id=<?php echo $comission->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a><a href="actions/deleteComission.php?idC=<?php echo $comission->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td> 
+
+
+													<!-- <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>-->
 											</tr>
 										<?php
 										}
