@@ -13,6 +13,11 @@ Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
 
+
+echo "<br>";
+var_dump($_GET);
+echo "<br>";
+
 if (!isset($_GET['id']))
 {
 	header('Location: ../../index.php');
@@ -74,12 +79,10 @@ foreach ($datosUsers as $user)
 								<thead class="text-center bg-dark text-white">
 									<th> id </th>
 									<th> idUser </th>
-									<th> approved </th>
 									<th> accumulatedPoints </th>
 									<th> cashout </th>
 									<th> start </th>
 									<th> end </th>
-									<th> horas jugadas </th>
 									<th> acciones </th>
 								</thead>
 								<tbody class="text-center">
@@ -93,20 +96,18 @@ foreach ($datosUsers as $user)
 									<?php
 									} else
 									{
-										foreach ($session1->sessionUsers as $thisUser) 
+										foreach ($session1->sessionUsers as $user) 
 										{
 											?>
 												<tr class="text-center">
-													<td> <?php echo $thisUser->getId() ?>  </td>
-													<td> <?php echo $thisUser->getIdUser() ?>  </td>
-													<td> <?php echo $thisUser->getApproved() ?>  </td>
-													<td> <?php echo $thisUser->getAccumulatedPoints() ?>  </td>
-													<td> <?php echo $thisUser->getCashout() ?>  </td>
-													<td> <?php echo date_format(date_create($thisUser->getStart()), 'H:i') ?> </td>
-													<td> <?php echo date_format(date_create($thisUser->getEnd()), 'H:i') ?> </td>
-													<td> <?php echo date_diff(date_create($thisUser->getStart()), date_create($thisUser->getEnd()))->format('%H:%M'); ?> </td>
-													<td> <a href="actions/editUser.php?id=<?php echo $thisUser->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> 
-														<a href="javascript:void(0);" onclick="eliminar('actions/deleteUser.php?id=<?php echo $thisUser->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>
+													<td> <?php echo $user->getId() ?>  </td>
+													<td> <?php echo $user->getIdUser() ?>  </td>
+													<td> <?php echo $user->getAccumulatedPoints() ?>  </td>
+													<td> <?php echo $user->getCashout() ?>  </td>
+													<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
+													<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
+
+													<td> <a href="actions/editUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
 											
 												</tr>
 											<?php

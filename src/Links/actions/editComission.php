@@ -17,12 +17,12 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $session = new ConnectAppPoker;
-if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
+if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idC"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionComissionById($_GET["id"]);
+$datos = $session->getDatosSessionComissionById($_GET["idC"]);
 
 if (sizeof($datos)==0)
 {
@@ -36,7 +36,7 @@ if (isset($_POST["id"]))
 	<mark> <i class="far fa-grin-alt"></i> <code> La comisión se actualizó exitosamente </code></mark>
 
 	<br> <br>
-	<a class="btn btn-primary" href="../comissions.php"> volver </a>
+	<a class="btn btn-primary" href="../comissions.php?id=<?php echo $_GET['id']; ?>"> volver </a>
 	
 	<?php
 	exit;	
@@ -51,7 +51,6 @@ if (isset($_POST["id"]))
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../../index.php">Home</a></li>
-			    <li class="breadcrumb-item"><a href="../comissions.php">Comissions</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Editar Comision</li>
 			  </ol>
 			</nav>
@@ -66,21 +65,17 @@ if (isset($_POST["id"]))
 								
 								<input name="id" type="hidden" value="<?php echo $datos[0]->id; ?>">
 								
-								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->session_id; ?>">
-
-								</div>
+								<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $datos[0]->session_id; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hora" id="hora" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="comission"> comission: </label>
-									<input class="form-control" name="comission" id="comission" type="text" placeholder="Comission" required="true" value="<?php echo $datos[0]->comission; ?>">
+									<input class="form-control" name="comission" id="comission" type="text" autofocus="true" placeholder="Comission" required="true" value="<?php echo $datos[0]->comission; ?>">
 								</div>
 
 								<div class="form-group">

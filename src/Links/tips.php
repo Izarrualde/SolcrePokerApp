@@ -44,7 +44,8 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 $session = new ConnectAppPoker;
 $datosSessionDealerTips = $session->getDatosSessionDealerTips();
-$datosServiceTipSession = $session->getDatosSessionServiceTips();
+$datosSessionServiceTips = $session->getDatosSessionServiceTips();
+
 $session1 = new SessionEntity;
 
 foreach ($datosSessionDealerTips as $dealerTip) 
@@ -52,7 +53,7 @@ foreach ($datosSessionDealerTips as $dealerTip)
 	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->hour, $dealerTip->dealer_tip);
 }
 
-foreach ($datosServiceTipSession as $serviceTip) 
+foreach ($datosSessionServiceTips as $serviceTip) 
 {
 	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->hour, $serviceTip->service_tip);
 }
@@ -119,7 +120,9 @@ foreach ($datosServiceTipSession as $serviceTip)
 										<th> <?php if (isset($datosSessionDealerTips[0])) 
 											 {
 											 	echo date_format(date_create($datosSessionDealerTips[0]->hour), 'd-m-y');
-											 } ?> </th>
+											 }  
+											 ?> 
+										</th>
 									</tr>
 									<tr class="text-center bg-success">
 										<th> id </th>
@@ -174,8 +177,9 @@ foreach ($datosServiceTipSession as $serviceTip)
 										<th> <?php if (isset($datosSessionServiceTips[0])) 
 											 {
 											 	echo date_format(date_create($datosSessionServiceTips[0]->hour), 'd-m-y');
-											 } 
-											 ?> </th>
+											 }
+											 ?> 
+										</th>
 									</tr>
 									<tr class="text-center bg-success">
 										<th> id </th>

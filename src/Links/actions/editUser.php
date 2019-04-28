@@ -17,12 +17,12 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $session = new ConnectAppPoker;
-if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
+if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idU"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionUsersById($_GET["id"]);
+$datos = $session->getDatosSessionUsersById($_GET["idU"]);
 
 if (sizeof($datos)==0)
 {
@@ -36,7 +36,7 @@ if (isset($_POST["id"]))
 	<mark> <i class="far fa-grin-alt"></i> <code> El usuario se actualizó exitosamente </code></mark>
 
 	<br> <br>
-	<a class="btn btn-primary" href="../users.php"> volver </a>
+	<a class="btn btn-primary" href="../users.php?id=<?php echo $_GET['id']; ?>"> volver </a>
 	
 	<?php
 	exit;	
@@ -70,14 +70,11 @@ if (isset($_POST["id"]))
 								</div>
 
 								<div class="form-group">
-									<label class="sr-only" for="approved"> currency: </label>
-									<input class="form-control" name="approved" id="approved" type="text" placeholder="approved" required="true" value="<?php echo $datos[0]->approved; ?>">
-								</div>
-
-								<div class="form-group">
 									<label class="sr-only" for="accumulatedPoints"> accumulatedPoints: </label>
 									<input class="form-control" name="accumulatedPoints" id="accumulatedPoints" type="text" placeholder="accumulatedPoints" required="true" value="<?php echo $datos[0]->accumulated_points; ?>">
 								</div>
+
+								<input name="approved" id="approved" type="hidden" value="<?php echo $datos[0]->approved; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> cashout: </label>

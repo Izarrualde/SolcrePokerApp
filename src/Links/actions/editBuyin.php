@@ -17,12 +17,13 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $session = new ConnectAppPoker;
-if (!isset($_GET["id"]) or !is_numeric($_GET["id"]))
+if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idB"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionBuyinById($_GET["id"]);
+
+$datos = $session->getDatosSessionBuyinById($_GET["idB"]);
 
 if (sizeof($datos)==0)
 {
@@ -36,12 +37,11 @@ if (isset($_POST["id"]))
 	<mark> <i class="far fa-grin-alt"></i> <code> El buyin se actualizó exitosamente </code></mark>
 
 	<br> <br>
-	<a class="btn btn-primary" href="../buyins.php"> volver </a>
+	<a class="btn btn-primary" href="../buyins.php?id=<?php echo $_GET['id']; ?>"> volver </a>
 	
 	<?php
 	exit;	
 }
-
 
 ?>
 
@@ -51,7 +51,6 @@ if (isset($_POST["id"]))
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../../index.php">Home</a></li>
-			    <li class="breadcrumb-item"><a href="../buyins.php">Buyins</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Editar Buyin</li>
 			  </ol>
 			</nav>
@@ -65,19 +64,13 @@ if (isset($_POST["id"]))
 							<form class="was-validated" action="" method="post">
 								<input name="id" type="hidden" value="<?php echo $datos[0]->id; ?>">
 								
-								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdSession: </label>
-									<input class="form-control" name="idSession" id="idSession" type="text" autofocus="true" placeholder="IdSession" required="true" value="<?php echo $datos[0]->session_id; ?>">
-								</div>
+								<input name="idSession" id="idSession" type="hidden" required= "true" value="<?php echo $datos[0]->session_id; ?>">
 
-								<div class="form-group">
-									<label class="sr-only" for="idPlayer"> IdPlayer: </label>
-									<input class="form-control" name="idPlayer" id="idPlayer" type="text" placeholder="IdPlayer" required="true" value="<?php echo $datos[0]->player_id; ?>">
-								</div>
+								<input name="idPlayer" id="idPlayer" type="hidden" required="true" value="<?php echo $datos[0]->player_id; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> amountCash: </label>
-									<input class="form-control" name="amountCash" id="amountCash" type="text" placeholder="amountCash" required="true" value="<?php echo $datos[0]->amount_cash; ?>">
+									<input class="form-control" name="amountCash" id="amountCash" type="text" autofocus="true" placeholder="amountCash" required="true" value="<?php echo $datos[0]->amount_cash; ?>">
 								</div>
 
 								<div class="form-group">
@@ -92,7 +85,7 @@ if (isset($_POST["id"]))
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hora" id="hora" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 

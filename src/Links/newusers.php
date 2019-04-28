@@ -14,16 +14,14 @@ include "../MySQL/ConnectAppPoker.php";
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
-echo "<br>";
-var_dump($_POST);
-
-echo "<br>";
-
-echo "<br>";
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 if (isset($_POST['idUser']))
 {
 	$session = new ConnectAppPoker;
+	echo "<br>";
+	var_dump($_POST);
+	echo "<br>";
 	$session->insertUser();
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El usuario se ingresó exitosamente </code></mark>
@@ -62,30 +60,24 @@ if (isset($_POST['idUser']))
 
 								<div class="form-group">
 									<label class="sr-only" for="nickname"> Jugador </label>
-									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true"> 
+									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true" autofocus="true"> 
 								</div>									
 
-								<div class="form-group">
-									<label class="sr-only" for="accumulatedPoints"> Puntos Acumulados: </label>
-									<input class="form-control"name="accumulatedPoints" id="accumulatedPoints" type="text" placeholder="Puntos Acumulados" required="true">
-								</div>
+								<input name="accumulatedPoints" id="accumulatedPoints" type="hidden" placeholder="Puntos Acumulados" required="true">
+
+								<input class="form-control" name="cashout" id="cashout" type="hidden">
+							
 
 								<div class="form-group">
-									<label class="sr-only" for="cashout"> Cashout: </label>
-									<input class="form-control" name="cashout" id="cashout" type="text" placeholder="Cashout" required="true">
+									<label class="sr-only" for="start"> hora inicio: </label>
+									<input class="form-control" name="start" id="start" type="datetime-local" placeholder="hora de inicio" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
+									<small id="inicio" class="form-tet text-muted"> Fecha y hora de Incio </small>
 								</div>
 
-								<div class="form-group">
-									<label class="sr-only" for="horaInicio"> hora inicio: </label>
-									<input class="form-control" name="start" id="start" type="datetime-local" placeholder="hora de inicio" required="true">
-									<small id="end" class="form-tet text-muted"> Fecha y hora de inicio </small>
-								</div>
+								<input name="end" id="end" type="hidden" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
+								 <!-- =getStarbyFirstBuyin()--> 
 
-								<div class="form-group">
-									<label class="sr-only" for="end"> hora fin: </label>
-									<input class="form-control" name="end" id="end" type="datetime-local" placeholder="hora de fin" required="true">
-									<small id="end" class="form-tet text-muted"> Fecha y hora de finalización </small>
-								</div>
+
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />

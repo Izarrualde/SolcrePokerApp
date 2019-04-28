@@ -14,11 +14,6 @@ $datos = $session->getDatosSessionComissionById($_GET["idC"]);
 //$datos1 = $session->getDatosSessionComissions();
 if (sizeof($datos)==0)
 {
-	echo "<br>";
-	var_dump($datos);
-	echo "<br>";
-	var_dump($datos1);
-	echo "<br>";
 	die("error 404");
 }
 
