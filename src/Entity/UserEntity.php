@@ -4,6 +4,7 @@ Namespace Solcre\PokerApp\Entity;
 class UserEntity {
 	protected $id;
 	protected $password;
+	protected $mobile;
 	protected $email;
 	protected $firstname;
 	protected $lastname;
@@ -16,17 +17,19 @@ class UserEntity {
 	protected $results;
 	protected $cashin;
 
-	public function __construct($id=null, $password="", $email="", $lasname="", $firstname="", $multiplier=null, $active=null, $hours=0, $points=0, $results=0, $cashin=0) 
+	public function __construct($id=null, $password="", $mobile="", $email="", $lastname="", $firstname="",  $nickname="", $multiplier=null, $active=null, $hours=0, $points=0, $results=0, $cashin=0) 
 	{
 		$this->setId($id);
 		$this->setPassword($password);
+		$this->setMobile($mobile);
 		$this->setEmail($email);
 		$this->setLastname($lastname);
 		$this->setFirstName($firstname);
+		$this->setNickname($nickname);
 		$this->setMultiplier($multiplier);
 		$this->setActive($active);
 		$this->setHours($hours);
-		$this->setpoints($poins);
+		$this->setpoints($points);
 		$this->setResults($results);
 		$this->setCashin($cashin);
 	}
@@ -64,6 +67,18 @@ class UserEntity {
 		return $this;
 	}
 
+	public function getMobile() 
+	{
+		return $this->mobile;
+	}
+
+
+	public function setMobile($mobile)
+	{
+		$this->mobile = $mobile;
+		return $this;
+	}
+
 	public function getEmail() 
 	{
 		return $this->email;
@@ -76,6 +91,17 @@ class UserEntity {
 		return $this;
 	}
 
+	public function getFirstname() 
+	{
+		return $this->firstname;
+	}
+
+	public function setFirstname($firstname)
+	{
+		$this->firstname = $firstname;
+		return $this;
+	}
+
 	public function getLastname() 
 	{
 		return $this->lastname;
@@ -84,6 +110,17 @@ class UserEntity {
 	public function setLastname($lastname)
 	{
 		$this->lastname = $lastname;
+		return $this;
+	}
+
+	public function getNickname() 
+	{
+		return $this->nickname;
+	}
+
+	public function setNickname($nickname)
+	{
+		$this->nickname = $nickname;
 		return $this;
 	}
 

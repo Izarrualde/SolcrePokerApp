@@ -64,10 +64,10 @@ if (isset($_POST["id"]))
 							<form class="was-validated" action="" method="post">
 								<input name="id" type="hidden" value="<?php echo $datos[0]->id; ?>">
 								
-								<div class="form-group">
+								<!--/*<div class="form-group">
 									<label class="sr-only" for="idSession"> IdUser: </label>
-									<input class="form-control" name="idUser" id="idUser" type="text" autofocus="true" placeholder="IdUser" required="true" value="<?php echo $datos[0]->user_id; ?>">
-								</div>
+									<input class="form-control" name="idUser" id="idUser" type="text" autofocus="true" placeholder="IdUser" required="true" value="<?php/* echo*/ $datos[/*0*/]->user_id; ?>">
+								</div>-->
 
 								<div class="form-group">
 									<label class="sr-only" for="accumulatedPoints"> accumulatedPoints: </label>

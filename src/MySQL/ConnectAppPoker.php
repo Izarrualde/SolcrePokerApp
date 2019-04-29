@@ -15,7 +15,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessionUsers()
 	{
-		$sql="SELECT id, session_id, user_id, approved, accumulated_points, cashout, DATE_FORMAT(start, '%d-%m-%Y %H:%i') as start, DATE_FORMAT('end', '%d-%m-%Y %H:%i') as 'end' FROM session_users WHERE session_id='$_GET[id]'";
+		$sql="SELECT id, session_id, user_id, approved, accumulated_points, cashout, DATE_FORMAT(start, '%d-%m-%Y %H:%i') as start, DATE_FORMAT('end', '%d-%m-%Y %H:%i') as end FROM session_users WHERE session_id='$_GET[id]'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -141,7 +141,19 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessions()
 	{
-		$sql="SELECT id, title, description, date, start_time, start_time_real, end_time FROM sessions";
+		$sql="SELECT id, title, description, date, seats, start_time, start_time_real, end_time FROM sessions";
+		$datos = $this->db->query($sql);
+		$arreglo = array();
+		while ($reg=$datos->fetch_object())
+		{
+			$arreglo[]=$reg;
+		}
+		return $arreglo;
+	}
+
+	public function getDatosUsers()
+	{
+		$sql="SELECT id, lastname, firstname, nickname, mobile, email, password, multiplier, active, hours, points, results, cashin FROM users";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -185,15 +197,51 @@ class ConnectAppPoker extends Connect
 
 	public function insertUser()
 	{
-		echo "estoy en insertUser";
-		$sql="INSERT into session_users VALUES (null, '$_POST[idUser]', '$_POST[idSession]','$_POST[idUser]', '$_POST[accumulatedPoints]', '$_POST[cashout]', '$_POST[start]', '$_POST[end]')"; 
-		$this->db->query($sql);
+		$users_session = $this->getDatosSessionUsers();
+		$mensaje ='';
+		foreach ($users_session as $user) 
+		{
+			if ($user->user_id==$_POST['idUser'])
+			{
+				$mensaje = "El usuario ya habia sido agregado a esta sesión";
+				break;			
+			}
+		}
+		if ($mensaje=='')
+		{
+			$sql="INSERT into session_users VALUES (null, '$_POST[idSession]','$_POST[idUser]', '$_POST[approved]', '$_POST[accumulatedPoints]', '$_POST[cashout]', '$_POST[start]', '$_POST[end]')"; 
+			$mensaje = "El usuario se ingreso exitosamente";
+			$this->db->query($sql);			
+		}
+		return $mensaje;
 	}
 
 	public function insertSession()
 	{
 		$sql="INSERT into sessions VALUES (null, '$_POST[title]', '$_POST[description]', '$_POST[date]', '$_POST[seats]', '$_POST[startTime]', '$_POST[startTimeReal]', '$_POST[end]')"; 
 		$this->db->query($sql);
+	}
+
+	public function addUser()
+	{
+		$users = $this->getDatosUsers();
+		$mensaje = '';
+		foreach ($users as $user) 
+		{
+			if ($user->mobile==$_POST['mobile'])
+			{
+				$mensaje = "El usuario ya estaba agregado";
+				break;			
+			}
+		}
+		if ($mensaje=='')
+		{
+		$sql="INSERT into users VALUES (null, '$_POST[lastname]', '$_POST[firstname]', '$_POST[nickname]', '$_POST[mobile]', '$_POST[email]', '$_POST[password]', '$_POST[multiplier]', '$_POST[active]', '$_POST[hours]', '$_POST[points]', '$_POST[results]', '$_POST[cashin]')"; 
+		$this->db->query($sql);
+			$mensaje = "El usuario se ingreso exitosamente";
+			$this->db->query($sql);			
+		}
+		return $mensaje;
 	}
 
 	public function updateComission()
@@ -210,7 +258,7 @@ class ConnectAppPoker extends Connect
 
 	public function updateUser()
 	{
-		$sql= "UPDATE session_users SET user_id='$_POST[idUser]', approved='$_POST[approved]', accumulated_points='$_POST[accumulatedPoints]', cashout='$_POST[cashout]', start='$_POST[start]', end='$_POST[end]' WHERE id='$_POST[id]'";
+		$sql= "UPDATE session_users SET approved='$_POST[approved]', accumulated_points='$_POST[accumulatedPoints]', cashout='$_POST[cashout]', start='$_POST[start]', end='$_POST[end]' WHERE id='$_POST[id]'";
 		$this->db->query($sql);
 	}
 

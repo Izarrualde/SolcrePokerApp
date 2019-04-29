@@ -18,6 +18,7 @@ include "src/Exception/ServiceTipAlreadyAddedException.php";
 include "src/Exception/DealerTipAlreadyAddedException.php";
 
 Use \Solcre\PokerApp\Entity\SessionEntity;
+Use \Solcre\PokerApp\Entity\UserEntity;
 Use \Solcre\PokerApp\Entity\UserSession;
 Use \Solcre\PokerApp\Entity\BuyinSession;
 Use \Solcre\PokerApp\Entity\ComissionSession;
@@ -33,12 +34,17 @@ Use \Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
 Use \Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
 
 $session = new ConnectAppPoker;
+
+
 //$datosUsers = $session->getDatosSessionUsers();
 //$datosBuyinSession = $session->getDatosSessionBuyins();
 //$datosComissionSession = $session->getDatosSessionComissions();
 //$datosDealerTipSession = $session->getDatosSessionDealerTips();
 //$datosServiceTipSession = $session->getDatosSessionServiceTips();
+
+$datosUsers = $session->getDatosUsers();
 $datosSessions = $session->getDatosSessions();
+
 
 
 if (!empty($_POST))
@@ -47,7 +53,22 @@ if (!empty($_POST))
 	$mensaje = "La sesion se agregó exitosamente";
 }
 
-$session1 = new SessionEntity;
+$sessions = array();
+
+
+foreach ($datosSessions as $session) 
+{
+	$sessions[] = new SessionEntity($session->id, $session->date, $session->title, $session->description, null, $session->seats, null, null, $session->start_time, $session->start_time_real, $session->end_time);
+}
+
+
+$users = array();
+
+
+foreach ($datosUsers as $user) 
+{
+	$users[]= new UserEntity($user->id, $user->password, $user->mobile, $user->email, $user->lastname, $user->firstname, $user->nickname, $user->multiplier, $user->active, $user->hours, $user->points, $user->results, $user->cashin);
+}
 
 /*
 foreach ($datosDealerTipSession as $dealerTip) 
@@ -75,6 +96,8 @@ foreach ($datosUsers as $user)
 	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->user_id, $user->approved, $user->accumulated_points, $user->cashout, $user->start, $user->end);
 }
 */
+
+
 
 ?>
 
@@ -134,35 +157,35 @@ foreach ($datosUsers as $user)
 							</thead>
 							<tbody>
 									<?php 
-									foreach ($datosSessions AS $thisSession) 
+									foreach ($sessions as $session) 
 									{
 									?>
 									<tr>
-											<td> <?php echo $thisSession->id; ?>  </td>
-											<td> <?php echo date_format(date_create($thisSession->date), 'd-m-Y'); ?> </td>
-											<td> <?php if ($thisSession->date != '0000-00-00 00:00:00') 
+											<td> <?php echo $session->getIdSession(); ?>  </td>
+											<td> <?php echo date_format(date_create($session->getDate()), 'd-m-Y'); ?> </td>
+											<td> <?php if ($session->getDate() != '0000-00-00 00:00:00') 
 												       {
-												       		echo date_format(date_create($thisSession->date), 'l');
+												       		echo date_format(date_create($session->getDate()), 'l');
 												       } 
 												 ?> 
 											</td>
-											<td> <?php echo $thisSession->description; ?> </td>
+											<td> <?php echo $session->getDescription(); ?></td>
 											<td> <?php 
-												 if (($thisSession->start_time_real) != '0000-00-00 00:00:00') 
-												 	echo substr($thisSession->start_time_real, 11, 5) ; 
+												 if (($session->getStartTimeReal()) != '0000-00-00 00:00:00') 
+												 	echo substr($session->getStartTimeReal(), 11, 5) ; 
 												 ?> 
 											</td>
 											<td> <?php 
-												 if (($thisSession->start_time_real) != '0000-00-00 00:00:00')
-												 	echo substr($thisSession->end_time, 11, 5) ; 
+												 if (($session->getEndTime()) != '0000-00-00 00:00:00')
+												 	echo substr($session->getEndTime, 11, 5) ; 
 												 ?> 
 											</td>
 											<td> 
 											
-												<a href="src/links/tips.php?id=<?php echo $thisSession->id; ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
-												<a href="src/links/comissions.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-												<a href="src/links/buyins.php?id=<?php echo $thisSession->id;?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
-												<a href="src/links/users.php?id=<?php echo $thisSession->id; ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
+												<a href="src/links/tips.php?id=<?php echo $session->getIdSession(); ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
+												<a href="src/links/comissions.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
+												<a href="src/links/buyins.php?id=<?php echo $session->getIdSession();?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
+												<a href="src/links/users.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
 
 											</td>
 											<?php
@@ -185,12 +208,13 @@ foreach ($datosUsers as $user)
 		<br>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
-					Bloque Datos Sesion
+					Usuarios
 				</div>
 				<div class="card-body">
 					<section class="container row"  style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
-
+								<a href="src/links/viewUsers.php" class="btn btn-lg btn-block btn-info"> <i class="fas fa-eye"></i></a>										
+								<a href="src/links/adduser.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>			
 						</article>
 					</section>
 				</div>

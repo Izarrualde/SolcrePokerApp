@@ -20,7 +20,7 @@ class SessionEntity
 	protected $seatsWaiting;
 	protected $reserveWaiting;
 	protected $startTime;
-	protected $starTimeReal;
+	protected $startTimeReal;
 	protected $endTime;
 	//protected $comision;
 	
@@ -54,7 +54,7 @@ class SessionEntity
 
 	public function getIdSession()
 	{
-		return $this->IdSession;
+		return $this->idSession;
 	}
 
 	public function setIdSession($idSession)
@@ -126,18 +126,18 @@ class SessionEntity
 
 	public function setSeatsWaiting($seatsWaiting)
 	{
-		$this->SeatsWaiting=$seatsWaiting;
+		$this->seatsWaiting=$seatsWaiting;
 	return $this;
 	}
 
 	public function getReserveWaiting()
 	{
-		return $this->ReserveWaiting;
+		return $this->reserveWaiting;
 	}
 
-	public function setReserveWaiting($ReserveWaiting)
+	public function setReserveWaiting($reserveWaiting)
 	{
-		$this->ReserveWaiting=$ReserveWaiting;
+		$this->reserveWaiting=$reserveWaiting;
 		return $this;
 	}
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>Agregar Usuario</title>
 	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
@@ -16,18 +16,15 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-if (isset($_POST['idUser']))
+if (isset($_POST['id']))
 {
 	$session = new ConnectAppPoker;
-	echo "<br>";
-	var_dump($_POST);
-	echo "<br>";
-	$mensaje = $session->insertUser();
+	$mensaje = $session->addUser();
 
 	?>
 	<mark> <!--<i class="far fa-grin-alt"></i> --><code> <?php echo $mensaje ?> </code></mark>
 	<br> <br>
-	<a class="btn btn-primary" href="users.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+	<a class="btn btn-primary" href="viewusers.php"> volver </a>
 	
 	<?php
 	exit;
@@ -53,38 +50,46 @@ if (isset($_POST['idUser']))
 						<article>
 							<form class="was-validated" action="" method="post">
 
-									<input class="form-control" name="id" id="id" type="hidden" value="null" required="true">
+									<input class="form-control" name="id" id="id" type="hidden" value="" required="true">
 
-									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
+								<div class="form-group">
+									<label class="sr-only" for="lastname"> Apellido </label>
+									<input class="form-control"name="lastname" id="lastname" type="text" placeholder="lastname" required="true" autofocus="true"> 
+								</div>		
 
-									<input class="form-control" name="idUser" id="idUser" type="hidden" placeholder="IdUser" required="true" value="3" > <!-- poner un getidUserbyNickname -->
-
-								<input name="approved" id="approved" type="hidden">		
+								<div class="form-group">
+									<label class="sr-only" for="firstname"> Nombre </label>
+									<input class="form-control"name="firstname" id="firstname" type="text" placeholder="firstname" required="true" autofocus="true"> 
+								</div>		
 
 								<div class="form-group">
 									<label class="sr-only" for="nickname"> Jugador </label>
 									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true" autofocus="true"> 
-								</div>									
-
-								<input name="accumulatedPoints" id="accumulatedPoints" type="hidden">
-
-								<input class="form-control" name="cashout" id="cashout" type="hidden">
-							
+								</div>		
 
 								<div class="form-group">
-									<label class="sr-only" for="start"> hora inicio: </label>
-									<input class="form-control" name="start" id="start" type="datetime-local" placeholder="hora de inicio" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
-									<small id="inicio" class="form-tet text-muted"> Fecha y hora de Incio </small>
+									<label class="sr-only" for="mobile"> Celular </label>
+									<input class="form-control"name="mobile" id="mobile" type="text" placeholder="mobile" required="true"> 
 								</div>
 
-								<input name="end" id="end" type="hidden" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
-								 <!-- =getStarbyFirstBuyin()--> 
+								<div class="form-group">
+									<label class="sr-only" for="email"> E-mail </label>
+									<input class="form-control"name="email" id="email" type="text" placeholder="email" required="true"> 
+								</div>
 
+									<input class="form-control" name="password" id="password" type="hidden" required="true" value="">
+									<input class="form-control" name="multiplier" id="multiplier" type="hidden" required="true" value="">
+									<input class="form-control" name="active" id="active" type="hidden" required="true" value="">
+									<input class="form-control" name="hours" id="hours" type="hidden" required="true" value="">
+									<input class="form-control" name="points" id="points" type="hidden" required="true" value="">
+									<input class="form-control" name="results" id="results" type="hidden" required="true" value="">
+									<input class="form-control" name="cashin" id="cashin" type="hidden" required="true" value="">
 
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />
 								</div>
+							
 							</form>
 						</article>
 					</section>
@@ -92,7 +97,9 @@ if (isset($_POST['idUser']))
 			</div>
 		</div>
 	</div>
-	
-	
 </body>
-</html>
+
+
+
+
+

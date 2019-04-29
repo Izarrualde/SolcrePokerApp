@@ -13,11 +13,6 @@ Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
 
-
-echo "<br>";
-var_dump($_GET);
-echo "<br>";
-
 if (!isset($_GET['id']))
 {
 	header('Location: ../../index.php');
