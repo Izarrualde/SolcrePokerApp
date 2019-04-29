@@ -181,12 +181,10 @@ foreach ($datosUsers as $user)
 												 ?> 
 											</td>
 											<td> 
-											
+												<a href="src/links/users.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
+												<a href="src/links/buyins.php?id=<?php echo $session->getIdSession();?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
 												<a href="src/links/tips.php?id=<?php echo $session->getIdSession(); ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
 												<a href="src/links/comissions.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-												<a href="src/links/buyins.php?id=<?php echo $session->getIdSession();?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
-												<a href="src/links/users.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
-
 											</td>
 											<?php
 										}
@@ -213,7 +211,7 @@ foreach ($datosUsers as $user)
 				<div class="card-body">
 					<section class="container row"  style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
-								<a href="src/links/viewUsers.php" class="btn btn-lg btn-block btn-info"> <i class="fas fa-eye"></i></a>										
+								<a href="src/links/viewUsers.php" class="btn btn-lg btn-block btn-info"> <i class="far fa-eye"></i></i></a>										
 								<a href="src/links/adduser.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>			
 						</article>
 					</section>
@@ -221,6 +219,7 @@ foreach ($datosUsers as $user)
 			</div>
 		</div>
 	</div>
+	<br><br><br><br><br>
 </body>
 
 

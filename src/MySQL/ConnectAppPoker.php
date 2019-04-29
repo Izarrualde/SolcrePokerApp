@@ -28,7 +28,7 @@ class ConnectAppPoker extends Connect
 
 	public function getDatosSessionUsersById($id)
 	{
-		$sql="SELECT id, session_id, user_id, approved, accumulated_points, cashout, DATE_FORMAT(start, '%d-%m-%Y %H:%i') as start, DATE_FORMAT(end, '%d-%m-%Y %H:%i') as end FROM session_users WHERE id='".$id."'";
+		$sql="SELECT id, session_id, user_id, approved, accumulated_points, cashout, DATE_FORMAT(start, '%d-%m-%Y %H:%i') as start, DATE_FORMAT(end, '%d-%m-%Y %H:%i') as end FROM session_users WHERE user_id='".$id."'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -139,6 +139,14 @@ class ConnectAppPoker extends Connect
 		return $arreglo;
 	}
 
+	public function getHourFirstBuyin()
+	{
+		$sql="SELECT MIN(hour) as start FROM session_buyins WHERE session_id='$_GET[id]' AND player_id='$_GET[idU]'";
+		$datos = $this->db->query($sql);
+		$reg = $datos->fetch_object();
+		return $reg;
+	}
+
 	public function getDatosSessions()
 	{
 		$sql="SELECT id, title, description, date, seats, start_time, start_time_real, end_time FROM sessions";
@@ -162,6 +170,24 @@ class ConnectAppPoker extends Connect
 		}
 		return $arreglo;
 	}
+
+
+	public function getIdUserbyNickname($nickname)
+	{
+		$sql="SELECT id FROM users WHERE nickname='$nickname'";
+		$datos = $this->db->query($sql);
+		$reg=$datos->fetch_object();
+		return $reg;
+	}
+
+	public function getNicknameUserbyId($id)
+	{
+		$sql="SELECT nickname FROM users WHERE id='$id'";
+		$datos = $this->db->query($sql);
+		$reg=$datos->fetch_object();
+		return $reg;
+	}
+
 
 	public function insertDealerTip()
 	{
@@ -188,8 +214,8 @@ class ConnectAppPoker extends Connect
 
 	public function insertBuyin()
 	{
-
-		$sql= "INSERT into session_buyins VALUES (NULL, '$_POST[idSession]', '$_POST[idPlayer]', '$_POST[amountCash]', '$_POST[amountCredit]', '$_POST[currency]', '$_POST[hour]', '1')";
+		$idPlayer = $this->getIdUserbyNickname($_POST['nickname']);
+		$sql= "INSERT into session_buyins VALUES (NULL, '$_POST[idSession]', '$idPlayer->id', '$_POST[amountCash]', '$_POST[amountCredit]', '$_POST[currency]', '$_POST[hour]', '1')";
 		$this->db->query($sql);
 	}
 
@@ -198,10 +224,11 @@ class ConnectAppPoker extends Connect
 	public function insertUser()
 	{
 		$users_session = $this->getDatosSessionUsers();
+		$idUser = $this->getIdUserbyNickname($_POST['nickname']);
 		$mensaje ='';
 		foreach ($users_session as $user) 
 		{
-			if ($user->user_id==$_POST['idUser'])
+			if ($user->user_id==$idUser->id)
 			{
 				$mensaje = "El usuario ya habia sido agregado a esta sesión";
 				break;			
@@ -209,7 +236,7 @@ class ConnectAppPoker extends Connect
 		}
 		if ($mensaje=='')
 		{
-			$sql="INSERT into session_users VALUES (null, '$_POST[idSession]','$_POST[idUser]', '$_POST[approved]', '$_POST[accumulatedPoints]', '$_POST[cashout]', '$_POST[start]', '$_POST[end]')"; 
+			$sql="INSERT into session_users VALUES (null, '$_POST[idSession]','$idUser->id', '$_POST[approved]', '$_POST[accumulatedPoints]', '$_POST[cashout]', '$_POST[start]', '$_POST[end]')"; 
 			$mensaje = "El usuario se ingreso exitosamente";
 			$this->db->query($sql);			
 		}

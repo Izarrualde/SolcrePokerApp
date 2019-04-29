@@ -18,11 +18,12 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 $mensaje1 = '';
 $mensaje2 = '';
 
+$session = new ConnectAppPoker;
+
 if (isset($_POST['idSession']))
 {
 	if ((is_numeric($_POST['amountCash'])) and (is_numeric($_POST['amountCredit'])))
 	{
-		$session = new ConnectAppPoker;
 		$session->insertBuyin(); 
 		//header();
 		?>
@@ -44,6 +45,7 @@ if (isset($_POST['idSession']))
 	}
 }
 
+$usersSession = $session->getDatosSessionUsers();
 ?>
 
 <body>
@@ -69,12 +71,20 @@ if (isset($_POST['idSession']))
 
 									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
 
-
-
 								<div class="form-group">
-									<label class="sr-only" for="idSession"> IdPlayer: </label>
-									<input class="form-control" name="idPlayer" id="idPlayer" type="text" placeholder="IdPlayer" required="true">
+									<select class="custom-select" name="nickname" id="nickname" required="true">
+										<option value=""> --Seleccione un Jugador--</option>
+										<?php foreach ($usersSession as $user) 
+										{
+											?>
+										<option> <?php echo $session->getNicknameUserbyId($user->user_id)->nickname; ?></option>
+											<?php
+										}
+										?>
+									</select>
 								</div>
+
+									<!--<input class="form-control" name="idPlayer" id="idPlayer" type="hidden" value="">-->
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> monto cash: </label>
@@ -109,8 +119,11 @@ if (isset($_POST['idSession']))
 								</div>
 
 								<div class="form-group">
-									<label class="sr-only" for="currency"> currency: </label>
-									<input class="form-control" name="currency" id="currency" type="text" placeholder="moneda" required="true">
+									<select class="custom-select" name="currency" id="currency" required="true">
+										<option value=""> --Seleccione la moneda--</option>
+										<option> USD </option>
+										<option> $ </option>
+									</select>
 								</div>
 
 								<div class="form-group">

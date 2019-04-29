@@ -24,6 +24,8 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idU"]))
 
 $datos = $session->getDatosSessionUsersById($_GET["idU"]);
 
+$horaInicio = $session->getHourFirstBuyin()->start;
+
 if (sizeof($datos)==0)
 {
 	die("error 404");
@@ -83,7 +85,7 @@ if (isset($_POST["id"]))
 
 								<div class="form-group">
 									<label class="sr-only" for="start"> Inicio: </label>
-									<input class="form-control" name="start" id="start" type="datetime-local" required="true" value="<?php echo substr($datos[0]->start, 6, 4); echo substr($datos[0]->start, 2, 4); echo substr($datos[0]->start, 0, 2); echo "T"; echo substr($datos[0]->start, 11, 5); ?>">
+									<input class="form-control" name="start" id="start" type="datetime-local" required="true" value="<?php echo substr($horaInicio, 0, 10); echo "T"; echo substr($horaInicio, 11, 5); ?>">
 									<small id="start" class="form-tet text-muted"> Fecha y hora de inicio </small>
 								</div>
 

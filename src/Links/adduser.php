@@ -37,7 +37,7 @@ if (isset($_POST['id']))
 		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Nuevo Usuario</li>
 			  </ol>
 			</nav>

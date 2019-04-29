@@ -102,7 +102,7 @@ foreach ($datosUsers as $user)
 													<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
 													<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
 
-													<td> <a href="actions/editUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+													<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
 											
 												</tr>
 											<?php

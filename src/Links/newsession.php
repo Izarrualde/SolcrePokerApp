@@ -34,9 +34,9 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 	}
 	?>
 
-	<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-5">
+
+	<div class="container">
+		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
@@ -47,7 +47,7 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 				<div class="card-header bg-primary text-white">
 					Ingresar datos
 				</div>
-				<div class="card-body">
+
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
@@ -103,7 +103,7 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 							</form>
 						</article>
 					</section>
-
+				</div>
 			</div>
 		</div>
 	</div>

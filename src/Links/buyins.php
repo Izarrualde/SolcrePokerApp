@@ -18,6 +18,8 @@ if (!isset($_GET['id']))
 
 $session = new ConnectAppPoker;
 $datosSessionBuyins = $session->getDatosSessionBuyins();
+
+
 $session1 = new SessionEntity;
 
 foreach ($datosSessionBuyins as $buyin) 
@@ -25,6 +27,9 @@ foreach ($datosSessionBuyins as $buyin)
 	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->session_id, $buyin->player_id, $buyin->amount_cash, $buyin->amount_credit, $buyin->currency, $buyin->hour, $buyin->approved);
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">

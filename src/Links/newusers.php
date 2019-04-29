@@ -11,19 +11,24 @@
 <?php
 include "../MySQL/Connect.php";
 include "../MySQL/ConnectAppPoker.php";
+include "../Entity/UserEntity.php";
 Use \Solcre\pokerApp\MySQL\Connect;
 Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+Use \Solcre\PokerApp\Entity\UserEntity;
+
+var_dump($_POST);
+echo "<br>";
+
+
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
+$connection = new ConnectAppPoker;
 
-if (isset($_POST['idUser']))
+
+
+if (isset($_POST['id']))
 {
-	$session = new ConnectAppPoker;
-	echo "<br>";
-	var_dump($_POST);
-	echo "<br>";
-	$mensaje = $session->insertUser();
-
+	$mensaje = $connection->insertUser();
 	?>
 	<mark> <!--<i class="far fa-grin-alt"></i> --><code> <?php echo $mensaje ?> </code></mark>
 	<br> <br>
@@ -33,6 +38,15 @@ if (isset($_POST['idUser']))
 	exit;
 }
 
+
+$datosUsers = $connection->getDatosUsers();
+$users = array();
+
+foreach ($datosUsers as $user) 
+{
+	$users[]= new UserEntity($user->id, $user->password, $user->mobile, $user->email, $user->lastname, $user->firstname, $user->nickname, $user->multiplier, $user->active, $user->hours, $user->points, $user->results, $user->cashin);
+}
+
 ?>
 
 <body>
@@ -40,7 +54,7 @@ if (isset($_POST['idUser']))
 		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Nuevo Usuario</li>
 			  </ol>
 			</nav>
@@ -57,14 +71,29 @@ if (isset($_POST['idUser']))
 
 									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
 
-									<input class="form-control" name="idUser" id="idUser" type="hidden" placeholder="IdUser" required="true" value="3" > <!-- poner un getidUserbyNickname -->
+
 
 								<input name="approved" id="approved" type="hidden">		
+								
+								<div class="form-group">
+									<select class="custom-select" name="nickname" id="nickname" required="true">
+										<option value=""> --Seleccione un Jugador--</option>
+										<?php foreach ($users as $user) 
+										{
+											?>
+										<option> <?php echo $user->getNickname(); ?></option>
+											<?php
+										}
+										?>
+									</select>
+								</div>
+								<!--<input class="form-control" name="idUser" id="idUser" type="hidden" placeholder="IdUser" required="true" value="<?php /*echo $connection->getidUserbyNickname($_POST['nickname'])->id; */?>" >--> <!-- poner un getidUserbyNickname -->
 
+								<!--
 								<div class="form-group">
 									<label class="sr-only" for="nickname"> Jugador </label>
 									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true" autofocus="true"> 
-								</div>									
+								</div> -->									
 
 								<input name="accumulatedPoints" id="accumulatedPoints" type="hidden">
 

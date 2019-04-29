@@ -74,6 +74,7 @@ foreach ($datosUsers as $user)
 									<th>  Cel </th>
 									<th> horas </th>
 									<th> puntos </th>
+									<th> acciones </th>
 										<tbody>
 												<?php 
 												foreach ($users as $user) 
@@ -85,6 +86,7 @@ foreach ($datosUsers as $user)
 														<td> <?php echo $user->getMobile(); ?></td>
 														<td> <?php echo $user->getHours();?> </td>
 														<td> <?php echo $user->getPoints();?> </td>
+														<td> <a href="actions/editPlayer.php?id=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a><a href="actions/deletePlayer.php?id=<?php echo $user->getId(); ?>"> <i class="fas fa-trash-alt"></i> </a> </td>
 														<?php
 													}
 													?>

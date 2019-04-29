@@ -36,6 +36,7 @@ foreach ($datosComissionsSession as $comission)
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +74,7 @@ foreach ($datosComissionsSession as $comission)
 					<?php
 					}
 					?>
-					Comissions
+					Comisiones
 				</div>
 				<div class="card-body">
 					<section class="container row">
@@ -81,17 +82,17 @@ foreach ($datosComissionsSession as $comission)
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="thead-dark text-center bg-secondary">
 									<tr>
-										<th colspan="3"> Comission </th>
-										<th> <?php if (isset($datosSessionComissions[0])) 
+										<th colspan="3"> Comisiones </th>
+										<th> <?php if (isset($datosComissionsSession[0])) 
 											 {
-											 	echo date_format(date_create($datosSessionComissions[0]->hour), 'd-m-y');
+											 	echo date_format(date_create($datosComissionsSession[0]->hour), 'd-m-y');
 											 } ?> </th>
 									</tr>
 									<tr class="bg-success">
 										<th> id </th>
-										<th> hour</th>
-										<th> comisision </th>	
-										<th> actions </th>						
+										<th> hora</th>
+										<th> comision </th>	
+										<th> accciones </th>						
 									</tr>
 
 								</thead>

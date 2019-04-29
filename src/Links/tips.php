@@ -126,7 +126,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 									</tr>
 									<tr class="text-center bg-success">
 										<th> id </th>
-										<th> hour</th>
+										<th> hora</th>
 										<th> DealerTips </th>
 										<th> acciones </th>
 									</tr>
@@ -183,7 +183,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 									</tr>
 									<tr class="text-center bg-success">
 										<th> id </th>
-										<th> hour</th>
+										<th> hora</th>
 										<th> ServiceTip </th>
 										<th> acciones </th>
 									</tr>
