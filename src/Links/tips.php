@@ -8,7 +8,7 @@ include "../Entity/DealerTipSession.php";
 include "../Entity/ServiceTipSession.php";
 
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
+include "../MySQL/ConnectLmsuy_db.php";
 
 //include "src/Exception/UserAlreadyAddedException.php";
 //include "src/Exception/SessionFullException.php";
@@ -18,15 +18,15 @@ include "../MySQL/ConnectAppPoker.php";
 //include "src/Exception/ServiceTipAlreadyAddedException.php";
 //include "src/Exception/DealerTipAlreadyAddedException.php";
 
-Use \Solcre\PokerApp\Entity\SessionEntity;
+Use \Solcre\lmsuy\Entity\SessionEntity;
 //Use \Solcre\PokerApp\Entity\UserSession;
 //Use \Solcre\PokerApp\Entity\BuyinSession;
 //Use \Solcre\PokerApp\Entity\ComissionSession;
-Use \Solcre\PokerApp\Entity\DealerTipSession;
-Use \Solcre\PokerApp\Entity\ServiceTipSession;
+Use \Solcre\lmsuy\Entity\DealerTipSession;
+Use \Solcre\lmsuy\Entity\ServiceTipSession;
 
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 //Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
@@ -42,20 +42,20 @@ Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
 }*/
 
 
-$session = new ConnectAppPoker;
-$datosSessionDealerTips = $session->getDatosSessionDealerTips();
-$datosSessionServiceTips = $session->getDatosSessionServiceTips();
+$connection = new ConnectLmsuy_db;
+$datosSessionDealerTips = $connection->getDatosSessionDealerTips($_GET['id']);
+$datosSessionServiceTips = $connection->getDatosSessionServiceTips($_GET['id']);
 
-$session1 = new SessionEntity;
+$session = new SessionEntity;
 
 foreach ($datosSessionDealerTips as $dealerTip) 
 {
-	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->hour, $dealerTip->dealer_tip);
+	$session->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
 }
 
 foreach ($datosSessionServiceTips as $serviceTip) 
 {
-	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->hour, $serviceTip->service_tip);
+	$session->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
 }
 ?>
 
@@ -119,7 +119,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										<th colspan="3"> DEALER </th>
 										<th> <?php if (isset($datosSessionDealerTips[0])) 
 											 {
-											 	echo date_format(date_create($datosSessionDealerTips[0]->hour), 'd-m-y');
+											 	echo date_format(date_create($datosSessionDealerTips[0]->created_at), 'd-m-y');
 											 }  
 											 ?> 
 										</th>
@@ -133,7 +133,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 								</thead>
 								<tbody class="text-center">
 									<?php 
-									if (sizeof($session1->sessionDealerTips)==0)
+									if (sizeof($session->sessionDealerTips)==0)
 									{
 										?>
 										<tr>
@@ -142,7 +142,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 									<?php
 									} else
 									{ 
-										foreach ($session1->sessionDealerTips as $dealerTip) 
+										foreach ($session->sessionDealerTips as $dealerTip) 
 										{
 										?>
 										<tr class="text-center">
@@ -159,7 +159,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										<tr class="text-center bg-dark text-white">
 											<th> TOTAL </th>
 											<th> </th>
-											<th> <?php echo $session1->getDealerTipTotal() ?> </th>
+											<th> <?php echo $session->getDealerTipTotal() ?> </th>
 											<th> </th>
 										</tr>
 									<?php
@@ -176,7 +176,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										<th colspan="3"> SERVICE </th>
 										<th> <?php if (isset($datosSessionServiceTips[0])) 
 											 {
-											 	echo date_format(date_create($datosSessionServiceTips[0]->hour), 'd-m-y');
+											 	echo date_format(date_create($datosSessionServiceTips[0]->created_at), 'd-m-y');
 											 }
 											 ?> 
 										</th>
@@ -190,7 +190,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 								</thead>
 								<tbody class="text-center">
 									<?php 
-									if (sizeof($session1->sessionServiceTips)==0)
+									if (sizeof($session->sessionServiceTips)==0)
 									{
 										?>
 										<tr>
@@ -200,7 +200,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										<?php
 									} else
 									{
-										foreach ($session1->sessionServiceTips as $serviceTip) 
+										foreach ($session->sessionServiceTips as $serviceTip) 
 										{
 										?>
 											<tr>
@@ -218,7 +218,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 											<tr class="text-center bg-dark text-white">
 												<th> TOTAL </th>
 												<th> </th>
-												<th> <?php echo $session1->getServiceTipTotal(); ?> </th>
+												<th> <?php echo $session->getServiceTipTotal(); ?> </th>
 												<th> </th>
 											</tr>		
 										<?php

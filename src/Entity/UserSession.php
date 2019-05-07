@@ -1,21 +1,21 @@
 <?php
-Namespace Solcre\PokerApp\Entity;
+Namespace Solcre\lmsuy\Entity;
 class UserSession 
 {
 	protected $id;
 	protected $session;
 	protected $idUser;
-	protected $approved;
+	protected $isApproved;
 	protected $accumulatedPoints;
 	protected $cashout;
 	public $start;
 	protected $end;
-	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $approved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
+	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
 	{
 		$this->setId($id);
 		$this->setSession($session);
 		$this->setIdUser($idUser);
-		$this->setApproved($approved);
+		$this->setIsApproved($isApproved);
 		$this->setAccumulatedPoints($accumulatedPoints);
 		$this->setCashout($cashout);
 		$this->setStart($start);
@@ -54,13 +54,13 @@ class UserSession
 		return $this;
 	}
 	
-	public function getApproved() 
+	public function getIsApproved() 
 	{
-		return $this->approved;
+		return $this->isApproved;
 	}
 	
-	public function setApproved($approved){
-		$this->approved = $approved;
+	public function setIsApproved($isApproved){
+		$this->isApproved = $isApproved;
 		return $this;
 	}
 	

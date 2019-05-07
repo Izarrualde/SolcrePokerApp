@@ -3,14 +3,14 @@ include "../Entity/SessionEntity.php";
 //include "src/Entity/UserEntity.php";
 include "../Entity/UserSession.php";
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
+include "../MySQL/ConnectLmsuy_db.php";
 //include "src/Exception/UserAlreadyAddedException.php";
 //include "src/Exception/SessionFullException.php";
 //include "src/Exception/PlayerNotFoundException.php";
-Use \Solcre\PokerApp\Entity\SessionEntity;
-Use \Solcre\PokerApp\Entity\UserSession;
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+Use \Solcre\lmsuy\Entity\SessionEntity;
+Use \Solcre\lmsuy\Entity\UserSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
 
 if (!isset($_GET['id']))
@@ -19,15 +19,29 @@ if (!isset($_GET['id']))
 	exit;
 }
 
-$session = new ConnectAppPoker;
-$datosUsers = $session->getDatosSessionUsers();
-$session1 = new SessionEntity;
+
+
+
+$connection = new ConnectLmsuy_db;
+$datosUsers = $connection->getDatosSessionsUsers($_GET['id']);
+
+$session = new SessionEntity;
 
 foreach ($datosUsers as $user) 
 {
-	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->user_id, $user->approved, $user->accumulated_points, $user->cashout, $user->start, $user->end);
+	$session->sessionUsers[] = new UserSession($user->id, $session, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
 }
+
+/*foreach ($session->sessionUsers as $user) 
+{
+	echo "<br>";
+	print_r($user); echo "<br>";
+}
+*/
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,8 +87,7 @@ foreach ($datosUsers as $user)
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-dark text-white">
 									<th> id </th>
-									<th> idUser </th>
-									<th> accumulatedPoints </th>
+									<th> Jugador </th>
 									<th> cashout </th>
 									<th> start </th>
 									<th> end </th>
@@ -91,21 +104,30 @@ foreach ($datosUsers as $user)
 									<?php
 									} else
 									{
-										foreach ($session1->sessionUsers as $user) 
+										foreach ($session->sessionUsers as $user) 
 										{
-											?>
-												<tr class="text-center">
-													<td> <?php echo $user->getId() ?>  </td>
-													<td> <?php echo $user->getIdUser() ?>  </td>
-													<td> <?php echo $user->getAccumulatedPoints() ?>  </td>
-													<td> <?php echo $user->getCashout() ?>  </td>
-													<td> <?php echo date_format(date_create($user->getStart()), 'H:i') ?> </td>
-													<td> <?php echo date_format(date_create($user->getEnd()), 'H:i') ?> </td>
+											if ($user->getStart()== "00-00-0000 00:00")
+											{
+												?>
+													<tr class="text-center">
+														<td> <?php echo $user->getId() ?>  </td>
+														<td> 
+															
+															<?php echo $connection->getDatosUserById($user->getIdUser())->name; echo " "; echo $connection->getDatosUserById($user->getIdUser())->last_name; ?>  </td>
+														<td> <?php echo $user->getCashout() ?>  </td>
+														<td> <?php 
+														if ($user->getStart()== "00-00-0000 00:00")
+														{
+															echo "pendiente";
+														} else
+														echo date_format(date_create($user->getStart()), 'H:i'); ?> </td>
+														<td> <?php echo "pendiente"; ?> </td>
 
-													<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
-											
-												</tr>
+														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+												
+													</tr>
 											<?php
+											}
 										}
 									}
 											?>
@@ -124,6 +146,68 @@ foreach ($datosUsers as $user)
 					</section>
 				</div>
 			</div>
+
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Usuarios Inactivos
+				</div>
+				<div class="card-body bg-secondary">
+					<section class="container row" style="width: auto; margin: auto auto;">
+						<article class="col-md-12">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="text-center bg-dark text-white">
+									<th> id </th>
+									<th> Jugador </th>
+									<th> cashout </th>
+									<th> start </th>
+									<th> end </th>
+									<th> acciones </th>
+								</thead>
+								<tbody class="text-center">
+									<?php 
+									if (sizeof($datosUsers)==0)
+									{
+										?>
+										<tr>
+											<td colspan="9"> sin registros </td>
+										</tr>
+									<?php
+									} else
+									{
+										foreach ($session->sessionUsers as $user) 
+										{
+											if ($user->getEnd()!= "00-00-0000 00:00")
+											{
+												?>
+													<tr class="text-center">
+														<td> <?php echo $user->getId() ?>  </td>
+														<td> 
+															
+															<?php echo $connection->getDatosUserById($user->getIdUser())->name; echo " "; echo $connection->getDatosUserById($user->getIdUser())->last_name; ?>  </td>
+														<td> <?php echo $user->getCashout() ?>  </td>
+														<td> <?php echo date_format(date_create($user->getStart()), 'H:i'); ?> </td>
+														<td> <?php echo date_format(date_create($user->getEnd()), 'H:i'); ?> </td>
+
+														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+												
+													</tr>
+											<?php
+											}
+										}
+									}
+											?>
+
+							
+								</tbody>  
+							</table>
+						</article>	
+
+
+
+					</section>
+				</div>
+			</div>
+
 		</div>
 	</div>
 

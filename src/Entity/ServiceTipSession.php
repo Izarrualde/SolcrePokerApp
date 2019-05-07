@@ -1,5 +1,5 @@
 <?php
-Namespace Solcre\PokerApp\Entity;
+Namespace Solcre\lmsuy\Entity;
 
 class ServiceTipSession 
 {

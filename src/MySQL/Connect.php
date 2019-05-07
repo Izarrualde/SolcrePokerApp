@@ -1,5 +1,5 @@
 <?php
-Namespace Solcre\PokerApp\MySQL;
+Namespace Solcre\lmsuy\MySQL;
 
 abstract class Connect
 {
@@ -7,7 +7,7 @@ abstract class Connect
 
 	public function connection()
 	{
-		$this->mysqli = new \mysqli("localhost", "root", "", "apppoker");
+		$this->mysqli = new \mysqli("localhost", "root", "", "lmsuy_db");
 		return $this->mysqli;
 	}
 

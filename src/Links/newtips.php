@@ -1,8 +1,8 @@
 <?php
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $mensaje1 = '';
@@ -25,9 +25,9 @@ if (isset($_POST['enviado']))
 {
 	if ((is_numeric($_POST['dealerTip'])) and (is_numeric($_POST['serviceTip'])))
 	{		
-		$session = new ConnectAppPoker;
-		$session->insertDealerTip();
-		$session->insertServiceTip();
+		$connection = new ConnectLmsuy_db;
+		$connection->insertDealerTip($_POST['hour'], $_POST['dealerTip'], $_POST['idSession']);
+		$connection->insertServiceTip($_POST['hour'], $_POST['serviceTip'], $_POST['idSession']);
 		?>
 
 		<mark> <i class="far fa-grin-alt"></i> <code> Los tips se ingresaron exitosamente </code></mark>

@@ -10,9 +10,9 @@
 
 <?php
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -21,8 +21,8 @@ if (isset($_POST['idSession']))
 {
 	if (is_numeric($_POST['comission']))
 	{
-		$session = new ConnectAppPoker;
-		$session->insertComission();
+		$connection = new ConnectLmsuy_db;
+		$connection->insertComission($_POST['hour'], $_POST['comission'], $_POST['idSession']);
 		?>
 		<mark> <i class="far fa-grin-alt"></i> <code> La comisión se ingresó exitosamente </code></mark>
 		<br> <br>

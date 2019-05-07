@@ -7,13 +7,13 @@ include "../Entity/BuyinSession.php";
 include "../Entity/DealerTipSession.php";
 include "../Entity/ServiceTipSession.php";
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
+include "../MySQL/ConnectLmsuy_db.php";
 //include "src/Exception/PlayerNotFoundException.php";
 //include "src/Exception/ComissionAlreadyAddedException.php";
-Use \Solcre\PokerApp\Entity\SessionEntity;
-Use \Solcre\PokerApp\Entity\ComissionSession;
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+Use \Solcre\lmsuy\Entity\SessionEntity;
+Use \Solcre\lmsuy\Entity\ComissionSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 //Use \Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
 
@@ -23,15 +23,15 @@ if (!isset($_GET['id']))
 	exit;
 }
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 
-$datosComissionsSession = $session->getDatosSessionComissions();
+$datosComissionsSession = $connection->getDatosSessionComissions($_GET['id']);
 
-$session1 = new SessionEntity;
+$session = new SessionEntity;
 
 foreach ($datosComissionsSession as $comission) 
 {
-	$session1->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->hour, $comission->comission);
+	$session->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
 }
 
 ?>
@@ -85,7 +85,7 @@ foreach ($datosComissionsSession as $comission)
 										<th colspan="3"> Comisiones </th>
 										<th> <?php if (isset($datosComissionsSession[0])) 
 											 {
-											 	echo date_format(date_create($datosComissionsSession[0]->hour), 'd-m-y');
+											 	echo date_format(date_create($datosComissionsSession[0]->created_at), 'd-m-y');
 											 } ?> </th>
 									</tr>
 									<tr class="bg-success">
@@ -98,7 +98,7 @@ foreach ($datosComissionsSession as $comission)
 								</thead>
 								<tbody class="text-center">
 									<?php 
-									if (sizeof($session1->sessionComissions)==0)
+									if (sizeof($session->sessionComissions)==0)
 									{
 										?>
 										<tr>
@@ -107,7 +107,7 @@ foreach ($datosComissionsSession as $comission)
 									<?php
 									} else
 									{ 
-										foreach ($session1->sessionComissions as $comission) 
+										foreach ($session->sessionComissions as $comission) 
 										{
 										?>
 											<tr>
@@ -125,7 +125,7 @@ foreach ($datosComissionsSession as $comission)
 											<tr class="text-center bg-dark text-white">
 												<th> TOTAL </th>
 												<th> </th>
-												<th> <?php echo $session1->getComissionTotal() ?></th>
+												<th> <?php echo $session->getComissionTotal() ?></th>
 												<th> </th>
 											</tr>	
 									<?php

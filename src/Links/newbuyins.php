@@ -10,21 +10,35 @@
 
 <?php
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+
+var_dump($_POST);
+echo "<br>";
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 $mensaje1 = '';
 $mensaje2 = '';
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
+
+//public function insertBuyin($hour, $amountCash, $amountCredit, $IdSessionUser, $approved, $currency)
 
 if (isset($_POST['idSession']))
 {
 	if ((is_numeric($_POST['amountCash'])) and (is_numeric($_POST['amountCredit'])))
 	{
-		$session->insertBuyin(); 
+		echo "<br>";
+		echo "id user: ".$_POST['idUser'];
+		echo "<br>";
+		echo "idSession: ".$_GET['id'];
+		echo "<br>";
+		echo "moneda: ".$_POST['currency'];
+		echo "<br>";
+		echo "hora: ".$_POST['hour'];
+		echo "<br>";
+		$connection->insertBuyin($_POST['hour'], $_POST['amountCash'], $_POST['amountCredit'], $_POST['idUser'], $_POST['approved'], $_POST['currency']); 
 		//header();
 		?>
 		<mark> <i class="far fa-grin-alt"></i> <code> El buyin se ingresó exitosamente </code></mark>
@@ -45,7 +59,11 @@ if (isset($_POST['idSession']))
 	}
 }
 
-$usersSession = $session->getDatosSessionUsers();
+$usersSession = $connection->getDatosSessionsUsers($_GET['id']);
+
+echo "<br>";
+echo "<br>";
+var_dump($usersSession);
 ?>
 
 <body>
@@ -66,18 +84,18 @@ $usersSession = $session->getDatosSessionUsers();
 						<article>
 							<form class="was-validated" action="" method="post">
 
-									<input class="form-control" name="id" id="id" type="hidden" required="true" value="null">
+									<!--<input class="form-control" name="id" id="id" type="hidden" required="true" value="">-->
 								
 
 									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
 
 								<div class="form-group">
-									<select class="custom-select" name="nickname" id="nickname" required="true">
+									<select class="custom-select" name="idUser" id="idUser" required="true">
 										<option value=""> --Seleccione un Jugador--</option>
 										<?php foreach ($usersSession as $user) 
 										{
 											?>
-										<option> <?php echo $session->getNicknameUserbyId($user->user_id)->nickname; ?></option>
+										<option value="<?php echo $user->id; ?>"> <?php echo $connection->getDatosUserById($user->user_id)->username; ?></option>
 											<?php
 										}
 										?>
@@ -121,10 +139,12 @@ $usersSession = $session->getDatosSessionUsers();
 								<div class="form-group">
 									<select class="custom-select" name="currency" id="currency" required="true">
 										<option value=""> --Seleccione la moneda--</option>
-										<option> USD </option>
-										<option> $ </option>
+										<option value="1"> USD </option>
+										<option value="2"> $ </option>
 									</select>
 								</div>
+
+								<input class="form-control" name="approved" id="approved" type="hidden" required="true" value="1">
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />

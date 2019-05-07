@@ -1,5 +1,5 @@
 <?php
-Namespace Solcre\PokerApp\Entity;
+Namespace Solcre\lmsuy\Entity;
 
 use Solcre\PokerApp\Exception\UserAlreadyAddedException;
 use Solcre\PokerApp\Exception\SessionFullException;

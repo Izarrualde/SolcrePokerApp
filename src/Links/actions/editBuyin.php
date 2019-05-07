@@ -10,29 +10,32 @@
 
 <?php
 include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idB"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
 
-$datos = $session->getDatosSessionBuyinById($_GET["idB"]);
+$datos = $connection->getDatosSessionBuyinById($_GET["idB"]);
+
+
 
 if (sizeof($datos)==0)
 {
 	die("error 404");
 }
 
+
 if (isset($_POST["id"]))
 {
-	$session->updateBuyin();
+	$connection->updateBuyin($_POST['amountCash'], $_POST['amountCredit'], $_POST['currency'], $_POST['hour'], $_POST['approved'], $_POST['id']);
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El buyin se actualizó exitosamente </code></mark>
 
@@ -64,35 +67,32 @@ if (isset($_POST["id"]))
 							<form class="was-validated" action="" method="post">
 								<input name="id" type="hidden" value="<?php echo $datos[0]->id; ?>">
 								
-								<input name="idSession" id="idSession" type="hidden" required= "true" value="<?php echo $datos[0]->session_id; ?>">
+								<input name="idSessionUser" id="idSessionUser" type="hidden" required= "true" value="<?php echo $datos[0]->session_user_id; ?>">
 
-								<input name="idPlayer" id="idPlayer" type="hidden" required="true" value="<?php echo $datos[0]->player_id; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> amountCash: </label>
-									<input class="form-control" name="amountCash" id="amountCash" type="text" autofocus="true" placeholder="amountCash" required="true" value="<?php echo $datos[0]->amount_cash; ?>">
+									<input class="form-control" name="amountCash" id="amountCash" type="text" autofocus="true" placeholder="amountCash" required="true" value="<?php echo $datos[0]->amount_of_cash_money; ?>">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCredit"> amountCredit: </label>
-									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="amountCredit" required="true" value="<?php echo $datos[0]->amount_credit; ?>">
+									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="amountCredit" required="true" value="<?php echo $datos[0]->amount_of_credit_money; ?>">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="currency"> currency: </label>
-									<input class="form-control" name="currency" id="currency" type="text" placeholder="Currency" required="true" value="<?php echo $datos[0]->currency; ?>">
+									<input class="form-control" name="currency" id="currency" type="text" placeholder="Currency" required="true" value="<?php echo $datos[0]->currency_id; ?>">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr($datos[0]->created_at, 6, 4); echo substr($datos[0]->created_at, 2, 4); echo substr($datos[0]->created_at, 0, 2); echo "T"; echo substr($datos[0]->created_at, 11, 5); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 
-								<div class="form-group">
-									<label class="sr-only" for="approved"> currency: </label>
-									<input class="form-control" name="approved" id="approved" type="text" placeholder="approved" required="true" value="<?php echo $datos[0]->approved; ?>">
-								</div>
+									<input name="approved" id="approved" type="hidden" required="true" value="<?php echo $datos[0]->approved; ?>">
+
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />

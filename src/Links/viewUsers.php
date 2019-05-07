@@ -5,14 +5,14 @@ include "../Entity/UserEntity.php";
 include "../Entity/UserSession.php";
 
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
+include "../MySQL/ConnectLmsuy_db.php";
 
-Use \Solcre\PokerApp\Entity\UserEntity;
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+Use \Solcre\lmsuy\Entity\UserEntity;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 
 
 //$datosUsers = $session->getDatosSessionUsers();
@@ -21,7 +21,7 @@ $session = new ConnectAppPoker;
 //$datosDealerTipSession = $session->getDatosSessionDealerTips();
 //$datosServiceTipSession = $session->getDatosSessionServiceTips();
 
-$datosUsers = $session->getDatosUsers();
+$datosUsers = $connection->getDatosUsers();
 
 
 $users = array();
@@ -29,7 +29,7 @@ $users = array();
 
 foreach ($datosUsers as $user) 
 {
-	$users[]= new UserEntity($user->id, $user->password, $user->mobile, $user->email, $user->lastname, $user->firstname, $user->nickname, $user->multiplier, $user->active, $user->hours, $user->points, $user->results, $user->cashin);
+	$users[]= new UserEntity($user->id, $user->password, null /*mobile*/, $user->email, $user->last_name, $user->name, $user->username, $user->multiplier, $user->is_active, $user->hours, $user->points, $user->results, $user->cashin);
 }
 
 
@@ -69,11 +69,9 @@ foreach ($datosUsers as $user)
 						<article class="col-md-12">
 							<table class="table table-bordered table-hover text-center">
 								<thead class="text-center bg-dark text-white">
-									<th> Id </th>
-									<th> Nickname </th>
+									<th> Jugador </th>
 									<th>  Cel </th>
 									<th> horas </th>
-									<th> puntos </th>
 									<th> acciones </th>
 										<tbody>
 												<?php 
@@ -81,11 +79,9 @@ foreach ($datosUsers as $user)
 												{
 												?>
 												<tr>
-														<td> <?php echo $user->getId(); ?>  </td>
-														<td> <?php echo $user->getNickname(); ?></td>
+														<td> <?php echo $user->getName(); echo "  "; echo $user->getLastname(); ?></td>
 														<td> <?php echo $user->getMobile(); ?></td>
 														<td> <?php echo $user->getHours();?> </td>
-														<td> <?php echo $user->getPoints();?> </td>
 														<td> <a href="actions/editPlayer.php?id=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a><a href="actions/deletePlayer.php?id=<?php echo $user->getId(); ?>"> <i class="fas fa-trash-alt"></i> </a> </td>
 														<?php
 													}

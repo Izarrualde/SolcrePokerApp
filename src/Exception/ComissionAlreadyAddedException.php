@@ -1,5 +1,5 @@
 <?php
-Namespace Solcre\PokerApp\Exception;
+Namespace Solcre\lmsuy\Exception;
 
 class ComissionAlreadyAddedException extends \Exception {
 

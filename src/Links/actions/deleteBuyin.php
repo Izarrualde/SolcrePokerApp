@@ -1,32 +1,21 @@
 <?php
 include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
-echo "<br>";
-var_dump($_GET);
-echo "<br>";
-//var_dump($datos1);
-echo "<br>";
-
-
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idB"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionBuyinById($_GET["idB"]);
-echo "<br>";
-echo "get datos por id";
-var_dump($datos);
-echo "<br>";
+/*$datos = $connection->getDatosSessionBuyinById($_GET["idB"]);
 if (sizeof($datos)==0)
 {
 	die("error 404");
-}
+}*/
 
-$session->deleteBuyin();
+$connection->deleteBuyin($_GET["idB"]);
 header("Location: ../buyins.php?m=".'1'."&id=".$_GET['id']);
 ?>

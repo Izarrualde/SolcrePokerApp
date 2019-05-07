@@ -1,22 +1,22 @@
 <?php
 include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idC"]))	
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionComissionById($_GET["idC"]);
+$datos = $connection->getDatosSessionComissionById($_GET["idC"]);
 //$datos1 = $session->getDatosSessionComissions();
 if (sizeof($datos)==0)
 {
 	die("error 404");
 }
 
-$session->deleteComission();
+$connection->deleteComission($_GET["idC"]);
 header("Location: ../comissions.php?m=".'1'."&id=".$_GET['id']);
 ?>

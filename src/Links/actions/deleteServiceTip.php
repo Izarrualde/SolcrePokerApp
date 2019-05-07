@@ -1,24 +1,24 @@
 <?php
 include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idT"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionServiceTipById($_GET["idT"]);
+$datos = $connection->getDatosSessionServiceTipById($_GET["idT"]);
 
 if (sizeof($datos)==0)
 {
 	die("error 404");
 }
 
-$session->deleteServiceTip();
+$connection->deleteServiceTip($_GET["idT"]);
 
 //header("Location: ultrapro.php?var1=".$_GET['var1']."&var2=".$_GET['var2']."&var3=".$_GET['var3']);
 header("Location: ../tips.php?m=".'2'."&id=".$_GET['id']); // &id=$_GET['id']");

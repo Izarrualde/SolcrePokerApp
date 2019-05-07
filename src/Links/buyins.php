@@ -2,12 +2,12 @@
 include "../Entity/SessionEntity.php";
 include "../Entity/BuyinSession.php";
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
+include "../MySQL/ConnectLmsuy_db.php";
 //include "src/Exception/InsufficientBuyinException.php";
-Use \Solcre\PokerApp\Entity\SessionEntity;
-Use \Solcre\PokerApp\Entity\BuyinSession;
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+Use \Solcre\lmsuy\Entity\SessionEntity;
+Use \Solcre\lmsuy\Entity\BuyinSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 //Use \Solcre\PokerApp\Exception\InsufficientBuyinException;
 
 if (!isset($_GET['id']))
@@ -16,15 +16,15 @@ if (!isset($_GET['id']))
 	exit;
 }
 
-$session = new ConnectAppPoker;
-$datosSessionBuyins = $session->getDatosSessionBuyins();
+$connection = new ConnectLmsuy_db;
+$datosSessionBuyins = $connection->getDatosSessionBuyins($_GET['id']);
 
 
-$session1 = new SessionEntity;
+$session = new SessionEntity;
 
 foreach ($datosSessionBuyins as $buyin) 
 {
-	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->session_id, $buyin->player_id, $buyin->amount_cash, $buyin->amount_credit, $buyin->currency, $buyin->hour, $buyin->approved);
+	$session->sessionBuyins[] = new BuyinSession($buyin->id, null, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
 }
 ?>
 
@@ -75,13 +75,13 @@ foreach ($datosSessionBuyins as $buyin)
 										<th colspan="5"> Buyins </th>
 										<th colspan="3"> <?php if (isset($datosSessionBuyins[0])) 
 											 {
-											 	echo date_format(date_create($datosSessionBuyins[0]->hour), 'd-m-y');
+											 	echo date_format(date_create($datosSessionBuyins[0]->created_at), 'd-m-y');
 											 } ?> </th>
 
 									</tr>
 									<tr>
 										<th> id </th>
-										<th> playerId</th>
+										<th> sessionUserId</th>
 										<th> amountCash </th>
 										<th> amountCredit </th>
 										<th> currency </th>
@@ -92,7 +92,7 @@ foreach ($datosSessionBuyins as $buyin)
 								</thead>
 								<tbody class="text-center">
 									<?php 
-									if (sizeof($session1->sessionBuyins)==0)
+									if (sizeof($session->sessionBuyins)==0)
 									{
 										?>
 										<tr>
@@ -101,17 +101,17 @@ foreach ($datosSessionBuyins as $buyin)
 									<?php
 									} else
 									{
-										foreach ($session1->sessionBuyins as $buyin) 
+										foreach ($session->sessionBuyins as $buyin) 
 										{
 										?>
 											<tr>
 												<td> <?php echo $buyin->getId() ?>  </td>
-												<td> <?php echo $buyin->getIdPlayer() ?>  </td>
+												<td> <?php echo $buyin->getSessionUserId() ?>  </td>
 												<td> <?php echo $buyin->getAmountCash() ?>  </td>
 												<td> <?php echo $buyin->getAmountCredit() ?>  </td>
 												<td> <?php echo $buyin->getCurrency() ?>  </td>
 												<td> <?php echo date_format(date_create($buyin->getHour()), 'H:i') ?> </td>
-												<td> <?php echo $buyin->getApproved() ?>  </td>
+												<td> <?php echo $buyin->getIsApproved() ?>  </td>
 												<td> <a href="actions/editBuyin.php?idB=<?php echo $buyin->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a><a href="actions/deleteBuyin.php?idB=<?php echo $buyin->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td> 
 
 

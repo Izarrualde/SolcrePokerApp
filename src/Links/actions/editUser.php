@@ -10,30 +10,37 @@
 
 <?php
 include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-$session = new ConnectAppPoker;
+
+$connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idU"]))
 {
-	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
+	die("error 404 primero"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionUsersById($_GET["idU"]);
-
-$horaInicio = $session->getHourFirstBuyin()->start;
+$datos = $connection->getDatosSessionUsersById($_GET["idUS"]);
+var_dump($datos);
+//$horaInicio = $session->getHourFirstBuyin()->start;
 
 if (sizeof($datos)==0)
 {
-	die("error 404");
+	die("error 404 segundo");
 }
 
-if (isset($_POST["id"]))
+echo "<br>";
+echo "var_dump de post";
+echo "<br>";
+var_dump($_POST);
+echo "<br>";
+
+if (isset($_POST["idSession"]))
 {
-	$session->updateUser();
+	$connection->updateUserSession($_POST['accumulatedPoints'], $_POST['cashout'], $_POST['start'], $_POST['end'] , $_POST['approved'] , $_POST['idSession'], $_POST['idUser'], $_GET['idUS']);
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El usuario se actualizó exitosamente </code></mark>
 
@@ -52,7 +59,7 @@ if (isset($_POST["id"]))
 		<div class="col-md-8">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
-			    <li class="breadcrumb-item"><a href="../../../index.php">Home</a></li>
+			    <li class="breadcrumb-item"><a href="../../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Editar Usuario</li>
 			  </ol>
 			</nav>
@@ -64,19 +71,18 @@ if (isset($_POST["id"]))
 					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
-								<input name="id" type="hidden" value="<?php echo $datos[0]->id; ?>">
+								<input name="id" type="hidden" value="<?php echo $_GET['idUS']; ?>">
 								
-								<!--/*<div class="form-group">
-									<label class="sr-only" for="idSession"> IdUser: </label>
-									<input class="form-control" name="idUser" id="idUser" type="text" autofocus="true" placeholder="IdUser" required="true" value="<?php/* echo*/ $datos[/*0*/]->user_id; ?>">
-								</div>-->
+								<input name="idUser" id="idUser" type="hidden" value="<?php echo $datos['0']->user_id; ?>">
+
+								<input name="idSession" id="idSession" type="hidden" value="<?php echo $datos['0']->session_id; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="accumulatedPoints"> accumulatedPoints: </label>
-									<input class="form-control" name="accumulatedPoints" id="accumulatedPoints" type="text" placeholder="accumulatedPoints" required="true" value="<?php echo $datos[0]->accumulated_points; ?>">
+									<input class="form-control" name="accumulatedPoints" id="accumulatedPoints" type="text" placeholder="accumulatedPoints" required="true" value="<?php echo $datos[0]->points; ?>">
 								</div>
 
-								<input name="approved" id="approved" type="hidden" value="<?php echo $datos[0]->approved; ?>">
+								<input name="approved" id="approved" type="hidden" value="<?php echo $datos[0]->is_approved; ?>">
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> cashout: </label>
@@ -85,13 +91,13 @@ if (isset($_POST["id"]))
 
 								<div class="form-group">
 									<label class="sr-only" for="start"> Inicio: </label>
-									<input class="form-control" name="start" id="start" type="datetime-local" required="true" value="<?php echo substr($horaInicio, 0, 10); echo "T"; echo substr($horaInicio, 11, 5); ?>">
+									<input class="form-control" name="start" id="start" type="datetime-local" value="<?php echo substr($datos[0]->start_at, 0, 10); echo "T"; echo substr($datos[0]->start_at, 11, 5); ?>">
 									<small id="start" class="form-tet text-muted"> Fecha y hora de inicio </small>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="end"> Fin: </label>
-									<input class="form-control" name="end" id="end" type="datetime-local" required="true" value="<?php echo substr($datos[0]->end, 6, 4); echo substr($datos[0]->end, 2, 4); echo substr($datos[0]->end, 0, 2); echo "T"; echo substr($datos[0]->end, 11, 5); ?>">
+									<input class="form-control" name="end" id="end" type="datetime-local" value="<?php echo substr($datos[0]->end_at, 6, 4); echo substr($datos[0]->end_at, 2, 4); echo substr($datos[0]->end_at, 0, 2); echo "T"; echo substr($datos[0]->end_at, 11, 5); ?>">
 									<small id="end" class="form-tet text-muted"> Fecha y hora de finalizacion </small>
 								</div>
 

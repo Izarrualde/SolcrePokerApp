@@ -1,33 +1,34 @@
 <?php
-Namespace Solcre\PokerApp\Entity;
+Namespace Solcre\lmsuy\Entity;
 
-class UserEntity {
+class UserEntity 
+{
 	protected $id;
 	protected $password;
 	protected $mobile;
 	protected $email;
-	protected $firstname;
+	protected $name;
 	protected $lastname;
-	protected $nickname;
+	protected $username;
 	protected $multiplier;
-	protected $active;
+	protected $isActive;
 	//for cache
 	protected $hours;
 	protected $points;
 	protected $results;
 	protected $cashin;
 
-	public function __construct($id=null, $password="", $mobile="", $email="", $lastname="", $firstname="",  $nickname="", $multiplier=null, $active=null, $hours=0, $points=0, $results=0, $cashin=0) 
+	public function __construct($id=null, $password="", $mobile="", $email="", $lastname="", $name="",  $username="", $multiplier=null, $isActive=null, $hours=0, $points=0, $results=0, $cashin=0) 
 	{
 		$this->setId($id);
 		$this->setPassword($password);
 		$this->setMobile($mobile);
 		$this->setEmail($email);
 		$this->setLastname($lastname);
-		$this->setFirstName($firstname);
-		$this->setNickname($nickname);
+		$this->setName($name);
+		$this->setUsername($username);
 		$this->setMultiplier($multiplier);
-		$this->setActive($active);
+		$this->setIsActive($isActive);
 		$this->setHours($hours);
 		$this->setpoints($points);
 		$this->setResults($results);
@@ -91,14 +92,14 @@ class UserEntity {
 		return $this;
 	}
 
-	public function getFirstname() 
+	public function getName() 
 	{
-		return $this->firstname;
+		return $this->name;
 	}
 
-	public function setFirstname($firstname)
+	public function setName($name)
 	{
-		$this->firstname = $firstname;
+		$this->name = $name;
 		return $this;
 	}
 
@@ -113,14 +114,14 @@ class UserEntity {
 		return $this;
 	}
 
-	public function getNickname() 
+	public function getUsername() 
 	{
-		return $this->nickname;
+		return $this->username;
 	}
 
-	public function setNickname($nickname)
+	public function setUsername($username)
 	{
-		$this->nickname = $nickname;
+		$this->username = $username;
 		return $this;
 	}
 
@@ -135,14 +136,14 @@ class UserEntity {
 		return $this;
 	}
 
-	public function getActive() 
+	public function getIs_active() 
 	{
 		return $this->active;
 	}
 
-	public function setActive($active)
+	public function setIsActive($isActive)
 	{
-		$this->active = $active;
+		$this->isActive = $isActive;
 		return $this;
 	}
 

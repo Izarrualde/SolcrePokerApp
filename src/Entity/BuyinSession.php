@@ -1,27 +1,27 @@
 <?php
-Namespace Solcre\PokerApp\Entity;
+Namespace Solcre\lmsuy\Entity;
 
 class BuyinSession 
 {
 	protected $id;
 	protected $idSession;
-	protected $idPlayer;
+	protected $sessionUserId;
 	protected $amountCash;
 	protected $amountCredit;
 	protected $currency;
 	protected $hour;
-	protected $approved;
+	protected $isApproved;
 
-	public function __construct($id=null, $idSession=null, $idPlayer=null, $amountCash=null, $amountCredito=null, $currency=null, $hour=null, $approved=null)
+	public function __construct($id=null, $idSession=null, $sessionUserId=null, $amountCash=null, $amountCredit=null, $currency=null, $hour=null, $isApproved=null)
 	{
 		$this->setId($id);
 		$this->setIdSession($idSession);
-		$this->setIdPlayer($idPlayer);
+		$this->setSessionUserId($sessionUserId);
 		$this->setamountCash($amountCash);
-		$this->setamountCredito($amountCredito);
+		$this->setamountCredit($amountCredit);
 		$this->setCurrency($currency);
 		$this->setHour($hour);
-		$this->setApproved($approved);
+		$this->setIsApproved($isApproved);
 	}
 
 	public function getId()
@@ -46,14 +46,14 @@ class BuyinSession
 		return $this;
 	}
 
-	public function getIdPlayer() 
+	public function getSessionUserId() 
 	{
-		return $this->idPlayer;
+		return $this->sessionUserId;
 	}
 
-	public function setIdPlayer($idPlayer)
+	public function setSessionUserId($sessionUserId)
 	{
-		$this->idPlayer = $idPlayer;
+		$this->sessionUserId = $sessionUserId;
 		return $this;
 	}
 
@@ -68,12 +68,12 @@ class BuyinSession
 		return $this;
 	}
 
-	public function getamountCredit()
+	public function getAmountCredit()
 	{
 		return $this->amountCredit;
 	}
 
-	public function setAmountCredito($amountCredit)
+	public function setAmountCredit($amountCredit)
 	{
 		$this->amountCredit = $amountCredit;
 		return $this;
@@ -101,14 +101,14 @@ class BuyinSession
 		return $this;
 	}
 
-	public function getApproved()
+	public function getIsApproved()
 	{
-		return $this->approved;
+		return $this->isApproved;
 	}
 
-	public function setApproved($approved)
+	public function setIsApproved($isApproved)
 	{
-		$this->approved = $approved;
+		$this->isApproved = $isApproved;
 		return $this;
 	}
 }

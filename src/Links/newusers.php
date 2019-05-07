@@ -10,25 +10,38 @@
 
 <?php
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
+include "../MySQL/ConnectLmsuy_db.php";
 include "../Entity/UserEntity.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
-Use \Solcre\PokerApp\Entity\UserEntity;
-
-var_dump($_POST);
-echo "<br>";
-
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Entity\UserEntity;
 
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
-$connection = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 
-
-
-if (isset($_POST['id']))
+//chequeo variables que deben ser no NULL.
+if (empty($_POST['accumulatedPoints']))
 {
-	$mensaje = $connection->insertUser();
+	$points = 0;
+} else 
+{
+	$points = $_POST['accumulatedPoints'];
+}
+
+if (empty($_POST['approved']))
+{
+	$approved = 1;
+} else 
+{
+	$approved = $_POST['approved'];
+}
+
+//function insertUserInSession($created_at, $accumulatedPoints, $cashout, $start_at, $end_at, $is_approved, $idSession)
+
+if (isset($_POST['idSession']))
+{
+	$mensaje = $connection->insertUserInSession(date('c'), $points, $_POST['cashout'], $_POST['start'], $_POST['end'], $approved, $_POST['idSession']);
 	?>
 	<mark> <!--<i class="far fa-grin-alt"></i> --><code> <?php echo $mensaje ?> </code></mark>
 	<br> <br>
@@ -40,12 +53,14 @@ if (isset($_POST['id']))
 
 
 $datosUsers = $connection->getDatosUsers();
+
 $users = array();
 
 foreach ($datosUsers as $user) 
 {
-	$users[]= new UserEntity($user->id, $user->password, $user->mobile, $user->email, $user->lastname, $user->firstname, $user->nickname, $user->multiplier, $user->active, $user->hours, $user->points, $user->results, $user->cashin);
+	$users[]= new UserEntity($user->id, $user->password, null, $user->email, $user->last_name, $user->name, $user->username, $user->multiplier, $user->is_active, $user->hours, $user->points, $user->results, $user->cashin);
 }
+
 
 ?>
 
@@ -76,12 +91,12 @@ foreach ($datosUsers as $user)
 								<input name="approved" id="approved" type="hidden">		
 								
 								<div class="form-group">
-									<select class="custom-select" name="nickname" id="nickname" required="true">
+									<select class="custom-select" name="user_id" id="user_id" required="true">
 										<option value=""> --Seleccione un Jugador--</option>
 										<?php foreach ($users as $user) 
 										{
 											?>
-										<option> <?php echo $user->getNickname(); ?></option>
+										<option value="<?php echo $user->getId(); ?>"> <?php echo $user->getUsername(); ?></option>
 											<?php
 										}
 										?>
@@ -100,13 +115,9 @@ foreach ($datosUsers as $user)
 								<input class="form-control" name="cashout" id="cashout" type="hidden">
 							
 
-								<div class="form-group">
-									<label class="sr-only" for="start"> hora inicio: </label>
-									<input class="form-control" name="start" id="start" type="datetime-local" placeholder="hora de inicio" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
-									<small id="inicio" class="form-tet text-muted"> Fecha y hora de Incio </small>
-								</div>
+								<input name="start" id="start" type="hidden" required="true" value="">
 
-								<input name="end" id="end" type="hidden" required="true" value="<?php echo substr(date('c'), 0, 16); ?>">
+								<input name="end" id="end" type="hidden" required="true" value="">
 								 <!-- =getStarbyFirstBuyin()--> 
 
 

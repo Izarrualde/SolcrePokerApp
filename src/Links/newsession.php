@@ -1,8 +1,8 @@
 <?php
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 ?>
@@ -18,10 +18,14 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 </head>
 <body>
 	<?php
+
+
+
+	var_dump($_POST);
 	if (isset($_POST['id']))
 	{
-		$session = new ConnectAppPoker;
-		$session->insertSession();
+		$session = new ConnectLmsuy_db;
+		$session->insertSession($_POST['date'], $_POST['title'], $_POST['description'], $_POST['seats'], $_POST['startTime'], $_POST['startTimeReal'], $_POST['end']);
 		//header();
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> La sesión se agregó exitosamente </code></mark>

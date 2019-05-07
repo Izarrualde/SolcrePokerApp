@@ -10,20 +10,21 @@
 
 <?php
 include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-$session = new ConnectAppPoker;
+$connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idT"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-$datos = $session->getDatosSessionDealerTipById($_GET["idT"]);
 
+$datos = $connection->getDatosSessionDealerTipById($_GET["idT"]);
+var_dump($datos);
 if (sizeof($datos)==0)
 {
 	die("error 404");
@@ -31,7 +32,7 @@ if (sizeof($datos)==0)
 
 if (isset($_POST["id"]))
 {
-	$session->updateDealerTip();
+	$connection->updateDealerTip($_POST["idSession"], $_POST["hour"], $_POST["dealerTip"], $_POST["id"]);
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> El dealerTip se actualizó exitosamente </code></mark>
 
@@ -70,7 +71,7 @@ if (isset($_POST["id"]))
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hour" id="hora" type="datetime-local" required="true" value="<?php echo substr($datos[0]->hour, 6, 4); echo substr($datos[0]->hour, 2, 4); echo substr($datos[0]->hour, 0, 2); echo "T"; echo substr($datos[0]->hour, 11, 5); ?>">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="<?php echo substr($datos[0]->created_at, 6, 4); echo substr($datos[0]->created_at, 2, 4); echo substr($datos[0]->created_at, 0, 2); echo "T"; echo substr($datos[0]->created_at, 11, 5); ?>">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 

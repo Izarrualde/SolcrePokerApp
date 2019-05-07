@@ -10,16 +10,25 @@
 
 <?php
 include "../MySQL/Connect.php";
-include "../MySQL/ConnectAppPoker.php";
-Use \Solcre\pokerApp\MySQL\Connect;
-Use \Solcre\pokerApp\MySQL\ConnectAppPoker;
+include "../MySQL/ConnectLmsuy_db.php";
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
+print_r($_POST);
+echo "<br>";
+foreach ($_POST as $key => $value) {
+	echo $key; echo "-->"; echo $value;
+	echo "<br>";
+}
+
 if (isset($_POST['id']))
 {
-	$session = new ConnectAppPoker;
-	$mensaje = $session->addUser();
+	$connection = new ConnectLmsuy_db;
+	$mensaje = $connection->addUser(date('c'), $_POST['lastname'], $_POST['firstname'], $_POST['username'], $_POST['mobile'], $_POST['email'], $_POST['password'], $_POST['multiplier'], $_POST['active'], $_POST['hours'], $_POST['points'], $_POST['results'], $_POST['cashin'], null, null);
+
+
 
 	?>
 	<mark> <!--<i class="far fa-grin-alt"></i> --><code> <?php echo $mensaje ?> </code></mark>
@@ -54,27 +63,27 @@ if (isset($_POST['id']))
 
 								<div class="form-group">
 									<label class="sr-only" for="lastname"> Apellido </label>
-									<input class="form-control"name="lastname" id="lastname" type="text" placeholder="lastname" required="true" autofocus="true"> 
+									<input class="form-control"name="lastname" id="lastname" type="text" placeholder="Apellido" required="true" autofocus="true"> 
 								</div>		
 
 								<div class="form-group">
 									<label class="sr-only" for="firstname"> Nombre </label>
-									<input class="form-control"name="firstname" id="firstname" type="text" placeholder="firstname" required="true" autofocus="true"> 
+									<input class="form-control"name="firstname" id="firstname" type="text" placeholder="Nombre" required="true" autofocus="true"> 
 								</div>		
 
 								<div class="form-group">
-									<label class="sr-only" for="nickname"> Jugador </label>
-									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true" autofocus="true"> 
+									<label class="sr-only" for="username"> Jugador </label>
+									<input class="form-control"name="username" id="username" type="text" placeholder="Nombre de usuario" required="true" autofocus="true"> 
 								</div>		
 
 								<div class="form-group">
 									<label class="sr-only" for="mobile"> Celular </label>
-									<input class="form-control"name="mobile" id="mobile" type="text" placeholder="mobile" required="true"> 
+									<input class="form-control"name="mobile" id="mobile" type="text" placeholder="Teléfono" required="true"> 
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="email"> E-mail </label>
-									<input class="form-control"name="email" id="email" type="text" placeholder="email" required="true"> 
+									<input class="form-control"name="email" id="email" type="text" placeholder="E-mail" required="true"> 
 								</div>
 
 									<input class="form-control" name="password" id="password" type="hidden" required="true" value="">
