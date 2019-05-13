@@ -1,13 +1,13 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
-use Solcre\PokerApp\Exception\UserAlreadyAddedException;
-use Solcre\PokerApp\Exception\SessionFullException;
-use Solcre\PokerApp\Exception\PlayerNotFoundException;
-use Solcre\PokerApp\Exception\InsufficientBuyinException;
-use Solcre\PokerApp\Exception\ComissionAlreadyAddedException;
-use Solcre\PokerApp\Exception\DealerTipAlreadyAddedException;
-use Solcre\PokerApp\Exception\ServiceTipAlreadyAddedException;
+use Solcre\lmsuy\Exception\UserAlreadyAddedException;
+use Solcre\lmsuy\Exception\SessionFullException;
+use Solcre\lmsuy\Exception\PlayerNotFoundException;
+use Solcre\lmsuy\Exception\InsufficientBuyinException;
+use Solcre\lmsuy\Exception\ComissionAlreadyAddedException;
+use Solcre\lmsuy\Exception\DealerTipAlreadyAddedException;
+use Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
 
 class SessionEntity 
 {
@@ -476,6 +476,27 @@ class SessionEntity
 		  }
 	}
 
+	public function getActivePlayers()
+	{
+		$activePlayers = array();
+		foreach ($this->sessionUsers as $user) 
+		{
+			if (!in_array($user->getIdUser(), $activePlayers) && ($user->getEnd() == null) && ($user->getStart() != null)) 
+			$activePlayers[]= $user->getIdUser();
+		}
+		return count($activePlayers);
+	}
+
+	public function getTotalDistinctPlayers()
+	{
+		$distinctPlayers = array();
+		foreach ($this->sessionUsers as $user) 
+		{
+			if (!in_array($user->getIdUser(), $distinctPlayers))
+			$distinctPlayers[]= $user->getIdUser();
+		}
+		return count($distinctPlayers);
+	}
 	
 }
 ?>

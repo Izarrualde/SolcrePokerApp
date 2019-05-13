@@ -16,8 +16,6 @@ Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-var_dump($_POST);
-
 $connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idC"]))
 {
@@ -44,8 +42,6 @@ if (isset($_POST["id"]))
 	<?php
 	exit;	
 }
-
-
 ?>
 
 <body>

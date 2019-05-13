@@ -149,19 +149,32 @@ class ConnectLmsuy_db extends Connect
 		return $arreglo;
 	}
 
-
-	/*public function getHourFirstBuyin()
+	public function getIdUserByUserSessionId($userSessionId)
 	{
-		$sql="SELECT MIN(hour) as start FROM session_buyins WHERE session_user_id='$_GET[idUS]'";
+		$sql="SELECT user_id FROM sessions_users WHERE id='$userSessionId'";
+
 		$datos = $this->db->query($sql);
-		echo "<br>";
-		echo "en gethoursfirstbuyin recojo $datos";
-		echo "<br>";
-		var_dump($datos);
-		echo "<br>";
+		$reg=$datos->fetch_object();
+		if ($reg) {
+			return $reg->user_id;
+		} 
+		else {
+			return null;
+		}
+
+
+
+	}
+
+	public function getHourFirstBuyin($idUserSession)
+	{
+		$sql="SELECT MIN(created_at) as start FROM session_buyins WHERE session_user_id='$idUserSession'";
+
+		$datos = $this->db->query($sql);
+
 		$reg = $datos->fetch_object();
-		return $reg;
-	}*/
+		return $reg->start;
+	}
 
 	public function getDatosSessions()
 	{
@@ -211,13 +224,7 @@ class ConnectLmsuy_db extends Connect
 	}
 
 	/*
-	public function getNicknameUserbyId($id)
-	{
-		$sql="SELECT nickname FROM users WHERE id='$id'";
-		$datos = $this->db->query($sql);
-		$reg=$datos->fetch_object();
-		return $reg;
-	}
+
 
 */
 	public function getDatosUserById($id)
@@ -255,13 +262,19 @@ class ConnectLmsuy_db extends Connect
 	}
 
 
-	public function insertBuyin($hour, $amountCash, $amountCredit, $IdSessionUser, $approved, $currency)
+	public function insertBuyin($hour, $amountCash, $amountCredit, $idSessionUser, $approved, $currency)
 	{
+		/*$sql="SELECT count(*) from session_buyins WHERE session_user_id='$IdSessionUser'";
+		if ($this->db->query($sql)==0)
+		{
+			$sql=
+		}*/
+		$sql="UPDATE sessions_users SET start_at='$hour' WHERE id='$idSessionUser' AND start_at IS NULL";
+
+		$this->db->query($sql);
 		//$idPlayer = $this->getIdUserbyNickname($_POST['nickname']);
-		$sql= "INSERT into session_buyins VALUES (NULL, '$hour', '$amountCash', '$amountCredit', '$approved', '$IdSessionUser', '$currency')";
-		echo "<br>";
-		print $sql;
-		echo "<br>";
+		$sql= "INSERT into session_buyins VALUES (NULL, '$hour', '$amountCash', '$amountCredit', '$approved', '$idSessionUser', '$currency')";
+
 		$this->db->query($sql);
 	}
 
@@ -285,12 +298,8 @@ class ConnectLmsuy_db extends Connect
 				echo "<br>";
 				echo " el jugador ya esta en la tabla";
 				echo "<br>";
-				if ($user->end_at != '00-00-0000 00:00')				
+				if ($user->end_at != null)				
 				{
-					echo "<br>";
-					echo " la fecha end no es la nula";
-					echo "<br>";
-					echo "la fecha end es "; echo $user->end_at;
 					$mensaje = "";					
 				}else
 				{
@@ -304,9 +313,9 @@ class ConnectLmsuy_db extends Connect
 		if ($mensaje=='')
 		{
 
-			$sql="INSERT into sessions_users VALUES (null, '$created_at', '$accumulatedPoints', '$cashout', '$start_at', '$end_at', '$is_approved', '$idSession', '$idUser')"; 
-
-			$mensaje = "El usuario se ingreso exitosamente";
+			$sql="INSERT into sessions_users VALUES (null, '$created_at', '$accumulatedPoints', '$cashout',".(!empty($start_at)?$start_at:'null').", ".(!empty($end_at)?$end_at:'null').", '$is_approved', '$idSession', '$idUser')"; 
+var_dump($sql);
+			$mensaje = "El usuario se ingresó exitosamente";
 			$this->db->query($sql);			
 		}
 		return $mensaje;
@@ -314,7 +323,7 @@ class ConnectLmsuy_db extends Connect
 
 	public function insertSession($date, $title, $description, $seats, $startTime, $startTimeReal, $endTime)
 	{
-		$sql="INSERT into sessions VALUES (null, '$date', '$title', '$description', '$seats', '$startTime', '$startTimeReal', '$endTime')"; 
+		$sql="INSERT into sessions VALUES (null, '$date', '$title', '$description', '$seats', '$startTime', ".(!empty($startTimeRea)?$startTimeReal:'null').", ".(!empty($endTime)?$endTime:'null').")"; 
 		echo $sql;
 		echo "<br>";
 		$this->db->query($sql);
@@ -358,11 +367,28 @@ class ConnectLmsuy_db extends Connect
 
 	public function updateUserSession($accumulatedPoints, $cashout, $startTime, $endTime, $isApproved, $idSession, $idUser, $idUserSession)
 	{
-
-		$sql= "UPDATE sessions_users SET is_approved='$isApproved', points='$accumulatedPoints', cashout='$cashout', start_at='$startTime', end_at='$endTime' WHERE id='$idUserSession'";
+		echo empty($endTime)?"si":"no";
+		$sql= "UPDATE sessions_users SET is_approved='$isApproved', points='$accumulatedPoints', cashout='$cashout', start_at='$startTime', end_at=".(!empty($endTime)?$endTime:'null')." WHERE id='$idUserSession'";
 		echo "<br>";
 		echo $sql;
-		echo "<br>";
+		//".(!empty($end_at)?$end_at:'null')."
+
+		$this->db->query($sql);
+	}
+
+	public function closeUserSession($idUserSession, $idUser, $cashout, $startTime, $endTime)
+	{
+		$sql= "UPDATE sessions_users SET end_at='$endTime', cashout=$cashout WHERE id='$idUserSession'";
+		$this->db->query($sql);
+		$date1=date_create($endTime);
+		$date2=date_create($startTime);  
+		//$diff=date_diff($date1, $date2)->format('%h:%i');
+		
+		$minutes=date_diff($date1, $date2)->format('%i');
+		$roundedMinutes=floor((($minutes/60)/.25))*.25;
+		$hours=date_diff($date1, $date2)->format('%h') + $roundedMinutes;
+
+		$sql="UPDATE users SET hours=hours+".$hours." WHERE id='$idUser'";
 		$this->db->query($sql);
 	}
 
@@ -384,6 +410,17 @@ class ConnectLmsuy_db extends Connect
 		$this->db->query($sql);
 	}
 
+		public function updateUser($name, $lastname, $username, $email, $id)
+	{
+		var_dump($_POST);
+		$sql= "UPDATE users SET name='$name', last_name='$lastname', username='$username', email='$email' WHERE id='$id'";
+		//".(!empty($end_at)?$end_at:'null')."
+		echo "<br>";
+		print $sql;
+
+		$this->db->query($sql);
+	}
+
 	public function deleteComission($idComission)
 	{
 		$sql = "DELETE from session_comissions WHERE id='$idComission'";
@@ -395,8 +432,8 @@ class ConnectLmsuy_db extends Connect
 		$deleteComissionsSession = "DELETE from session_comissions WHERE session_id='$id'";
 		$this->db->query($deleteComissionsSession);
 
-		//$deleteBuyinsSession = "DELETE from session_buyins WHERE session_id='$_GET[id]'";
-		//$this->db->query($deleteBuyinsSession);
+		$deleteBuyinsSession = "DELETE from session_buyins WHERE session_user_id IN (SELECT id FROM session_users WHERE session_id='$id')'";
+		$this->db->query($deleteBuyinsSession);
 		
 		//$deleteBuyinsSession = "SELECT session_buyins.* FROM session_buyins INNER JOIN sessions ON session_buyins.session_user_id=sessions.session_user_id  WHERE sessions.id='$id'";
 
@@ -404,9 +441,9 @@ class ConnectLmsuy_db extends Connect
 		$this->db->query($deleteDealerTipsSession);	
 		$deleteServiceTipsSession = "DELETE from session_service_tips WHERE session_id='$id'";
 		$this->db->query($deleteServiceTipsSession);	
-		$deleteUsersSession = "DELETE from session_users WHERE session_id='$id'";
+		$deleteUsersSession = "DELETE from sessions_users WHERE session_id='$id'";
 		$this->db->query($deleteUsersSession);	
-		$sql = "DELETE from sessions WHERE id='$_GETid'";
+		$sql = "DELETE from sessions WHERE id='$id'";
 		$this->db->query($sql);
 	}
 
@@ -433,6 +470,12 @@ class ConnectLmsuy_db extends Connect
 		public function deleteUser($idUserSession)
 	{
 		$sql = "DELETE from sessions_users WHERE id='$idUserSession'";
+		$this->db->query($sql);
+	}
+
+		public function deletePlayer($idPlayer)
+	{
+		$sql = "DELETE from users WHERE id='$idPlayer'";
 		$this->db->query($sql);
 	}
 

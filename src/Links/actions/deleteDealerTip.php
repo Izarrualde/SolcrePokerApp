@@ -12,7 +12,7 @@ echo "<br>";
 $connection = new ConnectLmsuy_db;
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idT"]))
 {
-	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
+	die("error 404"); 
 }
 
 $datos = $connection->getDatosSessionDealerTipById($_GET["idT"]);

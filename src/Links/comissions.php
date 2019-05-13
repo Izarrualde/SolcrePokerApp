@@ -34,6 +34,9 @@ foreach ($datosComissionsSession as $comission)
 	$session->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
 }
 
+$datosSession = $connection->getDatosSessionById($_GET['id']);
+var_dump($datosSession);
+
 ?>
 
 
@@ -61,6 +64,20 @@ foreach ($datosComissionsSession as $comission)
 			    <li class="breadcrumb-item active" aria-current="page">Comisiones</li>
 			  </ol>
 			</nav>
+
+			<div class="card bg-light mb-3">
+			  <div class="card-header"><b> Datos de la Sesión </b> </div>
+			  <div class="card-body">
+			    <p> <i><?php 
+			    	echo date_format(date_create($datosSession->created_at), 'l')." "; 
+			    	echo date_format(date_create($datosSession->created_at), 'd-m-Y');
+			    	?>	</i>
+			    </p>
+			    <p class="card-text"> Descripcion:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres:</p>
+
+			  </div>
+			</div>
+
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
@@ -81,18 +98,10 @@ foreach ($datosComissionsSession as $comission)
 						<article class="col-md-9"  style="width: auto; margin: auto auto;">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="thead-dark text-center bg-secondary">
-									<tr>
-										<th colspan="3"> Comisiones </th>
-										<th> <?php if (isset($datosComissionsSession[0])) 
-											 {
-											 	echo date_format(date_create($datosComissionsSession[0]->created_at), 'd-m-y');
-											 } ?> </th>
-									</tr>
 									<tr class="bg-success">
-										<th> id </th>
-										<th> hora</th>
-										<th> comision </th>	
-										<th> accciones </th>						
+										<th> Hora </th>
+										<th> Comision </th>	
+										<th> Accciones </th>						
 									</tr>
 
 								</thead>
@@ -102,7 +111,7 @@ foreach ($datosComissionsSession as $comission)
 									{
 										?>
 										<tr>
-											<td colspan="4"> sin registros </td>
+											<td colspan="3"> sin registros </td>
 										</tr>
 									<?php
 									} else
@@ -111,9 +120,8 @@ foreach ($datosComissionsSession as $comission)
 										{
 										?>
 											<tr>
-												<td> <?php echo $comission->getId() ?> </td>
 												<td> <?php echo date_format(date_create($comission->getHour()), 'H:i') ?> </td>
-												<td> <?php echo $comission->getComission() ?> </td>
+												<td> <?php echo "USD ".$comission->getComission() ?> </td>
 												<td> <a href="actions/editComission.php?idC=<?php echo $comission->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteComission.php?idC=<?php echo $comission->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td> 
 
 
@@ -124,9 +132,8 @@ foreach ($datosComissionsSession as $comission)
 										?>
 											<tr class="text-center bg-dark text-white">
 												<th> TOTAL </th>
-												<th> </th>
-												<th> <?php echo $session->getComissionTotal() ?></th>
-												<th> </th>
+												<th> <?php echo "USD ".$session->getComissionTotal() ?></th>
+												<th> </th>												
 											</tr>	
 									<?php
 									}

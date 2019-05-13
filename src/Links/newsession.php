@@ -18,15 +18,10 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 </head>
 <body>
 	<?php
-
-
-
-	var_dump($_POST);
 	if (isset($_POST['id']))
 	{
 		$session = new ConnectLmsuy_db;
 		$session->insertSession($_POST['date'], $_POST['title'], $_POST['description'], $_POST['seats'], $_POST['startTime'], $_POST['startTimeReal'], $_POST['end']);
-		//header();
 	?>
 	<mark> <i class="far fa-grin-alt"></i> <code> La sesión se agregó exitosamente </code></mark>
 	<br>
@@ -111,9 +106,6 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 			</div>
 		</div>
 	</div>
-	<br><br><br>
-
-	
-	
+	<br><br><br>	
 </body>
 </html>

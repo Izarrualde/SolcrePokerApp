@@ -16,20 +16,11 @@ Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-print_r($_POST);
-echo "<br>";
-foreach ($_POST as $key => $value) {
-	echo $key; echo "-->"; echo $value;
-	echo "<br>";
-}
 
 if (isset($_POST['id']))
 {
 	$connection = new ConnectLmsuy_db;
 	$mensaje = $connection->addUser(date('c'), $_POST['lastname'], $_POST['firstname'], $_POST['username'], $_POST['mobile'], $_POST['email'], $_POST['password'], $_POST['multiplier'], $_POST['active'], $_POST['hours'], $_POST['points'], $_POST['results'], $_POST['cashin'], null, null);
-
-
-
 	?>
 	<mark> <!--<i class="far fa-grin-alt"></i> --><code> <?php echo $mensaje ?> </code></mark>
 	<br> <br>

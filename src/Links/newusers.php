@@ -20,6 +20,16 @@ Use \Solcre\lmsuy\Entity\UserEntity;
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 $connection = new ConnectLmsuy_db;
 
+if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
+{
+	?>
+	<mark> <code> La sesión ha finalizado </code></mark>
+	<br> <br>
+	<a class="btn btn-primary" href="users.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+	<?php
+	exit;
+}
+
 //chequeo variables que deben ser no NULL.
 if (empty($_POST['accumulatedPoints']))
 {
@@ -37,11 +47,11 @@ if (empty($_POST['approved']))
 	$approved = $_POST['approved'];
 }
 
-//function insertUserInSession($created_at, $accumulatedPoints, $cashout, $start_at, $end_at, $is_approved, $idSession)
-
 if (isset($_POST['idSession']))
 {
-	$mensaje = $connection->insertUserInSession(date('c'), $points, $_POST['cashout'], $_POST['start'], $_POST['end'], $approved, $_POST['idSession']);
+	$start_at = !empty($_POST['start']) ? $_POST['start'] : null;
+	$end_at = !empty($_POST['end']) ? $_POST['end'] : null;
+	$mensaje = $connection->insertUserInSession(date('c'), $points, $_POST['cashout'], $start_at, $end_at, $approved, $_POST['idSession']);
 	?>
 	<mark> <!--<i class="far fa-grin-alt"></i> --><code> <?php echo $mensaje ?> </code></mark>
 	<br> <br>
@@ -50,7 +60,6 @@ if (isset($_POST['idSession']))
 	<?php
 	exit;
 }
-
 
 $datosUsers = $connection->getDatosUsers();
 
@@ -86,8 +95,6 @@ foreach ($datosUsers as $user)
 
 									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $_GET['id']; ?>">
 
-
-
 								<input name="approved" id="approved" type="hidden">		
 								
 								<div class="form-group">
@@ -96,19 +103,12 @@ foreach ($datosUsers as $user)
 										<?php foreach ($users as $user) 
 										{
 											?>
-										<option value="<?php echo $user->getId(); ?>"> <?php echo $user->getUsername(); ?></option>
+										<option value="<?php echo $user->getId(); ?>"> <?php echo $user->getName()." ".$user->getLastname(); ?></option>
 											<?php
 										}
 										?>
 									</select>
-								</div>
-								<!--<input class="form-control" name="idUser" id="idUser" type="hidden" placeholder="IdUser" required="true" value="<?php /*echo $connection->getidUserbyNickname($_POST['nickname'])->id; */?>" >--> <!-- poner un getidUserbyNickname -->
-
-								<!--
-								<div class="form-group">
-									<label class="sr-only" for="nickname"> Jugador </label>
-									<input class="form-control"name="nickname" id="nickname" type="text" placeholder="nickname" required="true" autofocus="true"> 
-								</div> -->									
+								</div>							
 
 								<input name="accumulatedPoints" id="accumulatedPoints" type="hidden">
 
@@ -120,8 +120,6 @@ foreach ($datosUsers as $user)
 								<input name="end" id="end" type="hidden" required="true" value="">
 								 <!-- =getStarbyFirstBuyin()--> 
 
-
-
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />
 								</div>
@@ -132,7 +130,6 @@ foreach ($datosUsers as $user)
 			</div>
 		</div>
 	</div>
-	
 	
 </body>
 </html>

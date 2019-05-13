@@ -21,6 +21,17 @@ $mensaje2 = '';
 
 <?php
 
+$connection = new ConnectLmsuy_db;
+if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
+{
+	?>
+	<mark> <code> La sesión ha finalizado </code></mark>
+	<br> <br>
+	<a class="btn btn-primary" href="tips.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+	<?php
+	exit;
+}
+
 if (isset($_POST['enviado']))
 {
 	if ((is_numeric($_POST['dealerTip'])) and (is_numeric($_POST['serviceTip'])))

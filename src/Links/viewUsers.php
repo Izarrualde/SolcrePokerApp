@@ -23,15 +23,12 @@ $connection = new ConnectLmsuy_db;
 
 $datosUsers = $connection->getDatosUsers();
 
-
 $users = array();
-
 
 foreach ($datosUsers as $user) 
 {
 	$users[]= new UserEntity($user->id, $user->password, null /*mobile*/, $user->email, $user->last_name, $user->name, $user->username, $user->multiplier, $user->is_active, $user->hours, $user->points, $user->results, $user->cashin);
 }
-
 
 ?>
 
@@ -62,6 +59,17 @@ foreach ($datosUsers as $user)
 			</nav>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
+					<?php
+					if (isset($_GET["m"]) and ($_GET["m"])==1)
+					{
+						?>
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">x</button>
+								El jugador se ha eliminado exitosamente.
+						</div>
+					<?php
+					}
+					?>
 					Usuarios
 				</div>
 				<div class="card-body">
@@ -70,7 +78,7 @@ foreach ($datosUsers as $user)
 							<table class="table table-bordered table-hover text-center">
 								<thead class="text-center bg-dark text-white">
 									<th> Jugador </th>
-									<th>  Cel </th>
+									<th> Teléfono </th>
 									<th> horas </th>
 									<th> acciones </th>
 										<tbody>
@@ -87,8 +95,6 @@ foreach ($datosUsers as $user)
 													}
 													?>
 												</tr>
-		
-
 										</tbody>
 									</table>
 						</article>
@@ -98,6 +104,4 @@ foreach ($datosUsers as $user)
 		</div>
 	</div>
 </body>
-
-
 </html>

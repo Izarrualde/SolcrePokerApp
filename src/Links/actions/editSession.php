@@ -28,8 +28,6 @@ if (empty($datos))
 	die("error 404");
 }
 
-
-
 if (isset($_POST["id"]))
 {
 	$connection->updateSession($_POST['created_at'], $_POST['title'], $_POST['description'], $_POST['count_of_seats'], $_POST['real_start_at'], $_POST['end_at'], $_POST['id']);
@@ -42,7 +40,6 @@ if (isset($_POST["id"]))
 	<?php
 	exit;
 }
-
 
 //echo substr($datos->end_time, 0, 10); echo "T"; echo substr($datos->end_time, 11, 5);
 	?>
@@ -66,7 +63,7 @@ if (isset($_POST["id"]))
 								
 								<input name="id" type="hidden" value="<?php echo $datos->id; ?>">
 
-								<input name="count_of_seats" type="hidden" value="<?php $datos->count_of_seats; ?>">
+								<input name="count_of_seats" type="hidden" value="<?php echo $datos->count_of_seats; ?>">
 								
 								<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="<?php echo $datos->id; ?>">
 
@@ -85,23 +82,21 @@ if (isset($_POST["id"]))
 
 								<div class="form-group">
 									<label class="sr-only" for="description"> Descripcion: </label>
-									<input class="form-control" name="description" id="description" placeholder="Descripcion" type="text" required="true" value="<?php echo $datos->description; ?>">
+									<input class="form-control" name="description" id="description" placeholder="Descripcion" type="text" value="<?php echo $datos->description; ?>">
 									
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="real_start_at"> Hora de Inicio: </label>
-									<input class="form-control" name="real_start_at" id="real_start_at" type="datetime-local" required="true" value="<?php echo substr($datos->real_start_at, 0, 10); echo "T"; echo substr($datos->real_start_at, 11, 5); ?>">
+									<input class="form-control" name="real_start_at" id="real_start_at" type="datetime-local" value="<?php echo substr($datos->real_start_at, 0, 10); echo "T"; echo substr($datos->real_start_at, 11, 5); ?>">
 									
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="end_at"> Hora de Fin: </label>
-									<input class="form-control" name="end_at" id="end_at" type="datetime-local" required="true" value="<?php echo substr($datos->end_at, 0, 10); echo "T"; echo substr($datos->end_at, 11, 5); ?>">
+									<input class="form-control" name="end_at" id="end_at" type="datetime-local" value="<?php echo substr($datos->end_at, 0, 10); echo "T"; echo substr($datos->end_at, 11, 5); ?>">
 									
 								</div>
-							
-
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />
@@ -115,6 +110,5 @@ if (isset($_POST["id"]))
 		</div>
 	</div>
 	
-
 </body>
 </html>

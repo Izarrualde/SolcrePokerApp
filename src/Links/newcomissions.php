@@ -16,6 +16,18 @@ Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
+$connection = new ConnectLmsuy_db;
+
+if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
+{
+	?>
+	<mark> <code> La sesión ha finalizado </code></mark>
+	<br> <br>
+	<a class="btn btn-primary" href="comissions.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+	<?php
+	exit;
+}
+
 $mensaje1 = '';
 if (isset($_POST['idSession'])) 
 {
@@ -89,6 +101,5 @@ if (isset($_POST['idSession']))
 		</div>
 	</div>
 	
-
 </body>
 </html>

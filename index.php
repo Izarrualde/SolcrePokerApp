@@ -35,15 +35,7 @@ Use \Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
 
 $connection = new ConnectLmsuy_db;
 
-$idSession='1';
-$datosUsersSession = $connection->getDatosSessionsUsers($idSession);
-//$datosBuyinSession = $session->getDatosSessionBuyins();
-$datosComissionSession = $connection->getDatosSessionComissions($idSession);
-$datosDealerTipSession = $connection->getDatosSessionDealerTips($idSession);
-$datosServiceTipSession = $connection->getDatosSessionServiceTips($idSession);
-
 $datosUsers = $connection->getDatosUsers();
-
 $datosSessions = $connection->getDatosSessions();
 
 
@@ -51,13 +43,6 @@ if (!empty($_POST))
 {
 	$connection->insertSession();
 	$mensaje = "La sesion se agregó exitosamente";
-}
-
-$sessions = array();
-
-foreach ($datosSessions as $session) 
-{
-$sessions[] = new SessionEntity($session->id, $session->created_at, $session->title, $session->description, null /*photo*/, $session->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $session->start_at, $session->real_start_at, $session->end_at);
 }
 
 $users = array();
@@ -68,41 +53,51 @@ foreach ($datosUsers as $user)
 }
 
 
-$datosUsersSession = $connection->getDatosSessionsUsers($idSession);
+$sessions = array();
 
-$session1 = new SessionEntity;
-
-foreach ($datosUsersSession as $user) 
+foreach ($datosSessions as $session) 
 {
-	$session1->sessionUsers[] = new UserSession($user->id, $session1, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
+$sessions[] = new SessionEntity($session->id, $session->created_at, $session->title, $session->description, null /*photo*/, $session->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $session->start_at, $session->real_start_at, $session->end_at);
 }
 
-
-foreach ($datosDealerTipSession as $dealerTip) 
+foreach ($sessions as $session ) 
 {
-	$session1->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
+	$datosUsersSession = $connection->getDatosSessionsUsers($session->getIdSession());
+	$datosSessionComissions = $connection->getDatosSessionComissions($session->getIdSession());
+	$datosSessionBuyins = $connection->getDatosSessionBuyins($session->getIdSession());
+	$datosDealerTipSession = $connection->getDatosSessionDealerTips($session->getIdSession());
+	$datosServiceTipSession = $connection->getDatosSessionServiceTips($session->getIdSession());
+
+	
+	
+	foreach ($datosUsersSession as $user) 
+	{
+		$session->sessionUsers[] = new UserSession($user->id, $session, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
+	}
+
+	foreach ($datosDealerTipSession as $dealerTip) 
+	{
+		$session->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
+	}
+
+	foreach ($datosServiceTipSession as $serviceTip) 
+	{
+		$session->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
+	}
+
+	foreach ($datosSessionComissions as $comission) 
+	{
+		$session->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
+	}
+
+	foreach ($datosSessionBuyins as $buyin) 
+	{
+		$session->sessionBuyins[] = new BuyinSession($buyin->id, null, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
+	}
+
 }
 
-foreach ($datosServiceTipSession as $serviceTip) 
-{
-	$session1->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
-}
-
-$comissions = array();
-
-$datosSessionComissions = $connection->getDatosSessionComissions($idSession);
-
-foreach ($datosSessionComissions as $comission) 
-{
-	$comissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
-}
-
-/*
-foreach ($datosBuyinSession as $buyin) 
-{
-	$session1->sessionBuyins[] = new BuyinSession($buyin->id, $buyin->session_id, $buyin->player_id, $buyin->amount_cash, $buyin->amount_credit, $buyin->currency, $buyin->hour, $buyin->approved);
-}
-*/
+//var_dump($session->sessionUsers);
 
 
 
@@ -196,8 +191,8 @@ foreach ($datosBuyinSession as $buyin)
 												 	echo substr($session->getStartTimeReal(), 11, 5) ; 
 												 ?> 
 											</td>
-											<td> <?php //getAsientosOcupados(); echo "/"; echo count($users); ?> </td>
-											<td> <?php //$session->getSeats() - getAsientosOcupados() ?> </td>	
+											<td> <?php echo $session->getActivePlayers(); echo "/"; echo $session->getTotalDistinctPlayers(); ?> </td>
+											<td> <?php echo ($session->getSeats()-$session->getActivePlayers()); //- getAsientosOcupados() ?> </td>	
 											<td> <?php 
 												 if (($session->getEndTime()) != '0000-00-00 00:00:00')
 												 	echo substr($session->getEndTime(), 11, 5) ; 
@@ -208,7 +203,9 @@ foreach ($datosBuyinSession as $buyin)
 												<a href="src/links/buyins.php?id=<?php echo $session->getIdSession();?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
 												<a href="src/links/tips.php?id=<?php echo $session->getIdSession(); ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
 												<a href="src/links/comissions.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-												<a href="src/links/actions/editsession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="fas fa-pencil-alt"> </i> </a><a href="src/links/actions/deletesession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="fas fa-trash-alt"></i> </a>
+												<a href="src/links/actions/editsession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="fas fa-pencil-alt"> </i> </a>
+												<a href="src/links/actions/deletesession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="fas fa-trash-alt"></i> </a>
+												<a href="src/links/actions/revisionsession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="far fa-eye"></i></a>
 
 											</td>
 											<?php

@@ -112,9 +112,10 @@ class UserSession
 	{
 		$cashin = 0;
 		$session = $this->getSession();
+		$buyins = $session->getSessionBuyins();
 		if ($session instanceof SessionEntity) {
 			foreach($session->getSessionBuyins() as $buyin) {
-				if ($buyin->getIdPlayer() == $this->getId()) {
+				if ($buyin->getSessionUserId() == $this->getId()) {
 					$cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
 				}
 			}
@@ -122,15 +123,53 @@ class UserSession
 		return $cashin;
 	}
 
+	public function getTotalCredit()
+	{
+		$credit = 0;
+		$session = $this->getSession();
+		$buyins = $session->getSessionBuyins();	
+		if ($session instanceof SessionEntity) {
+			foreach($session->getSessionBuyins() as $buyin) {
+				if ($buyin->getSessionUserId() == $this->getId()) {
+					$credit += $buyin->getAmountCredit();
+				}
+			}
+		} 
+		return $credit;
+	}
+
 	public function getResult()
 	{
 		return $this->getCashout() - $this->getCashin();
 	}
 	
-	protected function getHourPlayed()
+	public function getHourPlayed()
 	{
-		return dateDiff($this->getEnd(), $this->getStart());
+		$date1=date_create($this->getEnd());
+		$date2=date_create($this->getStart());
+		$diff=date_diff($date1, $date2);
+		
+		//echo "horas jugadas: ".$diff->format('%h:%i');
+
+		return $diff;
 	}
+
+	/*public function playerHasBuyin($idUserSession)
+	{
+		$session = $this->getSession();
+		$buyins = $session->getSessionBuyins();
+		if ($session instanceof SessionEntity) { 
+			foreach($session->getSessionBuyins() as $buyin) { echo $buyin->getSessionUserId(); echo $idUserSession;
+				if ($buyin->getSessionUserId() == $idUserSession) { 
+					return true;
+				}
+				 else
+				{
+					return false;
+				}
+			}
+		} 
+	}*/
 }
 
 ?>

@@ -22,9 +22,8 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idT"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-
 $datos = $connection->getDatosSessionDealerTipById($_GET["idT"]);
-var_dump($datos);
+
 if (sizeof($datos)==0)
 {
 	die("error 404");
@@ -42,8 +41,6 @@ if (isset($_POST["id"]))
 	<?php
 	exit;	
 }
-
-
 ?>
 
 <body>
@@ -90,8 +87,7 @@ if (isset($_POST["id"]))
 				</div>
 			</div>
 		</div>
-	</div>
-	
+	</div>	
 
 </body>
 </html>

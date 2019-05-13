@@ -57,6 +57,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 {
 	$session->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
 }
+$datosSession = $connection->getDatosSessionById($_GET['id']);
 ?>
 
 <!DOCTYPE html>
@@ -82,6 +83,18 @@ foreach ($datosSessionServiceTips as $serviceTip)
 			    <li class="breadcrumb-item active" aria-current="page">Tips</li>
 			  </ol>
 			</nav>
+			<div class="card bg-light mb-3">
+			  <div class="card-header"><b> Datos de la Sesión </b> </div>
+			  <div class="card-body">
+			    <p> <i><?php 
+			    	echo date_format(date_create($datosSession->created_at), 'l')." "; 
+			    	echo date_format(date_create($datosSession->created_at), 'd-m-Y');
+			    	?>	</i>
+			    </p>
+			    <p class="card-text"> Descripcion:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres:</p>
+
+			  </div>
+			</div>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
@@ -115,20 +128,11 @@ foreach ($datosSessionServiceTips as $serviceTip)
 						<article class="col-md-6">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="thead-dark">
-									<tr class="text-center bg-secondary">
-										<th colspan="3"> DEALER </th>
-										<th> <?php if (isset($datosSessionDealerTips[0])) 
-											 {
-											 	echo date_format(date_create($datosSessionDealerTips[0]->created_at), 'd-m-y');
-											 }  
-											 ?> 
-										</th>
-									</tr>
+
 									<tr class="text-center bg-success">
-										<th> id </th>
-										<th> hora</th>
-										<th> DealerTips </th>
-										<th> acciones </th>
+										<th> Hora</th>
+										<th> Propina </th>
+										<th> Acciones </th>
 									</tr>
 								</thead>
 								<tbody class="text-center">
@@ -137,7 +141,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 									{
 										?>
 										<tr>
-											<td colspan="4"> sin registros </td>
+											<td colspan="3"> sin registros </td>
 										</tr>
 									<?php
 									} else
@@ -146,9 +150,8 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										{
 										?>
 										<tr class="text-center">
-											<td> <?php echo $dealerTip->getId() ?>  </td>
 											<td> <?php echo date_format(date_create($dealerTip->getHour()), 'H:i') ?>  </td>
-											<td> <?php echo $dealerTip->getDealerTip() ?>  </td>
+											<td> <?php echo "USD ".$dealerTip->getDealerTip() ?>  </td>
 											<td> <a href="actions/editDealerTip.php?idT=<?php echo $dealerTip->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteDealerTip.php?idT=<?php echo $dealerTip->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
 												<!--<i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" 
 												onclick="eliminar('actions/deleteDealerTip.php?id=<?php echo $dealerTip->getId(); ?>');"> <i class="fas fa-trash-alt"></i> </a></td>-->
@@ -158,9 +161,8 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										?>
 										<tr class="text-center bg-dark text-white">
 											<th> TOTAL </th>
-											<th> </th>
-											<th> <?php echo $session->getDealerTipTotal() ?> </th>
-											<th> </th>
+											<th> <?php echo "USD ".$session->getDealerTipTotal() ?> </th>
+											<th> </th>											
 										</tr>
 									<?php
 									}
@@ -172,20 +174,10 @@ foreach ($datosSessionServiceTips as $serviceTip)
 						<aside class="col-md-6">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="thead-dark">
-									<tr class="text-center">
-										<th colspan="3"> SERVICE </th>
-										<th> <?php if (isset($datosSessionServiceTips[0])) 
-											 {
-											 	echo date_format(date_create($datosSessionServiceTips[0]->created_at), 'd-m-y');
-											 }
-											 ?> 
-										</th>
-									</tr>
 									<tr class="text-center bg-success">
-										<th> id </th>
-										<th> hora</th>
-										<th> ServiceTip </th>
-										<th> acciones </th>
+										<th> Hora</th>
+										<th> Propina </th>
+										<th> Acciones </th>
 									</tr>
 								</thead>
 								<tbody class="text-center">
@@ -204,9 +196,8 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										{
 										?>
 											<tr>
-												<td> <?php echo $serviceTip->getId() ?>  </td>
 												<td> <?php echo date_format(date_create($serviceTip->getHour()), 'H:i') ?>  </td>
-												<td> <?php echo $serviceTip->getServiceTip() ?>  </td>
+												<td> <?php echo "USD ".$serviceTip->getServiceTip() ?>  </td>
 												<td> <a href="actions/editServiceTip.php?idT=<?php echo $serviceTip->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteServiceTip.php?idT=<?php echo $serviceTip->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
 
 
@@ -215,11 +206,11 @@ foreach ($datosSessionServiceTips as $serviceTip)
 										<?php
 										}
 										?>
-											<tr class="text-center bg-dark text-white">
+											<tr  class="text-center bg-dark text-white">
 												<th> TOTAL </th>
-												<th> </th>
-												<th> <?php echo $session->getServiceTipTotal(); ?> </th>
-												<th> </th>
+												<th> <?php echo "USD ".$session->getServiceTipTotal(); ?> </th>
+												<th> </th>												
+
 											</tr>		
 										<?php
 									}

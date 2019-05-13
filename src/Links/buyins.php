@@ -19,16 +19,14 @@ if (!isset($_GET['id']))
 $connection = new ConnectLmsuy_db;
 $datosSessionBuyins = $connection->getDatosSessionBuyins($_GET['id']);
 
-
 $session = new SessionEntity;
 
 foreach ($datosSessionBuyins as $buyin) 
 {
 	$session->sessionBuyins[] = new BuyinSession($buyin->id, null, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
 }
+$datosSession = $connection->getDatosSessionById($_GET['id']);
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -44,13 +42,27 @@ foreach ($datosSessionBuyins as $buyin)
 <body>
 	
 	<div class="container">
-		<div class="col-md-10">
+		<div class="col-md-11">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="../../index.php">Inicio</a></li>
 			    <li class="breadcrumb-item active" aria-current="page">Buyins</li>
 			  </ol>
 			</nav>
+
+			<div class="card bg-light mb-3">
+			  <div class="card-header"><b> Datos de la Sesión </b> </div>
+			  <div class="card-body">
+			    <p> <i><?php 
+			    	echo date_format(date_create($datosSession->created_at), 'l')." "; 
+			    	echo date_format(date_create($datosSession->created_at), 'd-m-Y');
+			    	?>	</i>
+			    </p>
+			    <p class="card-text"> Descripcion:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres:</p>
+
+			  </div>
+			</div>
+
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
@@ -68,26 +80,15 @@ foreach ($datosSessionBuyins as $buyin)
 				</div>
 				<div class="card-body">
 					<section class="container row">
-						<article class="col-md-10" style="width: auto; margin: auto auto;">
+						<article class="col-md-11" style="width: auto; margin: auto auto;">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-dark text-white">
 									<tr>
-										<th colspan="5"> Buyins </th>
-										<th colspan="3"> <?php if (isset($datosSessionBuyins[0])) 
-											 {
-											 	echo date_format(date_create($datosSessionBuyins[0]->created_at), 'd-m-y');
-											 } ?> </th>
-
-									</tr>
-									<tr>
-										<th> id </th>
-										<th> sessionUserId</th>
-										<th> amountCash </th>
-										<th> amountCredit </th>
-										<th> currency </th>
-										<th> hour </th>
-										<th> approved </th>
-										<th> acctions </th>
+										<th> Nombre </th>
+										<th> Efectivo </th>
+										<th> Credito </th>
+										<th> Hora de <br> compra </th>
+										<th> Acciones </th>
 									</tr>
 								</thead>
 								<tbody class="text-center">
@@ -96,7 +97,7 @@ foreach ($datosSessionBuyins as $buyin)
 									{
 										?>
 										<tr>
-											<td colspan="8"> sin registros </td>
+											<td colspan="9"> sin registros </td>
 										</tr>
 									<?php
 									} else
@@ -105,13 +106,10 @@ foreach ($datosSessionBuyins as $buyin)
 										{
 										?>
 											<tr>
-												<td> <?php echo $buyin->getId() ?>  </td>
-												<td> <?php echo $buyin->getSessionUserId() ?>  </td>
-												<td> <?php echo $buyin->getAmountCash() ?>  </td>
-												<td> <?php echo $buyin->getAmountCredit() ?>  </td>
-												<td> <?php echo $buyin->getCurrency() ?>  </td>
+												<td> <?php echo $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyin->getSessionUserId()))->name; echo " "; echo $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyin->getSessionUserId()))->last_name ?> </td>
+												<td> <?php echo "USD ".$buyin->getAmountCash(); ?> </td>
+												<td> <?php echo "USD ".$buyin->getAmountCredit(); ?> </td>
 												<td> <?php echo date_format(date_create($buyin->getHour()), 'H:i') ?> </td>
-												<td> <?php echo $buyin->getIsApproved() ?>  </td>
 												<td> <a href="actions/editBuyin.php?idB=<?php echo $buyin->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-pencil-alt"> </i> </a><a href="actions/deleteBuyin.php?idB=<?php echo $buyin->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td> 
 
 
@@ -122,7 +120,7 @@ foreach ($datosSessionBuyins as $buyin)
 									}
 										?>
 											<tr>
-												<td colspan="8">
+												<td colspan="9">
 												<a href="newbuyins.php?id=<?php echo $_GET['id']; ?>" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 												</td>
 											</tr>

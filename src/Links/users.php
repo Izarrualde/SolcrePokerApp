@@ -1,5 +1,6 @@
 <?php
 include "../Entity/SessionEntity.php";
+include "../Entity/BuyinSession.php";
 //include "src/Entity/UserEntity.php";
 include "../Entity/UserSession.php";
 include "../MySQL/Connect.php";
@@ -9,6 +10,7 @@ include "../MySQL/ConnectLmsuy_db.php";
 //include "src/Exception/PlayerNotFoundException.php";
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\UserSession;
+Use \Solcre\lmsuy\Entity\BuyinSession;
 Use \Solcre\lmsuy\MySQL\Connect;
 Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 //Use \Solcre\PokerApp\Exception\PlayerNotFoundException;
@@ -18,9 +20,6 @@ if (!isset($_GET['id']))
 	header('Location: ../../index.php');
 	exit;
 }
-
-
-
 
 $connection = new ConnectLmsuy_db;
 $datosUsers = $connection->getDatosSessionsUsers($_GET['id']);
@@ -32,15 +31,16 @@ foreach ($datosUsers as $user)
 	$session->sessionUsers[] = new UserSession($user->id, $session, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
 }
 
-/*foreach ($session->sessionUsers as $user) 
+$buyins = $connection->getDatosSessionBuyins($_GET['id']);
+
+foreach ($buyins as $buyin) 
 {
-	echo "<br>";
-	print_r($user); echo "<br>";
+	$session->sessionBuyins[] = new BuyinSession($buyin->id, $_GET['id'], $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
 }
-*/
+
+$datosSession = $connection->getDatosSessionById($_GET['id']);
 
 ?>
-
 
 
 <!DOCTYPE html>
@@ -66,6 +66,18 @@ foreach ($datosUsers as $user)
 			    <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
 			  </ol>
 			</nav>
+			<div class="card bg-light mb-3">
+			  <div class="card-header"><b> Datos de la Sesión </b> </div>
+			  <div class="card-body">
+			    <p> <i><?php 
+			    	echo date_format(date_create($datosSession->created_at), 'l')." "; 
+			    	echo date_format(date_create($datosSession->created_at), 'd-m-Y');
+			    	?>	</i>
+			    </p>
+			    <p class="card-text"> Descripcion:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres:</p>
+
+			  </div>
+			</div>
 			<div class="card">
 				<div class="card-header bg-primary text-white">
 					<?php
@@ -79,20 +91,19 @@ foreach ($datosUsers as $user)
 					<?php
 					}
 					?>
-					Usuarios
+					Usuarios 
 				</div>
 				<div class="card-body">
 					<section class="container row" style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-dark text-white">
-									<th> id </th>
 									<th> Jugador </th>
-									<th> cashout </th>
-									<th> start </th>
-									<th> end </th>
-									<th> acciones </th>
-								</thead>
+									<th> Hora <br>de inicio </th>
+									<th> Cashin </th>
+									<th> Cashout </th>
+									<th> Acciones </th>
+								</thead> 
 								<tbody class="text-center">
 									<?php 
 									if (sizeof($datosUsers)==0)
@@ -105,27 +116,29 @@ foreach ($datosUsers as $user)
 									} else
 									{
 										foreach ($session->sessionUsers as $user) 
-										{
-											if ($user->getStart()== "00-00-0000 00:00")
+										{ 
+											if (empty($user->getEnd()))
 											{
 												?>
 													<tr class="text-center">
-														<td> <?php echo $user->getId() ?>  </td>
 														<td> 
 															
 															<?php echo $connection->getDatosUserById($user->getIdUser())->name; echo " "; echo $connection->getDatosUserById($user->getIdUser())->last_name; ?>  </td>
+														<td> <?php echo (empty($user->getStart())) ? '-':date_format(date_create($user->getStart()), 'H:i'); 
+														      //date_format(date_create($user->getStart()), 'H:i'); 
+															  //echo $connection->getDatosUserById($user->getIdUser())->start_at;
+															  ?>  
+														</td>
+															
+														<td> <?php echo $user->getCashin()."(".$user->getTotalCredit().")"; ?> </td>
 														<td> <?php echo $user->getCashout() ?>  </td>
-														<td> <?php 
-														if ($user->getStart()== "00-00-0000 00:00")
-														{
-															echo "pendiente";
-														} else
-														echo date_format(date_create($user->getStart()), 'H:i'); ?> </td>
-														<td> <?php echo "pendiente"; ?> </td>
+														<td> <a href="actions/closeSession.php?id=<?php echo $_GET['id']; /*$connection->updateUserSession($user->getAccumulatedPoints(), $user->getCashout(), $user->getStart(), date('c'), $user->getIsApproved(), $_GET['id'], $user->getIdUser(), $user->getId()); //$connection->updateUserSession($user->getAccumulatedPoints(), $user->getCashout(), $user->getStart(), date('c'), $user->getIsApproved(), $user->getIdSession(), $user->getIdUser(), $user->getIdUserSession())
 
-														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+
+
+														*/ ?>&idUS=<?php echo $user->getId(); ?>&idU=<?php echo $user->getIdUser(); ?>"> <i class="fas fa-sign-out-alt"></i> </a> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a> </td>
 												
-													</tr>
+													</tr> 
 											<?php
 											}
 										}
@@ -151,16 +164,16 @@ foreach ($datosUsers as $user)
 				<div class="card-header bg-primary text-white">
 					Usuarios Inactivos
 				</div>
-				<div class="card-body bg-secondary">
+				<div class="card-body">
 					<section class="container row" style="width: auto; margin: auto auto;">
 						<article class="col-md-12">
 							<table class="table table-bordered table-hover table-condensed">
 								<thead class="text-center bg-dark text-white">
-									<th> id </th>
-									<th> Jugador </th>
-									<th> cashout </th>
-									<th> start </th>
-									<th> end </th>
+									<th> Inactivo </th>
+									<th> Hora <br> de inicio </th>
+									<th> Cashin </th>
+									<th> Cashout </th>
+									<th> Hora <br> de fin </th>
 									<th> acciones </th>
 								</thead>
 								<tbody class="text-center">
@@ -176,17 +189,20 @@ foreach ($datosUsers as $user)
 									{
 										foreach ($session->sessionUsers as $user) 
 										{
-											if ($user->getEnd()!= "00-00-0000 00:00")
+											if (!empty($user->getEnd()))
 											{
 												?>
 													<tr class="text-center">
-														<td> <?php echo $user->getId() ?>  </td>
 														<td> 
 															
 															<?php echo $connection->getDatosUserById($user->getIdUser())->name; echo " "; echo $connection->getDatosUserById($user->getIdUser())->last_name; ?>  </td>
-														<td> <?php echo $user->getCashout() ?>  </td>
 														<td> <?php echo date_format(date_create($user->getStart()), 'H:i'); ?> </td>
-														<td> <?php echo date_format(date_create($user->getEnd()), 'H:i'); ?> </td>
+														<td> <?php echo $user->getCashin()."(".$user->getTotalCredit().")"; ?> </td>
+														<td> <?php echo $user->getCashout() ?>  </td>
+
+														<td> <?php echo date_format(date_create($user->getEnd()), 'H:i');
+												             ?> 
+												        </td>
 
 														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
 												
@@ -201,22 +217,15 @@ foreach ($datosUsers as $user)
 								</tbody>  
 							</table>
 						</article>	
-
-
-
 					</section>
 				</div>
 			</div>
-
 		</div>
 	</div>
-
-
 
 		<script src="../../js/functions.js"></script>
 		<script src=”../../js/jquery.js”> </script>
 		<script src=”../../js/bootstrap.min.js”> </script>
-		
 </body>
 </html>
 

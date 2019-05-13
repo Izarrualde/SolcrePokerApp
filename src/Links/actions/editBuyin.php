@@ -22,16 +22,12 @@ if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idB"]))
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }
 
-
 $datos = $connection->getDatosSessionBuyinById($_GET["idB"]);
-
-
 
 if (sizeof($datos)==0)
 {
 	die("error 404");
 }
-
 
 if (isset($_POST["id"]))
 {
@@ -92,7 +88,6 @@ if (isset($_POST["id"]))
 								</div>
 
 									<input name="approved" id="approved" type="hidden" required="true" value="<?php echo $datos[0]->approved; ?>">
-
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />

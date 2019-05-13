@@ -14,8 +14,6 @@ include "../MySQL/ConnectLmsuy_db.php";
 Use \Solcre\lmsuy\MySQL\Connect;
 Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
-var_dump($_POST);
-echo "<br>";
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 $mensaje1 = '';
@@ -25,19 +23,21 @@ $connection = new ConnectLmsuy_db;
 
 //public function insertBuyin($hour, $amountCash, $amountCredit, $IdSessionUser, $approved, $currency)
 
+if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
+{
+	?>
+	<mark> <code> La sesión ha finalizado </code></mark>
+	<br> <br>
+	<a class="btn btn-primary" href="buyins.php?id=<?php echo $_GET['id']; ?>"> volver </a>
+	<?php
+	exit;
+}
+
 if (isset($_POST['idSession']))
 {
 	if ((is_numeric($_POST['amountCash'])) and (is_numeric($_POST['amountCredit'])))
 	{
-		echo "<br>";
-		echo "id user: ".$_POST['idUser'];
-		echo "<br>";
-		echo "idSession: ".$_GET['id'];
-		echo "<br>";
-		echo "moneda: ".$_POST['currency'];
-		echo "<br>";
-		echo "hora: ".$_POST['hour'];
-		echo "<br>";
+
 		$connection->insertBuyin($_POST['hour'], $_POST['amountCash'], $_POST['amountCredit'], $_POST['idUser'], $_POST['approved'], $_POST['currency']); 
 		//header();
 		?>
@@ -61,9 +61,6 @@ if (isset($_POST['idSession']))
 
 $usersSession = $connection->getDatosSessionsUsers($_GET['id']);
 
-echo "<br>";
-echo "<br>";
-var_dump($usersSession);
 ?>
 
 <body>
@@ -94,9 +91,12 @@ var_dump($usersSession);
 										<option value=""> --Seleccione un Jugador--</option>
 										<?php foreach ($usersSession as $user) 
 										{
+											if ($user->end_at == null)
+											{
 											?>
-										<option value="<?php echo $user->id; ?>"> <?php echo $connection->getDatosUserById($user->user_id)->username; ?></option>
+										<option value="<?php echo $user->id; ?>"> <?php echo $connection->getDatosUserById($user->user_id)->name." ".$connection->getDatosUserById($user->user_id)->last_name; ?></option>
 											<?php
+											}
 										}
 										?>
 									</select>
@@ -137,11 +137,7 @@ var_dump($usersSession);
 								</div>
 
 								<div class="form-group">
-									<select class="custom-select" name="currency" id="currency" required="true">
-										<option value=""> --Seleccione la moneda--</option>
-										<option value="1"> USD </option>
-										<option value="2"> $ </option>
-									</select>
+									<input class="form-control" name="currency" id="currency" type="hidden" required="true" value="2">
 								</div>
 
 								<input class="form-control" name="approved" id="approved" type="hidden" required="true" value="1">
