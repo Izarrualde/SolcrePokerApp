@@ -9,10 +9,8 @@
 </head>
 
 <?php
-include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectLmsuy_db.php";
-include "../../Entity/SessionEntity.php";
-include "../../Entity/UserSession.php";
+include "vendor/autoload.php";
+
 Use \Solcre\lmsuy\Entity\UserSession;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\MySQL\Connect;

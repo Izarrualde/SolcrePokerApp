@@ -9,9 +9,8 @@
 </head>
 
 <?php
-include "../MySQL/Connect.php";
-include "../MySQL/ConnectLmsuy_db.php";
-include "../Entity/UserEntity.php";
+include "vendor/autoload.php";
+
 Use \Solcre\lmsuy\MySQL\Connect;
 Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 Use \Solcre\lmsuy\Entity\UserEntity;

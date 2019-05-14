@@ -1,11 +1,6 @@
 <?php
 
-include "../Entity/SessionEntity.php";
-include "../Entity/UserEntity.php";
-include "../Entity/UserSession.php";
-
-include "../MySQL/Connect.php";
-include "../MySQL/ConnectLmsuy_db.php";
+include "vendor/autoload.php";
 
 Use \Solcre\lmsuy\Entity\UserEntity;
 Use \Solcre\lmsuy\MySQL\Connect;

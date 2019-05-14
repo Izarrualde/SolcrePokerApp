@@ -1,9 +1,6 @@
 <?php
-include "../Entity/SessionEntity.php";
-include "../Entity/BuyinSession.php";
-include "../MySQL/Connect.php";
-include "../MySQL/ConnectLmsuy_db.php";
-//include "src/Exception/InsufficientBuyinException.php";
+include "vendor/autoload.php";
+
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\BuyinSession;
 Use \Solcre\lmsuy\MySQL\Connect;

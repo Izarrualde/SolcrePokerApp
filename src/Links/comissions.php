@@ -1,15 +1,6 @@
 <?php
-include "../Entity/SessionEntity.php";
-//include "src/Entity/UserEntity.php";
-include "../Entity/UserSession.php";
-include "../Entity/ComisionSession.php";
-include "../Entity/BuyinSession.php";
-include "../Entity/DealerTipSession.php";
-include "../Entity/ServiceTipSession.php";
-include "../MySQL/Connect.php";
-include "../MySQL/ConnectLmsuy_db.php";
-//include "src/Exception/PlayerNotFoundException.php";
-//include "src/Exception/ComissionAlreadyAddedException.php";
+include "vendor/autoload.php";
+
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\ComissionSession;
 Use \Solcre\lmsuy\MySQL\Connect;

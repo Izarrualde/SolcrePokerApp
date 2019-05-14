@@ -1,21 +1,5 @@
 <?php
-
-include "src/Entity/SessionEntity.php";
-include "src/Entity/UserEntity.php";
-include "src/Entity/UserSession.php";
-include "src/Entity/ComisionSession.php";
-include "src/Entity/BuyinSession.php";
-include "src/Entity/DealerTipSession.php";
-include "src/Entity/ServiceTipSession.php";
-include "src/MySQL/Connect.php";
-include "src/MySQL/ConnectLmsuy_db.php";
-include "src/Exception/UserAlreadyAddedException.php";
-include "src/Exception/SessionFullException.php";
-include "src/Exception/InsufficientBuyinException.php";
-include "src/Exception/PlayerNotFoundException.php";
-include "src/Exception/ComissionAlreadyAddedException.php";
-include "src/Exception/ServiceTipAlreadyAddedException.php";
-include "src/Exception/DealerTipAlreadyAddedException.php";
+include "vendor/autoload.php";
 
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\UserEntity;
@@ -125,7 +109,7 @@ foreach ($sessions as $session )
 </head>
 <body>
 	<div class="container">
-		<div class="col-md-12">
+		<div class="col-md-12 col-sm-8 col-xs-8">
 			<nav aria-label="breadcrumb">
 				 <ol class="breadcrumb">
 				    <li class="breadcrumb-item active" aria-current="page">Inicio</li>
@@ -158,7 +142,7 @@ foreach ($sessions as $session )
 				</div>
 				<div class="card-body">
 					<section class="container row"  style="width: auto; margin: auto auto;">
-						<article class="col-md-12">
+						<article class="col-md-12 col-sm-12 col-xs-12">
 						<table class="table table-bordered table-hover text-center">
 							<thead class="text-center bg-dark text-white">
 								<th> Id </th>
@@ -232,7 +216,7 @@ foreach ($sessions as $session )
 				</div>
 				<div class="card-body">
 					<section class="container row"  style="width: auto; margin: auto auto;">
-						<article class="col-md-12">
+						<article class="col-md-12 col-sm-8 col-xs-8">
 								<a href="src/links/viewUsers.php" class="btn btn-lg btn-block btn-info"> <i class="far fa-eye"></i></i></a>										
 								<a href="src/links/adduser.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>			
 						</article>

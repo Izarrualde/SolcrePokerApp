@@ -15,22 +15,7 @@
 
 <?php
 
-include "../../Entity/SessionEntity.php";
-include "../../Entity/UserEntity.php";
-include "../../Entity/UserSession.php";
-include "../../Entity/ComisionSession.php";
-include "../../Entity/BuyinSession.php";
-include "../../Entity/DealerTipSession.php";
-include "../../Entity/ServiceTipSession.php";
-include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectLmsuy_db.php";
-include "../../Exception/UserAlreadyAddedException.php";
-include "../../Exception/SessionFullException.php";
-include "../../Exception/InsufficientBuyinException.php";
-include "../../Exception/PlayerNotFoundException.php";
-include "../../Exception/ComissionAlreadyAddedException.php";
-include "../../Exception/ServiceTipAlreadyAddedException.php";
-include "../../Exception/DealerTipAlreadyAddedException.php";
+include "vendor/autoload.php";
 
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\UserEntity;

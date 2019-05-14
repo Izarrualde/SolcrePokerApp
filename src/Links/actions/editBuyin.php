@@ -9,8 +9,8 @@
 </head>
 
 <?php
-include "../../MySQL/Connect.php";
-include "../../MySQL/ConnectLmsuy_db.php";
+include "vendor/autoload.php";
+
 Use \Solcre\lmsuy\MySQL\Connect;
 Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 

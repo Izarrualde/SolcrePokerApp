@@ -1,0 +1,19 @@
+{
+    "name": "solcre/lmsuy",
+    "description": "LMS Manager",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Diego",
+            "email": "diego.r.izarrualde@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {},
+    "autoload": {
+    "psr-4": {
+        "Solcre\\lmsuy\\": "./src"
+    }
+}
+}
