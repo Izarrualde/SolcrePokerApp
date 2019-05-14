@@ -26,7 +26,6 @@ class ConnectLmsuy_db extends Connect
 		return $arreglo;
 	}
 
-
 	public function getDatosSessionUsersById($id)
 	{
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, points, cashout, DATE_FORMAT(start_at, '%d-%m-%Y %H:%i') as start_at,  DATE_FORMAT(end_at, '%d-%m-%Y %H:%i') as end_at, is_approved, session_id, user_id FROM sessions_users WHERE id='$id'";
@@ -314,7 +313,7 @@ class ConnectLmsuy_db extends Connect
 		{
 
 			$sql="INSERT into sessions_users VALUES (null, '$created_at', '$accumulatedPoints', '$cashout',".(!empty($start_at)?$start_at:'null').", ".(!empty($end_at)?$end_at:'null').", '$is_approved', '$idSession', '$idUser')"; 
-var_dump($sql);
+
 			$mensaje = "El usuario se ingresó exitosamente";
 			$this->db->query($sql);			
 		}
@@ -324,8 +323,6 @@ var_dump($sql);
 	public function insertSession($date, $title, $description, $seats, $startTime, $startTimeReal, $endTime)
 	{
 		$sql="INSERT into sessions VALUES (null, '$date', '$title', '$description', '$seats', '$startTime', ".(!empty($startTimeRea)?$startTimeReal:'null').", ".(!empty($endTime)?$endTime:'null').")"; 
-		echo $sql;
-		echo "<br>";
 		$this->db->query($sql);
 	}
 

@@ -43,10 +43,11 @@ Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 
 $connection = new ConnectLmsuy_db;
+$datosSession = $connection->getDatosSessionById($_GET['id']);
 $datosSessionDealerTips = $connection->getDatosSessionDealerTips($_GET['id']);
 $datosSessionServiceTips = $connection->getDatosSessionServiceTips($_GET['id']);
 
-$session = new SessionEntity;
+$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
 
 foreach ($datosSessionDealerTips as $dealerTip) 
 {
@@ -57,7 +58,7 @@ foreach ($datosSessionServiceTips as $serviceTip)
 {
 	$session->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
 }
-$datosSession = $connection->getDatosSessionById($_GET['id']);
+
 ?>
 
 <!DOCTYPE html>
@@ -87,11 +88,12 @@ $datosSession = $connection->getDatosSessionById($_GET['id']);
 			  <div class="card-header"><b> Datos de la Sesión </b> </div>
 			  <div class="card-body">
 			    <p> <i><?php 
-			    	echo date_format(date_create($datosSession->created_at), 'l')." "; 
-			    	echo date_format(date_create($datosSession->created_at), 'd-m-Y');
+			    	echo date_format(date_create($session->getDate()), 'l')." "; 
+			    	echo date_format(date_create($session->getDate()), 'd-m-Y');
 			    	?>	</i>
 			    </p>
-			    <p class="card-text"> Descripcion:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres:</p>
+			    <p class="card-text"> Descripcion: <?php echo $session->getDescription() ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: <?php echo substr($session->getStartTimeReal(), 11, 5) ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total: <?php echo $session->getActivePlayers()."/".$session->getTotalDistinctPlayers() ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres: <?php echo ($session->getSeats()-$session->getActivePlayers()) ?>
+			    </p>
 
 			  </div>
 			</div>

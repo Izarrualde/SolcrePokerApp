@@ -17,15 +17,16 @@ if (!isset($_GET['id']))
 }
 
 $connection = new ConnectLmsuy_db;
+$datosSession = $connection->getDatosSessionById($_GET['id']);
 $datosSessionBuyins = $connection->getDatosSessionBuyins($_GET['id']);
 
-$session = new SessionEntity;
+$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
 
 foreach ($datosSessionBuyins as $buyin) 
 {
 	$session->sessionBuyins[] = new BuyinSession($buyin->id, null, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
 }
-$datosSession = $connection->getDatosSessionById($_GET['id']);
+
 ?>
 
 
@@ -54,11 +55,12 @@ $datosSession = $connection->getDatosSessionById($_GET['id']);
 			  <div class="card-header"><b> Datos de la Sesión </b> </div>
 			  <div class="card-body">
 			    <p> <i><?php 
-			    	echo date_format(date_create($datosSession->created_at), 'l')." "; 
-			    	echo date_format(date_create($datosSession->created_at), 'd-m-Y');
+			    	echo date_format(date_create($session->getDate()), 'l')." "; 
+			    	echo date_format(date_create($session->getDate()), 'd-m-Y');
 			    	?>	</i>
 			    </p>
-			    <p class="card-text"> Descripcion:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres:</p>
+			    <p class="card-text"> Descripcion: <?php echo $session->getDescription() ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: <?php echo substr($session->getStartTimeReal(), 11, 5) ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total: <?php echo $session->getActivePlayers()."/".$session->getTotalDistinctPlayers() ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres: <?php echo ($session->getSeats()-$session->getActivePlayers()) ?>
+			    </p>
 
 			  </div>
 			</div>

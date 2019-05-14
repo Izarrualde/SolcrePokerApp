@@ -179,7 +179,7 @@ foreach ($sessions as $session )
 									<tr>
 											<td> <?php echo $session->getIdSession(); ?>  </td>
 											<td> <?php echo date_format(date_create($session->getDate()), 'd-m-Y'); ?> </td>
-											<td> <?php if ($session->getDate() != '0000-00-00 00:00:00') 
+											<td> <?php if ($session->getDate() != null) 
 												       {
 												       		echo date_format(date_create($session->getDate()), 'l');
 												       } 
@@ -187,14 +187,14 @@ foreach ($sessions as $session )
 											</td>
 											<td> <?php echo $session->getDescription(); ?></td>
 											<td> <?php 
-												 if (($session->getStartTimeReal()) != '0000-00-00 00:00:00') 
+												 if (($session->getStartTimeReal()) != null) 
 												 	echo substr($session->getStartTimeReal(), 11, 5) ; 
 												 ?> 
 											</td>
 											<td> <?php echo $session->getActivePlayers(); echo "/"; echo $session->getTotalDistinctPlayers(); ?> </td>
 											<td> <?php echo ($session->getSeats()-$session->getActivePlayers()); //- getAsientosOcupados() ?> </td>	
 											<td> <?php 
-												 if (($session->getEndTime()) != '0000-00-00 00:00:00')
+												 if (($session->getEndTime()) != null)
 												 	echo substr($session->getEndTime(), 11, 5) ; 
 												 ?> 
 											</td>
