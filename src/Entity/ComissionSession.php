@@ -59,6 +59,16 @@ class ComissionSession
 		$this->comission = $comission;
 		return $this;
 	}
+
+	public function toArray(){
+		return  [
+			'id' => $this->getId(),
+			'idSession' => $this->getIdSession(),
+			'hour' => $this->getHour(),
+			'comission' => $this->getComission()
+		];
+	}
+
 }
 
 ?>

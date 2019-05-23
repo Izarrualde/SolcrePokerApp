@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html.twig' %}
+
+<body>
+	<div class="container">
+		<div class="col-md-8">
+		{% include 'breadcrumb.html.twig' %}
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Editar Sesión
+				</div>
+				<div class="card-body">
+					<section class="container row justify-content-center">
+						<article>
+							<form class="was-validated" action="" method="post">
+
+								<input name="count_of_seats" type="hidden" value="{{ session.seats }}">
+								
+								<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ session .idSession }}">
+
+								<div class="form-group">
+									<label class="sr-only" for="created_at"> Fecha: </label>
+									<input class="form-control" name="created_at" id="created_at" type="date" required="true" value="{{ session.created_at | date('Y-m-d') }}"> 
+									
+								</div>
+
+								<div class="form-group">
+									<label class="sr-only" for="title"> title: </label>
+									<input class="form-control" name="title" id="title" placeholder="title" type="text" required="true" value="{{ session.title }}">
+									
+								</div>
+
+
+								<div class="form-group">
+									<label class="sr-only" for="description"> Descripcion: </label>
+									<input class="form-control" name="description" id="description" placeholder="Descripcion" type="text" value="{{ session.description }}">
+									
+								</div>
+
+								<div class="form-group">
+									<label class="sr-only" for="real_start_at"> Hora de Inicio: </label>
+									<input class="form-control" name="real_start_at" id="real_start_at" type="datetime-local" value="{{ session.startTime | date('Y-m-d') }}T{{ session.startTime| date('H:i') }}">
+									
+								</div>
+
+								<div class="form-group">
+									<label class="sr-only" for="end_at"> Hora de Fin: </label>
+									<input class="form-control" name="end_at" id="end_at" type="datetime-local" value="{{ session.endTime | date('Y-m-d') }}T{{ session.endTime | date('H:i') }}">
+									
+								</div>
+
+								<div class="form-group">
+									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />
+								</div>
+								<br><br><br><br>
+							</form>
+						</article>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

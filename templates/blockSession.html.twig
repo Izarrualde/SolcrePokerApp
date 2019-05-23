@@ -1,0 +1,14 @@
+			<div class="card bg-light mb-3">
+			  <div class="card-header"><b> Datos de la Sesión </b> </div>
+			  <div class="card-body"> <!--
+			    <p> <i><?php 
+			    	echo date_format(date_create($session->getDate()), 'l')." "; 
+			    	echo date_format(date_create($session->getDate()), 'd-m-Y');
+			    	?>	</i>
+			    </p> 
+
+			    <p class="card-text"> Descripcion: <?php echo $session->getDescription() ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inicio: <?php echo substr($session->getStartTimeReal(), 11, 5) ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jugando/Total: <?php echo $session->getActivePlayers()."/".$session->getTotalDistinctPlayers() ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Asientos Libres: <?php echo ($session->getSeats()-$session->getActivePlayers()) ?>
+			    </p> -->
+
+			  </div>
+			</div>

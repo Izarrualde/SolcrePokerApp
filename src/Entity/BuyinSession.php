@@ -1,7 +1,7 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
-class BuyinSession 
+class BuyinSession
 {
 	protected $id;
 	protected $idSession;
@@ -11,6 +11,9 @@ class BuyinSession
 	protected $currency;
 	protected $hour;
 	protected $isApproved;
+
+	protected $session;
+	protected $userSession;
 
 	public function __construct($id=null, $idSession=null, $sessionUserId=null, $amountCash=null, $amountCredit=null, $currency=null, $hour=null, $isApproved=null)
 	{
@@ -111,6 +114,51 @@ class BuyinSession
 		$this->isApproved = $isApproved;
 		return $this;
 	}
+
+	public function getSession()
+	{
+		return $this->session;
+	}
+
+	public function setSession(SessionEntity $session)
+	{
+		$this->session = $session;
+		return $this;
+	}
+	public function getUserSession()
+	{
+		return $this->userSession;
+	}
+
+	public function setUserSession(UserSession $userSession)
+	{
+		$this->userSession = $userSession;
+		return $this;
+	}
+
+	public function toArray(){
+		$ret = [
+			'id' => $this->getId(),
+			'idSession' => $this->getIdSession(),
+			'amountCash' => $this->getAmountCash(),
+			'amountCredit' => $this->getAmountCredit(),
+			'hour' => $this->getHour(),
+		];
+
+		$session = $this->getSession();
+
+		if ($session instanceof SessionEntity) {
+			$ret['session'] = $session->toArray();
+		}
+
+		$userSession = $this->getUserSession();
+		if ($userSession instanceof UserSession) {
+			$ret['user_session'] = $userSession->toArray();
+		}
+
+		return $ret;
+	}
+
 }
 
 

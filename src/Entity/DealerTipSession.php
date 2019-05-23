@@ -59,6 +59,15 @@ class DealerTipSession
 		$this->dealerTip = $tip;
 		return $this;
 	}
+	public function toArray(){
+		return  [
+			'id' => $this->getId(),
+			'idSession' => $this->getIdSession(),
+			'hour' => $this->getHour(),
+			'dealerTip' => $this->getDealerTip()
+		];
+	}
+
 }
 
 ?>

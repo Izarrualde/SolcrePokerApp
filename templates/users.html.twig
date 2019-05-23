@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html.twig' %}
+
+<body>
+	<div class="container">
+		<div class="col-md-12">
+		{% include 'breadcrumb.html.twig' %}
+		{% include 'blockSession.html.twig' %}
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					{% if message is not empty %}
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">x</button>
+							{{ message }} 
+						</div>
+					{% endif %}
+					Usuarios 
+				</div>
+				<div class="card-body">
+					<section class="container row" style="width: auto; margin: auto auto;">
+						<article class="col-md-12">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="text-center bg-dark text-white">
+									<th> Jugador </th>
+									<th> Hora <br>de inicio </th>
+									<th> Cashin </th>
+									<th> Cashout </th>
+									<th> Acciones </th>
+								</thead> 
+								<tbody class="text-center">
+									<!--<?php 
+									if (sizeof($datosUsers)==0)
+									{
+										?>
+										<tr>
+											<td colspan="9"> sin registros </td>
+										</tr>
+									<?php
+									} else
+									{ -->
+										{% for user in session.usersSession %} 
+										 
+											<!-- if (empty($user->getEnd())) -->
+													<tr class="text-center">
+														<td> 
+															{{ user.name }} {{ user.lastname}} 
+														</td>
+														<td> {{ user.startTime }}  
+														</td>
+															
+														<td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
+														<td> {{ user.cashout|default("-") }}  </td>
+														<td> <a href="/lmsuy/actions/closeSession_twig.php?id={{ user.idSession }}&idUS={{ user.id }}&idU={{ user.idUser }}"> <i class="fas fa-sign-out-alt"></i> </a> <a href="/lmsuy/actions/editUser_twig.php?idU={{ user.idUser }}&id={{ user.idSession }}&idUS={{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/lmsuy/actions/deleteUser_twig.php?idUS={{ user.id }}&id={{ user.idSession }}"> <i class="fas fa-trash-alt"></i> </a> </td>
+												
+													</tr> 
+
+									{% endfor %}
+											
+												<tr>
+													<td colspan="9">
+													<a href="/lmsuy/newusers_twig.php?id={{ session.idSession }}" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+													</td>
+												</tr>
+							
+								</tbody>  
+							</table>
+						</article>	
+
+
+
+					</section>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Usuarios Inactivos
+				</div>
+				<div class="card-body">
+					<section class="container row" style="width: auto; margin: auto auto;">
+						<article class="col-md-12">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="text-center bg-dark text-white">
+									<th> Inactivo </th>
+									<th> Hora <br> de inicio </th>
+									<th> Cashin </th>
+									<th> Cashout </th>
+									<th> Hora <br> de fin </th>
+									<th> acciones </th>
+								</thead>
+								<tbody class="text-center">
+									<!-- <?php 
+									if (sizeof($datosUsers)==0)
+									{
+										?>
+										<tr>
+											<td colspan="9"> sin registros </td>
+										</tr>
+									<?php
+									} else
+									{ -->
+										{% for user in session.usersSession %} 
+										<!-- {
+											if (!empty($user->getEnd()))
+											{
+												?> -->
+													<tr class="text-center">
+														<td>
+															{{ user.name }} {{ user.lastname }}
+													    </td>
+														<td> {{ user.startTime }}  </td>
+														<td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
+														<td> {{ user.cashout }}  </td>
+
+														<td> {{ user.endTime }}
+												        </td>
+
+														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
+												
+													</tr>
+										{% endfor %}
+
+							
+								</tbody>  
+							</table>
+						</article>	
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<script src="../../js/functions.js"></script>
+		<script src=”../../js/jquery.js”> </script>
+		<script src=”../../js/bootstrap.min.js”> </script>
+</body>
+</html>
+
+

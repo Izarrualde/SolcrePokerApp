@@ -59,6 +59,16 @@ class ServiceTipSession
 		$this->serviceTip = $tip;
 		return $this;
 	}
+
+	public function toArray(){
+		return  [
+			'id' => $this->getId(),
+			'idSession' => $this->getIdSession(),
+			'hour' => $this->getHour(),
+			'serviceTip' => $this->getServiceTip()
+		];
+	}
+
 }
 
 ?>

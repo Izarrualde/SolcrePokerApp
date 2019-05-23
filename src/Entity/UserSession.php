@@ -8,8 +8,11 @@ class UserSession
 	protected $isApproved;
 	protected $accumulatedPoints;
 	protected $cashout;
-	public $start;
+	protected $start;
 	protected $end;
+
+	protected $user;
+
 	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
 	{
 		$this->setId($id);
@@ -108,6 +111,22 @@ class UserSession
 		return $this;
 	}
 
+	public function getUser() 
+	{
+		return $this->user;
+	}
+	
+	public function setUser(UserEntity $user)
+	{
+		$this->user = $user;
+		return $this;
+	}
+
+	public function getIdSession()
+	{
+		return  ($this->session instanceof SessionEntity) ? $this->session->getId() : null;
+	}
+
 	public function getCashin() 
 	{
 		$cashin = 0;
@@ -148,28 +167,32 @@ class UserSession
 		$date1=date_create($this->getEnd());
 		$date2=date_create($this->getStart());
 		$diff=date_diff($date1, $date2);
-		
-		//echo "horas jugadas: ".$diff->format('%h:%i');
 
 		return $diff;
 	}
 
-	/*public function playerHasBuyin($idUserSession)
-	{
-		$session = $this->getSession();
-		$buyins = $session->getSessionBuyins();
-		if ($session instanceof SessionEntity) { 
-			foreach($session->getSessionBuyins() as $buyin) { echo $buyin->getSessionUserId(); echo $idUserSession;
-				if ($buyin->getSessionUserId() == $idUserSession) { 
-					return true;
-				}
-				 else
-				{
-					return false;
-				}
-			}
-		} 
-	}*/
+	public function toArray(){
+		$ret =  [
+			'id' => $this->getId(),
+			'idSession' => $this->getSession()->getIdSession(),
+			'idUser' => $this->getIdUser(),
+			'isApproved' => $this->getIsApproved(),
+			'points' => $this->getAccumulatedPoints(),
+			'cashout' => $this->getCashout(),
+			'cashin' => $this->getCashin(),
+			'startTime' => $this->getStart(),
+			'endTime' => $this->getEnd(),
+			'cashin' => $this->getCashin(),
+			'totalCredit' => $this->getTotalCredit()
+		];
+
+		$user = $this->getUser();
+		if ($user instanceof UserEntity) {
+			$ret['user'] = $user->toArray();
+		}
+
+		return $ret;
+	}
 }
 
 ?>

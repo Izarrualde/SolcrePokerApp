@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html.twig' %}
+
+<body>
+	
+	<div class="container">
+		<div class="col-md-8">
+		{% include 'breadcrumb.html.twig' %}
+		{% include 'blockSession.html.twig' %}
+
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					{% if message is not empty %}
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">x</button>
+							{{ message }} 
+						</div>
+					{% endif %}					
+					<!-- <?php
+					if (isset($_GET["m"]) and $_GET["m"]==1)
+					{
+						?>
+						<div class="alert alert-success">
+						<button type="button" class="close" data-dismiss="alert">x</button>
+						La comisión se ha eliminado exitosamente.
+						</div>
+					<?php
+					}
+					?> -->
+					Comisiones
+				</div>
+				<div class="card-body">
+					<section class="container row">
+						<article class="col-md-9"  style="width: auto; margin: auto auto;">
+							<table class="table table-bordered table-hover table-condensed">
+								<thead class="thead-dark text-center bg-secondary">
+									<tr class="bg-success">
+										<th> Hora </th>
+										<th> Comision </th>	
+										<th> Accciones </th>						
+									</tr>
+
+								</thead>
+								<tbody class="text-center">
+									<!-- <?php 
+									if (sizeof($session->sessionComissions)==0)
+									{
+										?>
+										<tr>
+											<td colspan="3"> sin registros </td>
+										</tr>
+									<?php
+									} else
+									{ 
+										foreach ($session->sessionComissions as $comission) 
+										{*/
+										?> -->
+										{% for comission in session.comissions %}
+											<tr>
+												<td> {{ comission.date|date('H:i') }} </td>
+												<td> {{ comission.comission }} </td>
+												<td> <a href="/lmsuy/actions/editComission_twig.php?idC={{ comission.id }}&id={{ comission.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/lmsuy/actions/deleteComission_twig.php?idC={{ comission.id }}&id={{ comission.idSession }}"> <i class="fas fa-trash-alt"></i> </a></td> 
+
+
+													<!-- <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>-->
+											</tr>
+										{% endfor %}
+
+											<tr class="text-center bg-dark text-white">
+												<th> TOTAL </th>
+												<th> comision total </th>
+												<th> </th>												
+											</tr>	
+	
+											<tr>
+												<td colspan="8">
+												<a href="/lmsuy/newcomissions_twig.php?id={{ session.idSession }}" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+												</td>
+											</tr>
+
+								</tbody>  
+							</table>
+						
+						</article>	
+
+
+
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+		<script src="../../js/functions.js"></script>
+		<script src=”/../../js/jquery.js”> </script>
+		<script src=”/../../js/bootstrap.min.js”> </script>
+		
+</body>
+</html>

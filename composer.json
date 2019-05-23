@@ -10,7 +10,9 @@
         }
     ],
     "minimum-stability": "beta",
-    "require": {},
+    "require": {
+        "twig/twig": "^2.10"
+    },
     "autoload": {
     "psr-4": {
         "Solcre\\lmsuy\\": "./src"

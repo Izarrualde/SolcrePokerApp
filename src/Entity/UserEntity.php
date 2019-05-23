@@ -136,9 +136,9 @@ class UserEntity
 		return $this;
 	}
 
-	public function getIs_active() 
+	public function getIsActive() 
 	{
-		return $this->active;
+		return $this->isActive;
 	}
 
 	public function setIsActive($isActive)
@@ -192,7 +192,14 @@ class UserEntity
 		return $this;
 	}
 
-
+	public function toArray(){
+		return [
+			'id' => $this->getId(),
+			'name' => $this->getName(),
+			'lastname' => $this->getLastname(), 
+			'hours' => $this->getHours()
+		];
+	}
 }
 
 ?>

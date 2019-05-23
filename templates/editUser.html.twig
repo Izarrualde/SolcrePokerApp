@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html.twig' %}
+
+<body>
+	<div class="container">
+		<div class="col-md-8">
+		{% include 'breadcrumb.html.twig' %}
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Editar Usuario
+				</div>
+				<div class="card-body">
+					<section class="container row justify-content-center">
+						<article>
+							<form class="was-validated" action="" method="post">
+								<input name="id" type="hidden" value="{{ session.userSession.id }}">
+								
+								<input name="idUser" id="idUser" type="hidden" value="{{ session.userSession.idUser }}">
+
+								<input name="idSession" id="idSession" type="hidden" value="{{ session.idSession }}">
+
+								<input class="form-control" name="accumulatedPoints" id="accumulatedPoints" type="hidden" required="true" value="{{ session.userSession.points }}">
+
+								<input name="approved" id="approved" type="hidden" value="{{ session.userSession.isApproved }}">
+
+								<input class="form-control" name="cashout" id="cashout" type="hidden" required="true" value="">
+
+								<!-- usar en usuario inactivo
+								<div class="form-group">
+									<label class="sr-only" for="amountCash"> cashout: </label>
+									<input class="form-control" name="cashout" id="cashout" type="text" placeholder="cashout" required="true" value="<?php echo $datos[0]->cashout; ?>">
+								</div> -->
+
+								<div class="form-group">
+									<label class="sr-only" for="start"> Inicio: </label>
+									<input class="form-control" name="start" id="start" type="datetime-local" value="{{ session.userSession.startTime|date('Y-m-d') }}T{{ session.userSession.startTime|date('H:i') }}">
+									<small id="start" class="form-tet text-muted"> Fecha y hora de inicio </small>
+								</div>
+								
+								<input class="form-control" name="end" id="end" type="hidden" value="">
+
+								<!-- para edit user inactivo si usar esta
+								<div class="form-group">
+									<label class="sr-only" for="end"> Fin: </label>
+									<input class="form-control" name="end" id="end" type="datetime-local" value="<?php echo substr($datos[0]->end_at, 6, 4); echo substr($datos[0]->end_at, 2, 4); echo substr($datos[0]->end_at, 0, 2); echo "T"; echo substr($datos[0]->end_at, 11, 5); ?>">
+									<small id="end" class="form-tet text-muted"> Fecha y hora de finalizacion </small>
+								</div>  -->
+
+
+								<div class="form-group">
+									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />
+								</div>
+								<br><br><br><br>
+							</form>
+						</article>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+</body>
+</html>

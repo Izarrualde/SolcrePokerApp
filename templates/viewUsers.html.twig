@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html.twig' %}
+
+<body>
+	<div class="container">
+		<div class="col-md-12">
+		{% include 'breadcrumb.html.twig' %}
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					{% if message is not empty %}
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">x</button>
+							{{ message }} 
+						</div>
+					{% endif %}
+					Usuarios
+					
+				</div>
+				<div class="card-body">
+					<section class="container row"  style="width: auto; margin: auto auto;">
+						<article class="col-md-12">
+							<table class="table table-bordered table-hover text-center">
+								<thead class="text-center bg-dark text-white">
+									<th> Jugador </th>
+									<th> Teléfono </th>
+									<th> horas </th>
+									<th> acciones </th>
+										<tbody>
+											{% for user in users %}
+												<tr>
+														<td> {{ user.name }} {{ user.lastname }} </td>
+														<td> {{ user.username }} </td>
+														<td> {{ user.hours }} </td>
+														<td> <a href="/lmsuy/actions/editPlayer_twig.php?id={{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a><a href="/lmsuy/actions/deletePlayer_twig.php?id={{ user.id }}"> <i class="fas fa-trash-alt"></i> </a> </td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+						</article>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

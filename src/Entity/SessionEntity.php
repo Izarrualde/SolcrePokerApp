@@ -497,6 +497,19 @@ class SessionEntity
 		}
 		return count($distinctPlayers);
 	}
+
+	public function toArray(){
+		return  [
+			'idSession' => $this->getIdSession(),
+			'created_at' => $this->getDate(),
+			'description' => $this->getDescription(),
+			'startTime' => $this->getStartTimeReal(),
+			'activePlayers' => $this->getActivePlayers(),
+			'distinctPlayers' => $this->getTotalDistinctPlayers(),
+			'seats' => $this->getSeats(),
+			'endTime' => $this->getEndTime()
+		];
+	}
 	
 }
 ?>

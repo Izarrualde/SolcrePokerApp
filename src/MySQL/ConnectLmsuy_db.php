@@ -26,16 +26,12 @@ class ConnectLmsuy_db extends Connect
 		return $arreglo;
 	}
 
-	public function getDatosSessionUsersById($id)
+	public function getDatosSessionUserById($id)
 	{
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, points, cashout, DATE_FORMAT(start_at, '%d-%m-%Y %H:%i') as start_at,  DATE_FORMAT(end_at, '%d-%m-%Y %H:%i') as end_at, is_approved, session_id, user_id FROM sessions_users WHERE id='$id'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
-		while ($reg=$datos->fetch_object())
-		{
-			$arreglo[]=$reg;
-		}
-		return $arreglo;
+		return $datos->fetch_object();
 	}
 
 	public function getDatosSessionServiceTips($idSession)
@@ -160,9 +156,20 @@ class ConnectLmsuy_db extends Connect
 		else {
 			return null;
 		}
+	}
 
-
-
+	public function getIdUserSessionByIdUser($idUser)
+	{
+		$sql="SELECT id FROM sessions_users WHERE user_id='$idUser' and end_at IS null";
+		$datos = $this->db->query($sql);
+		$reg=$datos->fetch_object();
+		var_dump($reg);
+		if ($reg) {
+			return $reg->id;
+		} 
+		else {
+			return null;
+		}
 	}
 
 	public function getHourFirstBuyin($idUserSession)
@@ -233,6 +240,14 @@ class ConnectLmsuy_db extends Connect
 		$reg=$datos->fetch_object();
 		return $reg;
 	}
+
+	public function getIdSessionbyIdUserSession($idUserSession)
+	{
+		$sql="SELECT session_id FROM sessions_Users WHERE id='$idUserSession'";
+		$datos = $this->db->query($sql);
+		$reg=$datos->fetch_object();
+		return $reg->session_id;
+	}
 /*
 	public function getLastnameUserById($id)
 	{
@@ -271,9 +286,10 @@ class ConnectLmsuy_db extends Connect
 		$sql="UPDATE sessions_users SET start_at='$hour' WHERE id='$idSessionUser' AND start_at IS NULL";
 
 		$this->db->query($sql);
+
 		//$idPlayer = $this->getIdUserbyNickname($_POST['nickname']);
 		$sql= "INSERT into session_buyins VALUES (NULL, '$hour', '$amountCash', '$amountCredit', '$approved', '$idSessionUser', '$currency')";
-
+		echo $sql;
 		$this->db->query($sql);
 	}
 
@@ -311,7 +327,6 @@ class ConnectLmsuy_db extends Connect
 
 		if ($mensaje=='')
 		{
-
 			$sql="INSERT into sessions_users VALUES (null, '$created_at', '$accumulatedPoints', '$cashout',".(!empty($start_at)?$start_at:'null').", ".(!empty($end_at)?$end_at:'null').", '$is_approved', '$idSession', '$idUser')"; 
 
 			$mensaje = "El usuario se ingresó exitosamente";
@@ -358,16 +373,12 @@ class ConnectLmsuy_db extends Connect
 	public function updateBuyin($amountCash, $amountCredit, $currency, $hour, $approved, $id)
 	{
 		$sql= "UPDATE session_buyins SET amount_of_cash_money='$amountCash', amount_of_credit_money='$amountCredit', currency_id='$currency', created_at='$hour', approved='$approved' WHERE id='$id'";
-
 		$this->db->query($sql);
 	}
 
 	public function updateUserSession($accumulatedPoints, $cashout, $startTime, $endTime, $isApproved, $idSession, $idUser, $idUserSession)
 	{
-		echo empty($endTime)?"si":"no";
 		$sql= "UPDATE sessions_users SET is_approved='$isApproved', points='$accumulatedPoints', cashout='$cashout', start_at='$startTime', end_at=".(!empty($endTime)?$endTime:'null')." WHERE id='$idUserSession'";
-		echo "<br>";
-		echo $sql;
 		//".(!empty($end_at)?$end_at:'null')."
 
 		$this->db->query($sql);
@@ -392,6 +403,8 @@ class ConnectLmsuy_db extends Connect
 	public function updateDealerTip($idSession, $hour, $dealerTip, $id)
 	{
 		$sql= "UPDATE session_dealer_tips SET session_id='$idSession', created_at='$hour', dealer_tip='$dealerTip' WHERE id='$id'";
+		echo "<br>";
+		echo $sql;
 		$this->db->query($sql);
 	}
 
