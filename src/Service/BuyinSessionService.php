@@ -19,6 +19,7 @@ class BuyinSessionService {
 
 	public function add(BuyinSession $buyin)
 	{
+
 		$this->connection->insertBuyin($buyin->getHour(), $buyin->getAmountCash(), $buyin->getAmountCredit(), $buyin->getSessionUserId(), $buyin->getIsApproved(), '2');
 	}
 

@@ -30,10 +30,8 @@ foreach ($comissions as $comission)
 	$datosUI['comission'][] = $comission->toArray();
 }
 
-$datosUI['session'] = [
-		'idSession' => $session->getIdSession(),
-		'comissions' => $comissions
-		];
+$datosUI['session'] = $session->toArray();
+$datosUI['session']['comissions'] = $comissions;
 
 $datosUI['breadcrumb'] = 'Comissions';
 

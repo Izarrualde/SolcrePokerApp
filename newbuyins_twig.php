@@ -1,107 +1,80 @@
 <?php
 include "vendor/autoload.php";
 
+Use \Solcre\lmsuy\Service\BuyinSessionService;
+Use \Solcre\lmsuy\Service\UserService;
+Use \Solcre\lmsuy\Service\UserSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
+Use \Solcre\lmsuy\Entity\SessionEntity;
+Use \Solcre\lmsuy\Entity\BuyinSession;
 Use \Solcre\lmsuy\MySQL\Connect;
 Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\BuyinSession;
-Use \Solcre\lmsuy\Entity\SessionEntity;
-Use \Solcre\lmsuy\Entity\UserSession;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $datosUI = array();
 $connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+$userService = new UserService($connection);
+$userSessionService = new UserSessionService($connection, $userService, $sessionService);
+$buyinSessionService = new BuyinSessionService($connection, $sessionService, $userSessionService);
+
+$session = $sessionService->findOne($_GET['id']);
+
+$datosUsersSession = $userSessionService->find($_GET['id']);
+
+$datosUI = array();
 
 if (isset($_POST['idSession']))
-{
+{	
 	// formulario fue cargado debo insertar buyin y redirigir a buyin_twig.php con el mensaje de exito
 	if ((is_numeric($_POST['amountCash'])) and (is_numeric($_POST['amountCredit'])))
 	{
+		$buyin = new BuyinSession(null, $_GET['id'], $_POST['idUserSession'], $_POST['amountCash'], $_POST['amountCredit'], '2', date('c'), $_POST['approved']);
 
-	    $idUserSession = $connection->getIdUserSessionByIdUser($_POST['idUser']);
-		$connection->insertBuyin($_POST['hour'], $_POST['amountCash'], $_POST['amountCredit'], $idUserSession, $_POST['approved'], '2'); 
-		$template = 'buyins.html.twig';
-		$datosUI['breadcrumb'] = 'Buyins';
-		$datosUI['message'] = 'el buyin se ingresó exitosamente.';
-		$connection = new ConnectLmsuy_db;
-		$datosSession = $connection->getDatosSessionById($_GET['id']);
-		$datosSessionBuyins = $connection->getDatosSessionBuyins($_GET['id']);
+		$buyinSessionService->add($buyin); 
 
-		$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
 
-		foreach ($datosSessionBuyins as $buyin) 
+		// BUSQUEDA DE DATOS PARA LA UI
+
+		if (!isset($_GET['id']))
 		{
-			$buyinObject = new BuyinSession($buyin->id, $_GET['id'], $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
-
-			$name = $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyinObject->getSessionUserId()))->name;
-			$lastname = $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyinObject->getSessionUserId()))->last_name;
-
-			$buyins[] = [
-				'id' => $buyinObject->getId(),
-				'idSession' => $buyinObject->getIdSession(),
-				'amountCash' => $buyinObject->getAmountCash(),
-				'amountCredit' => $buyinObject->getAmountCredit(),
-				'hour' => $buyinObject->getHour(),
-				'name' => $name,
-				'lastname' => $lastname
-			];
-
+			header('Location: ../../index_twig.php');
+			exit;
 		}
-		$datosUI['session'] = [
-				'idSession' => $session->getIdSession(),
-				'buyins' => $buyins
-		];
+
+		//extraigo datos de la bdd
+
+		$buyins = array();
+		$datosBuyins = $buyinSessionService->find($_GET['id']);
+		foreach ($datosBuyins as $buyin)
+		{
+			$buyins[] = $buyin->toArray(); 
+		}
+
+		$datosUI['session'] = $session->toArray();
+		$datosUI['buyins'] = $buyins;
+		$datosUI['breadcrumb'] = 'Buyins';
+
+		$template = 'buyins.html.twig';
+		$datosUI['message'] = 'el buyin se ingresó exitosamente.';
+
 	}
 } 
 else
 {
-	//envio a usaruaio a newbuyin.html.twig con datos necesarios para mostrar formularios
+	//envio a usuario a newbuyin.html.twig con datos necesarios para mostrar formularios
 	$template = 'newbuyins.html.twig';
 	$datosUI['breadcrumb'] = 'Nuevo Buyin';
+	
+	$usersSession = array();
 
-
-	//public function insertBuyin($hour, $amountCash, $amountCredit, $IdSessionUser, $approved, $currency)
-
-	/*if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
+	foreach ($datosUsersSession as $userSession) 
 	{
-		?>
-		<mark> <code> La sesión ha finalizado </code></mark>
-		<br> <br>
-		<a class="btn btn-primary" href="buyins.php?id=<?php echo $_GET['id']; ?>"> volver </a>
-		<?php
-		exit;
-	}*/
-
-	// BUSQUEDA DE DATOS PARA LA UI
-
-	//extraigo datos de la bdd
-	$datosSession = $connection->getDatosSessionById($_GET['id']);
-	$datosUsers = $connection->getDatosSessionsUsers($_GET['id']);
-
-	$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-	foreach ($datosUsers as $user) 
-	{
-		$userObject = new UserSession($user->id, $session, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
-
-		$name = $connection->getDatosUserById($userObject->getIdUser())->name;
-		$lastname = $connection->getDatosUserById($userObject->getIdUser())->last_name;
-
-		$usersSession[] = [
-			'id' => $userObject->getId(),
-			'idSession' => $userObject->getSession()->getIdSession(),
-			'idUser' => $userObject->getIdUser(),
-			'name' => $name,
-			'lastname' => $lastname,
-			'endTime' => $userObject->getEnd()
-		];
+		$usersSession[] = $userSession->toArray();
 	}
 
-		$datosUI['session'] = [
-		'idSession' => $session->getIdSession(),
-		'usersSession' => $usersSession
-		];
-		var_dump($datosUI);
+		$datosUI['users_session'] = $usersSession;
 }
 
 

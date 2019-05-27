@@ -31,7 +31,7 @@ class ComissionSessionService {
 
 	public function findOne($id)
 	{
-		$datosComission = $this->connection->getDatosSessionComissionById($id);
+		$comission = $this->connection->getDatosSessionComissionById($id);
 		$comissionObject = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
 		return $comissionObject;
 	}

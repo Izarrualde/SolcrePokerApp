@@ -29,18 +29,16 @@ $buyinSessionService = new BuyinSessionService($connection, $sessionService, $us
 
 $session = $sessionService->findOne($_GET['id']);
 
-$buyins = $buyinSessionService->find($_GET['id']);
+$datosBuyins = $buyinSessionService->find($_GET['id']);
 
-$datosUI['buyins'] = array();
-
-foreach ($buyins as $buyin)  {
-	$datosUI['buyins'][] = $buyin->toArray();
+//$datosUI['buyins'] = array();
+$buyins = array();
+foreach ($datosBuyins as $buyin)  {
+	$buyins[] = $buyin->toArray(); 
 }
 
-$datosUI['session'] = [
-		'idSession' => $session->getIdSession(),
-		'buyins' => $buyins
-];
+$datosUI['session'] = $session->toArray();
+$datosUI['buyins'] = $buyins;
 $datosUI['breadcrumb'] = 'Buyins';
 
 // DISPLAY DE LA UI

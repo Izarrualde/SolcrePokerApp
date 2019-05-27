@@ -21,12 +21,12 @@
 									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ session.idSession }}">
 
 								<div class="form-group">
-									<select class="custom-select" name="idUser" id="idUser" required="true">
+									<select class="custom-select" name="idUserSession" id="idUserSession" required="true">
 										<option value=""> --Seleccione un Jugador--</option>
-										{% for userSession in session.usersSession %}
+										{% for userSession in users_session %}
 
 											{% if userSession.endTime == null %} 
-												<option value="{{ userSession.idUser }}"> {{ userSession.name }} {{ userSession.lastname }} </option>
+												<option value="{{ userSession.id }}"> {{ userSession.user.name }} {{ userSession.user.lastname }} </option>
 											{% endif %}
 										{%  endfor %}
 									</select>

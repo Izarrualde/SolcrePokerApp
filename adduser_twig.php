@@ -1,19 +1,19 @@
 <?php
 include "vendor/autoload.php";
 
+Use \Solcre\lmsuy\Service\UserService;
 Use \Solcre\lmsuy\MySQL\Connect;
 Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\UserEntity;
-Use \Solcre\lmsuy\Service\UserService;
 
 //pendiente
 date_default_timezone_set('America/Argentina/Buenos_Aires');
+
 $datosUI = array();
 
 if (isset($_POST['id']))
 {
 	$connection = new ConnectLmsuy_db;
-	$UserService = new UserService($connection);
+	$userService = new UserService($connection);
 
 	//agregar excepcion si user esta agregado
 	$datosUI['message'] = $connection->addUser(date('c'), $_POST['lastname'], $_POST['firstname'], $_POST['username'], $_POST['mobile'], $_POST['email'], $_POST['password'], $_POST['multiplier'], $_POST['active'], $_POST['hours'], $_POST['points'], $_POST['results'], $_POST['cashin'], null, null);

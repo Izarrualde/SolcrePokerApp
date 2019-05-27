@@ -30,7 +30,6 @@ class ConnectLmsuy_db extends Connect
 	{
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, points, cashout, DATE_FORMAT(start_at, '%d-%m-%Y %H:%i') as start_at,  DATE_FORMAT(end_at, '%d-%m-%Y %H:%i') as end_at, is_approved, session_id, user_id FROM sessions_users WHERE id='$id'";
 		$datos = $this->db->query($sql);
-		$arreglo = array();
 		return $datos->fetch_object();
 	}
 
@@ -50,12 +49,7 @@ class ConnectLmsuy_db extends Connect
 	{
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, service_tip, session_id  FROM session_service_tips WHERE id='".$id."'";
 		$datos = $this->db->query($sql);
-		$arreglo = array();
-		while ($reg=$datos->fetch_object())
-		{
-			$arreglo[]=$reg;
-		}
-		return $arreglo;
+		return $datos->fetch_object();
 	}
 
 	public function getDatosSessionDealerTips($idSession)
@@ -74,16 +68,7 @@ class ConnectLmsuy_db extends Connect
 	{
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, dealer_tip, session_id  FROM session_dealer_tips WHERE id='".$id."'";
 		$datos = $this->db->query($sql);
-		$arreglo = array();
-		if (!$datos)
-		{
-			return $arreglo;
-		}
-		while ($reg=$datos->fetch_object())
-		{
-			$arreglo[]=$reg;
-		}
-		return $arreglo;
+		return $datos->fetch_object();
 	}
 
 
@@ -103,12 +88,14 @@ class ConnectLmsuy_db extends Connect
 	{
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, comission, session_id  FROM session_comissions WHERE id='".$id."'";
 		$datos = $this->db->query($sql);
+		return $datos->fetch_object();
+		/*
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
 		{
 			$arreglo[]=$reg;
 		}
-		return $arreglo;
+		return $arreglo;*/
 	}
 
 	public function getDatosSessionBuyins($idSession)
@@ -136,12 +123,8 @@ class ConnectLmsuy_db extends Connect
 
 		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, amount_of_cash_money, amount_of_credit_money, session_user_id, approved, currency_id FROM session_buyins WHERE id='$idBuyin'";
 		$datos = $this->db->query($sql);
-		$arreglo = array();
-		while ($reg=$datos->fetch_object())
-		{
-			$arreglo[]=$reg;
-		}
-		return $arreglo;
+
+		return $datos->fetch_object();
 	}
 
 	public function getIdUserByUserSessionId($userSessionId)
@@ -157,13 +140,16 @@ class ConnectLmsuy_db extends Connect
 			return null;
 		}
 	}
-
+/*
 	public function getIdUserSessionByIdUser($idUser)
 	{
+		echo $idUser;
 		$sql="SELECT id FROM sessions_users WHERE user_id='$idUser' and end_at IS null";
+		echo "<br>";
+		echo $sql;
+		echo "<br>";
 		$datos = $this->db->query($sql);
 		$reg=$datos->fetch_object();
-		var_dump($reg);
 		if ($reg) {
 			return $reg->id;
 		} 
@@ -171,7 +157,7 @@ class ConnectLmsuy_db extends Connect
 			return null;
 		}
 	}
-
+*/
 	public function getHourFirstBuyin($idUserSession)
 	{
 		$sql="SELECT MIN(created_at) as start FROM session_buyins WHERE session_user_id='$idUserSession'";
@@ -278,18 +264,10 @@ class ConnectLmsuy_db extends Connect
 
 	public function insertBuyin($hour, $amountCash, $amountCredit, $idSessionUser, $approved, $currency)
 	{
-		/*$sql="SELECT count(*) from session_buyins WHERE session_user_id='$IdSessionUser'";
-		if ($this->db->query($sql)==0)
-		{
-			$sql=
-		}*/
 		$sql="UPDATE sessions_users SET start_at='$hour' WHERE id='$idSessionUser' AND start_at IS NULL";
 
 		$this->db->query($sql);
-
-		//$idPlayer = $this->getIdUserbyNickname($_POST['nickname']);
 		$sql= "INSERT into session_buyins VALUES (NULL, '$hour', '$amountCash', '$amountCredit', '$approved', '$idSessionUser', '$currency')";
-		echo $sql;
 		$this->db->query($sql);
 	}
 
@@ -403,8 +381,6 @@ class ConnectLmsuy_db extends Connect
 	public function updateDealerTip($idSession, $hour, $dealerTip, $id)
 	{
 		$sql= "UPDATE session_dealer_tips SET session_id='$idSession', created_at='$hour', dealer_tip='$dealerTip' WHERE id='$id'";
-		echo "<br>";
-		echo $sql;
 		$this->db->query($sql);
 	}
 
@@ -422,12 +398,8 @@ class ConnectLmsuy_db extends Connect
 
 		public function updateUser($name, $lastname, $username, $email, $id)
 	{
-		var_dump($_POST);
 		$sql= "UPDATE users SET name='$name', last_name='$lastname', username='$username', email='$email' WHERE id='$id'";
 		//".(!empty($end_at)?$end_at:'null')."
-		echo "<br>";
-		print $sql;
-
 		$this->db->query($sql);
 	}
 

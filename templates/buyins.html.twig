@@ -57,7 +57,7 @@
 										{% for buyin in buyins %} 
 	
 											<tr>
-												<td> {{ buyin.user_session.user.name }} {{ buyin.user_session.user.lastname }} </td>
+												<td> {{ buyin.user_session.user.name }} {{ buyin.user_session.user.lastname }}  </td>
 												<td> {{ buyin.amountCash }} </td>
 												<td> {{ buyin.amountCredit }} </td>
 												<td> {{ buyin.hour|date('H:i') }} </td>
@@ -75,10 +75,7 @@
 							
 								</tbody>  
 							</table>
-						</article>	
-
-
-
+						</article>
 					</section>
 				</div>
 			</div>

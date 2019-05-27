@@ -15,19 +15,19 @@
 						<article>
 							<form class="was-validated" action="" method="post">
 								
-								<input name="id" type="hidden" value="{{ comission.id }}">
+								<input name="id" type="hidden" value="{{ session.comission.id }}">
 								
-								<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ comission.idSession }}">
+								<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ session.idSession }}">
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ comission.hour | date('Y-m-d') }}T{{ comission.hour | date('H:i') }}">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ session.comission.hour | date('Y-m-d') }}T{{ session.comission.hour | date('H:i') }}">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="comission"> comission: </label>
-									<input class="form-control" name="comission" id="comission" type="text" autofocus="true" placeholder="Comission" required="true" value="{{ comission.comission }}">
+									<input class="form-control" name="comission" id="comission" type="text" autofocus="true" placeholder="Comission" required="true" value="{{ session.comission.comission }}">
 								</div>
 
 								<div class="form-group">

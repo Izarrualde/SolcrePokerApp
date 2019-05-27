@@ -40,11 +40,10 @@ foreach ($serviceTipsSession as $serviceTip)
 	$serviceTips[] = $serviceTip->toArray();	
 }
 
-$datosUI['session'] = [
-	'idSession' => $session->getIdSession(),
-	'serviceTips' => $serviceTips,
-	'dealerTips' => $dealerTips
-];
+$datosUI['session'] = $session->toArray();
+$datosUI['session']['serviceTips'] = $serviceTips;
+$datosUI['session']['dealerTips'] = $dealerTips;
+
 $datosUI['breadcrumb'] = 'Tips';
 
 // DISPLAY DE LA UI

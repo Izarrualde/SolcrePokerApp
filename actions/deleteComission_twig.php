@@ -1,12 +1,17 @@
 <?php
 include "../vendor/autoload.php";
 
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Service\ComissionSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\ComissionSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 $connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+
+$comissionSessionService = new ComissionSessionService($connection);
 
 /*
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idC"]))	
@@ -21,36 +26,24 @@ if (sizeof($datos)==0)
 	die("error 404");
 }
 */
-$connection->deleteComission($_GET["idC"]);
+$comission = $comissionSessionService->findOne($_GET["idC"]);
+
+$comissionSessionService->delete($comission);
 $message = 'Comisión eliminada exitosamente';
 
 
-//extraigo datos de la bdd
-$datosSession = $connection->getDatosSessionById($_GET['id']);
-$datosComissionsSession = $connection->getDatosSessionComissions($_GET['id']);
+//BUSQUEDA DE DATOS PARA LA UI
+$session = $sessionService->findOne($_GET['id']);
 
-// hidrato objetos con datos de la bdd y a la vez desarrollo datosUI segun requierimientos.
+$datosComissions = $comissionSessionService->find($_GET['id']);
 
-$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-foreach ($datosComissionsSession as $comission) 
-{
-
-	$comissionObject = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
-
-
-	$comissions[] = [
-		'id' => $comissionObject->getId(),
-		'idSession' => $comissionObject->getIdSession(), //quisiera no tener este aca pero en el template al iterar en comission no logro acceder a session.id
-		'date' => $comissionObject->getHour(),
-		'comission' => $comissionObject->getComission(),
-	];
+$comissions = array();
+foreach ($datosComissions as $comission)  {
+	$comissions[] = $comission->toArray(); 
 }
 
-$datosUI['session'] = [
-		'idSession' => $session->getIdSession(),
-		'comissions' => $comissions		
-];
+$datosUI['session'] = $session->toArray();
+$datosUI['session']['comissions'] = $comissions;
 $datosUI['breadcrumb'] = 'Comisiones';
 $datosUI['message'] = $message;
 

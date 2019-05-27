@@ -1,14 +1,18 @@
 <?php
 include "../vendor/autoload.php";
 
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Service\ComissionSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\ComissionSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+$comissionSessionService = new ComissionSessionService($connection);
 /*
 if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idC"]))
 {
@@ -21,66 +25,48 @@ if (sizeof($datos)==0)
 {
 	die("error 404");
 }*/
+$session = $sessionService->findOne($_GET['id']);
+
+$datosUI = array();
 
 if (isset($_POST["id"]))
 {
-	$connection->updateComission($_POST["idSession"], $_POST["hour"], $_POST["comission"], $_POST["id"]);
+	$comission = new ComissionSession($_GET['idC'], $_GET['id'], $_POST['hour'], $_POST['comission']);
+
+	$comissionSessionService->update($comission);
 
 	$template = 'comissions.html.twig';
-	$datosUI['breadcrumb'] = 'Comisiones';
-	$message = "Comisión actualizada exitosamente";
-		//extraigo datos de la bdd
-	
-	$datosSession = $connection->getDatosSessionById($_GET['id']);
-	$datosComissionsSession = $connection->getDatosSessionComissions($_GET['id']);
+	$message = 'La comisión se actualizó exitosamente.';
+	// BUSQUEDA DE DATOS PARA LA UI
 
-	// hidrato objetos con datos de la bdd y a la vez desarrollo datosUI segun requierimientos.
-
-	$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-	foreach ($datosComissionsSession as $comission) 
+	if (!isset($_GET['id']))
 	{
-		$comissionObject = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
-
-		$comissions[] = [
-			'id' => $comissionObject->getId(),
-			'idSession' => $comissionObject->getIdSession(), //quisiera no tener este aca pero en el template al iterar en comission no logro acceder a session.id
-			'date' => $comissionObject->getHour(),
-			'comission' => $comissionObject->getComission(),
-		];
+		header('Location: ../../index_twig.php');
+		exit;
 	}
 
-	$datosUI['session'] = [
-			'idSession' => $session->getIdSession(),
-			'comissions' => $comissions
-	];
-	$datosUI['message'] = $message;
+	//extraigo datos de la bdd
+	$comissions = array();
+	$datosComissions = $comissionSessionService->find($_GET['id']);
+
+	foreach ($datosComissions as $comission) {
+		$comissions[] = $comission->toArray(); 
+	}
+
+	$datosUI['session'] = $session->toArray();
+	$datosUI['session']['comissions'] = $comissions;
+	$datosUI['breadcrumb'] = 'Comisiones';
 }
 else
 {
 	//proporcionar datosUI con datos de autorreleno
+	//$buyin = $connection->getDatosSessionBuyinById($_GET["idB"]);
+	$comission = $comissionSessionService->findOne($_GET["idC"]);
 
-	$com = $connection->getDatosSessionComissionById($_GET["idC"]);
-
-	$comissionObject = new ComissionSession($com[0]->id, $com[0]->session_id, $com[0]->created_at, $com[0]->comission);
-
-		$datosUI['comission'] = [
-			'id' => $comissionObject->getId(),
-			'idSession' => $comissionObject->getIdSession(),
-			'hour' => $comissionObject->getHour(),
-			'comission' => $comissionObject->getComission(),
-		];
-/*
-		$datosUI['comission'] = [
-			'id' => $
-			'idSession' =>
-			'comission' => $comission
-		];*/
-
-
-
-		$template = 'editComission.html.twig';
-		$datosUI['breadcrumb'] = 'Editar Comision';
+	$datosUI['session'] = $session->toArray();
+	$datosUI['session']['comission'] = $comission->toArray();
+	$datosUI['breadcrumb'] = 'Editar Comisión';
+	$template = 'editComission.html.twig';
 }	
 
 

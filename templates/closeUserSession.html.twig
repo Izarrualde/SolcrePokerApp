@@ -18,7 +18,9 @@
 							<form class="was-validated" action="" method="post">
 								<input name="id" type="hidden" value="{{ session.userSession.id }}">
 
-								<input name="idUser" type="hidden" value="{{ session.userSession.idUser }}">
+								<input name="idSession" type="hidden" value="{{ session.idSession }}">
+								
+								<input name="idUser" type="hidden" value="{{ session.userSession.user.id }}">
 
 								<div class="form-group">
 									<label class="sr-only" for="Cashout"> Cashout: </label>
@@ -27,7 +29,7 @@
 								
 								<div class="form-group">
 									<label class="sr-only" for="end"> Fin: </label>
-									<input class="form-control" name="end" id="end" type="datetime-local" value="">
+									<input class="form-control" name="end" id="end" type="datetime-local" value="{{ date('c') | date('Y-m-d') }}T{{ date('c') | date('H:i') }}">
 									<small id="end" class="form-tet text-muted"> Fecha y hora de finalizacion </small>
 								</div>  
 

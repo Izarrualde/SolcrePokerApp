@@ -124,7 +124,7 @@ class UserSession
 
 	public function getIdSession()
 	{
-		return  ($this->session instanceof SessionEntity) ? $this->session->getId() : null;
+		return  ($this->session instanceof SessionEntity) ? $this->session->getIdSession() : null;
 	}
 
 	public function getCashin() 

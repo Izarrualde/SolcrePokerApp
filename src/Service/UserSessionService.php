@@ -19,7 +19,7 @@ class UserSessionService {
 
 	public function add(UserSession $userSession)
 	{
-		$this->connection->insertUserInSession(date('c'), $userSession->getPoints(), $userSession->getCashout(), $userSession->getStart(), $userSession->getEnd(), $userSession->getIsAproved(), $userSession->session->getId());
+		$this->connection->insertUserInSession(date('c'), $userSession->getAccumulatedPoints(), $userSession->getCashout(), $userSession->getStart(), $userSession->getEnd(), $userSession->getIsApproved(), $userSession->getSession()->getIdSession());
 	}
 
 	public function update(UserSession $userSession)
@@ -29,20 +29,26 @@ class UserSessionService {
 
 	public function delete(UserSession $userSession)
 	{	
-		$this->connection->deleteUserSession($userSession->getId());
+		$this->connection->deleteUser($userSession->getId());
+	}
+
+	public function close(UserSession $userSession, $cashout, $end)
+	{
+		$this->connection->closeUserSession($userSession->getId(), $userSession->getUser()->getId(), $cashout, $userSession->getStart(), $end);
 	}
 
 	public function findOne($id)
 	{
 		$user = $this->connection->getDatosSessionUserById($id);
-			$userObject = new UserSession($user->id, /*$sessionService->findOne($connection->getIdSessionbyIdUserSession($id)) */null, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
+		var_dump($id);
+		$userObject = new UserSession($user->id, /*$sessionService->findOne($connection->getIdSessionbyIdUserSession($id)) */null, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
 		$this->findEntities($userObject);
 		return $userObject;
 	}
 
-	public function find()
+	public function find($idSession)
 	{
-		$datosUsersSession = $this->connection->getSessionUsers();
+		$datosUsersSession = $this->connection->getDatosSessionsUsers($idSession);
 		$users = array();
 
 		foreach ($datosUsersSession as $userSession) 

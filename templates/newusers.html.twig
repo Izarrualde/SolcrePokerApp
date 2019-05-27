@@ -24,8 +24,8 @@
 								<div class="form-group">
 									<select class="custom-select" name="user_id" id="user_id" required="true">
 										<option value=""> --Seleccione un Jugador--</option>
-										{% for user in session.users %}
-										<option value="{{ user.id }}"> {{ user.name }} {{ user.lastname }} </option>
+										{% for user in users %}
+											<option value="{{ user.id }}"> {{ user.name }} {{ user.lastname }} </option>
 										{% endfor %}
 									</select>
 								</div>							

@@ -1,11 +1,16 @@
 <?php
 include "../vendor/autoload.php";
 
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Service\BuyinSessionService;
+Use \Solcre\lmsuy\Service\UserService;
+Use \Solcre\lmsuy\Service\UserSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\UserSession;
 Use \Solcre\lmsuy\Entity\BuyinSession;
+Use \Solcre\lmsuy\Entity\UserEntity;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 $connection = new ConnectLmsuy_db;
 /*if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idU"]))	
@@ -20,57 +25,28 @@ if (sizeof($datos)==0)
 	die("error 404");
 }*/
 
-$connection->deleteUser($_GET['idUS']);
-$message = 'Usuario eliminado exitosamente';
+$connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+$userService = new UserService($connection);
+$userSessionService = new UserSessionService($connection, $userService, $sessionService);
 
-$datosSession = $connection->getDatosSessionById($_GET['id']);
-$datosUsers = $connection->getDatosSessionsUsers($_GET['id']);
+$userSession = $userSessionService->findOne($_GET["idUS"]);
+$userSessionService->delete($userSession);
+$message = 'Usuario eliminado exitosamente de la sesión';
 
-$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-$buyins = $connection->getDatosSessionBuyins($_GET['id']);
-
-foreach ($buyins as $buyin) 
+//BUSQUEDA DE DATOS PARA LA UI
+$usersSession = array();
+$session = $sessionService->findOne($_GET['id']);
+$datosUsersSession = $userSessionService->find($_GET['id']);
+foreach ($datosUsersSession as $userSession)  
 {
-	$session->sessionBuyins[] = new BuyinSession($buyin->id, $_GET['id'], $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
+	$usersSession[] = $userSession->toArray(); 
 }
-
-foreach ($datosUsers as $user) 
-{
-	$userObject = new UserSession($user->id, $session, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
-
-	$name = $connection->getDatosUserById($userObject->getIdUser())->name;
-	$lastname = $connection->getDatosUserById($userObject->getIdUser())->last_name;
-
-	$cashin = $userObject->getCashin();
-	$totalCredit = $userObject->getTotalCredit();
-
-	$usersSession[] = [
-		'id' => $userObject->getId(),
-		'idSession' => $userObject->getSession()->getIdSession(),
-		'idUser' => $userObject->getIdUser(),
-		'isApproved' => $userObject->getIsApproved(),
-		'points' => $userObject->getAccumulatedPoints(),
-		'cashout' => $userObject->getCashout(),
-		'cashin' => $userObject->getCashin(),
-		'startTime' => $userObject->getStart(),
-		'endTime' => $userObject->getEnd(),
-		'name' => $name,
-		'lastname' => $lastname,
-		'cashin' => $cashin,
-		'totalCredit' => $totalCredit
-	];
-}
-
-
-
-$datosUI['session'] = [
-		'idSession' => $session->getIdSession(),
-		'usersSession' => $usersSession
-];
-
+$datosUI['session'] = $session->toArray();
+$datosUI['session']['usersSession'] = $usersSession;
+$datosUI['breadcrumb'] = 'Usuarios de Sesión';
 $datosUI['message'] = $message;
-$datosUI['breadcrumb'] = 'Usuarios de la sesión';
+
 
 // DISPLAY DE LA UI
 

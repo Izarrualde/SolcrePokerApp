@@ -30,7 +30,7 @@ class ServiceTipSessionService {
 
 	public function findOne($id)
 	{
-		$datosServiceTip = $this->connection->getSessionServiceTipById($id);
+		$serviceTip = $this->connection->getDatosSessionServiceTipById($id);
 		$serviceTipObject = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
 		return $serviceTipObject;
 	}

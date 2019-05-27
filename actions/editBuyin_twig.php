@@ -1,14 +1,28 @@
 <?php
 include "../vendor/autoload.php";
 
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Service\BuyinSessionService;
+Use \Solcre\lmsuy\Service\UserService;
+Use \Solcre\lmsuy\Service\UserSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\BuyinSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+$userService = new UserService($connection);
+$userSessionService = new UserSessionService($connection, $userService, $sessionService);
+$buyinSessionService = new BuyinSessionService($connection, $sessionService, $userSessionService);
+
+$session = $sessionService->findOne($_GET['id']);
+
+$datosUsersSession = $userSessionService->find($_GET['id']);
+
+$datosUI = array();
 
 
 /*if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idB"]))
@@ -20,68 +34,47 @@ $connection = new ConnectLmsuy_db;
 if (isset($_POST["id"]))
 	// ejecutar el update
 {
-	$connection->updateBuyin($_POST['amountCash'], $_POST['amountCredit'], '2', $_POST['hour'], $_POST['approved'], $_POST['id']);
+	$buyin = new BuyinSession($_GET['idB'], $_GET['id'], $_POST['idSessionUser'], $_POST['amountCash'], $_POST['amountCredit'], '2', date('c'), $_POST['approved']);
 
-	$message = 'Buyin actualizado exitosamente';
-    $template = 'buyins.html.twig';
-    $datosUI['breadcrumb'] = 'Buyins';
+	$buyinSessionService->update($buyin);
+	$template = 'buyins.html.twig';
+	$message = 'el buyin se actualizó exitosamente.';
 
+	// BUSQUEDA DE DATOS PARA LA UI
 
-	//extraigo datos de la bdd necesarios para el template buyins.html.twig
-	$datosSession = $connection->getDatosSessionById($_GET['id']);
-	$datosSessionBuyins = $connection->getDatosSessionBuyins($_GET['id']);
-
-	$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-	foreach ($datosSessionBuyins as $buyin) 
+	if (!isset($_GET['id']))
 	{
-		$buyinObject = new BuyinSession($buyin->id, $_GET['id'], $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
-
-		$name = $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyinObject->getSessionUserId()))->name;
-		$lastname = $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyinObject->getSessionUserId()))->last_name;
-
-		$buyins[] = [
-			'id' => $buyinObject->getId(),
-			'idSession' => $buyinObject->getIdSession(),
-			'amountCash' => $buyinObject->getAmountCash(),
-			'amountCredit' => $buyinObject->getAmountCredit(),
-			'hour' => $buyinObject->getHour(),
-			'name' => $name,
-			'lastname' => $lastname
-		];
-
+		header('Location: ../../index_twig.php');
+		exit;
 	}
-	$datosUI['session'] = [
-			'idSession' => $session->getIdSession(),
-			'buyins' => $buyins
-	];
+
+	//extraigo datos de la bdd
+	$buyins = array();
+	$datosBuyins = $buyinSessionService->find($_GET['id']);
+
+	foreach ($datosBuyins as $buyin) {
+		$buyins[] = $buyin->toArray(); 
+	}
+
+	$datosUI['session'] = $session->toArray();
+	$datosUI['buyins'] = $buyins;
+	$datosUI['breadcrumb'] = 'Buyins';
+	$datosUI['breadcrumb'] = 'Buyins';
 	$datosUI['message'] = $message;
 }
+
+	
 else
 {
 	//proporcionar datosUI con datos de autorreleno
-	$buyin = $connection->getDatosSessionBuyinById($_GET["idB"]);
+	//$buyin = $connection->getDatosSessionBuyinById($_GET["idB"]);
+	$buyin = $buyinSessionService->findOne($_GET["idB"]);
 
-	$buyinObject = new BuyinSession($buyin[0]->id, $_GET['id'], $buyin[0]->session_user_id, $buyin[0]->amount_of_cash_money, $buyin[0]->amount_of_credit_money, $buyin[0]->currency_id, $buyin[0]->created_at, $buyin[0]->approved);
+	$datosUI['buyin'] = $buyin->toArray();
+	$datosUI['session'] = $session->toArray();
+	$datosUI['breadcrumb'] = 'Editar Buyin';
+	$template = 'editBuyin.html.twig';
 
-		$name = $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyinObject->getSessionUserId()))->name;
-		$lastname = $connection->getDatosUserById($connection->getIdUserByUserSessionId($buyinObject->getSessionUserId()))->last_name;
-
-		$buyin = [
-			'id' => $buyinObject->getId(),
-			'idSession' => $buyinObject->getIdSession(),
-			'amountCash' => $buyinObject->getAmountCash(),
-			'amountCredit' => $buyinObject->getAmountCredit(),
-			'hour' => $buyinObject->getHour(),
-			'name' => $name,
-			'lastname' => $lastname
-		];
-		$datosUI['session'] = [
-			'buyin' => $buyin
-		];
-
-		$template = 'editBuyin.html.twig';
-		$datosUI['breadcrumb'] = 'Editar Buyin';
 }
 
 // DISPLAY DE LA UI

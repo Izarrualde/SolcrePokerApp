@@ -37,7 +37,7 @@ class UserService {
 
 	public function find()
 	{
-		$user = $this->connection->getDatosUsers();
+		$datosUsers = $this->connection->getDatosUsers();
 		$users = array();//
 
 		foreach ($datosUsers as $user) 

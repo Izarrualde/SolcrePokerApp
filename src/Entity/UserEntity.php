@@ -195,9 +195,17 @@ class UserEntity
 	public function toArray(){
 		return [
 			'id' => $this->getId(),
+			'password' => $this->getPassword(),
+			'email' => $this->getEmail(),
 			'name' => $this->getName(),
 			'lastname' => $this->getLastname(), 
-			'hours' => $this->getHours()
+			'username' => $this->getUsername(),
+			'multiplier' => $this->getMultiplier(),
+			'isActive' => $this->getIsActive(),
+			'hours' => $this->getHours(),
+			'points' => $this->getPoints(),
+			'results' => $this->getResults(),
+			'cashin' => $this->getCashin()
 		];
 	}
 }

@@ -45,7 +45,7 @@
 											<!-- if (empty($user->getEnd())) -->
 													<tr class="text-center">
 														<td> 
-															{{ user.name }} {{ user.lastname}} 
+															{{ user.user.name }} {{ user.user.lastname}} 
 														</td>
 														<td> {{ user.startTime }}  
 														</td>
@@ -108,7 +108,7 @@
 												?> -->
 													<tr class="text-center">
 														<td>
-															{{ user.name }} {{ user.lastname }}
+															{{ user.user.name }} {{ user.user.lastname }}
 													    </td>
 														<td> {{ user.startTime }}  </td>
 														<td> {{ user.cashin }} ({{ user.totalCredit }}) </td>

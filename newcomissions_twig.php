@@ -1,15 +1,19 @@
 <?php
 include "vendor/autoload.php";
 
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Service\ComissionSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\ComissionSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $datosUI = array();
 $connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+$comissionSessionService = new ComissionSessionService($connection);
 
 /*
 if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
@@ -23,47 +27,40 @@ if ($connection->getDatosSessionById($_GET['id'])->end_at!=null)
 }
 */
 
-$mensaje1 = '';
+$session = $sessionService->findOne($_GET['id']);
+
+$datosUI = array();
 
 if (isset($_POST['idSession'])) 
 {
 	if (is_numeric($_POST['comission']))
 	{
-		$connection = new ConnectLmsuy_db;
-		$connection->insertComission($_POST['hour'], $_POST['comission'], $_POST['idSession']);
+		$comission = new ComissionSession($_POST['id'], $_POST['idSession'], $_POST['hour'], $_POST['comission']);
+
+		$comissionSessionService->add($comission); 
 		$template = 'comissions.html.twig';
-		
-		//extraigo datos de la bdd
-		$connection = new ConnectLmsuy_db;
-		$datosSession = $connection->getDatosSessionById($_GET['id']);
-		$datosComissionsSession = $connection->getDatosSessionComissions($_GET['id']);
+		$message = 'la comission se ingresó exitosamente.';
 
+		// BUSQUEDA DE DATOS PARA LA UI
 
-		// hidrato objetos con datos de la bdd y a la vez desarrollo datosUI segun requierimientos.
-
-		$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-
-		foreach ($datosComissionsSession as $comission) 
+		if (!isset($_GET['id']))
 		{
-
-			$comissionObject = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
-
-
-			$comissions[] = [
-				'id' => $comissionObject->getId(),
-				'idSession' => $comissionObject->getIdSession(), //quisiera no tener este aca pero en el template al iterar en comission no logro acceder a session.id
-				'date' => $comissionObject->getHour(),
-				'comission' => $comissionObject->getComission(),
-			];
+			header('Location: ../../index_twig.php');
+			exit;
 		}
 
-		$datosUI['session'] = [
-				'idSession' => $session->getIdSession(),
-				'comissions' => $comissions
-		];
-		$datosUI['breadcrumb'] = 'Comisiones';
-		$datosUI['message'] = 'La comisión se agregó exitosamente';
+		//extraigo datos de la bdd
+
+		$comissions = array();
+		$datosComissions = $comissionSessionService->find($_GET['id']);
+		foreach ($datosComissions as $comission)
+		{
+			$comissions[] = $comission->toArray(); 
+		}
+		$datosUI['session'] = $session->toArray();
+		$datosUI['session']['comissions'] = $comissions;
+		$datosUI['breadcrumb'] = 'Comissions';
+		$datosUI['message'] = $message;
 	}
 } 
 else
@@ -82,7 +79,6 @@ else
 // DISPLAY DE LA UI
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader);
-
 
 echo $twig->render($template, $datosUI);
 

@@ -30,7 +30,7 @@ class DealerTipSessionService {
 
 	public function findOne($id)
 	{
-		$datosDealerTip = $this->connection->getSessionDealerTipById($id);
+		$dealerTip = $this->connection->getDatosSessionDealerTipById($id);
 		$dealerTipObject = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
 		return $dealerTipObject;
 	}

@@ -8,35 +8,35 @@
 		{% include 'breadcrumb.html.twig' %}
 			<div class="card">
 				<div class="card-header bg-primary text-white">
-					Editar Buyin {{ session.buyin.id }}
+					Editar Buyin 
 				</div>
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
 							<form class="was-validated" action="" method="post">
-								<input name="id" type="hidden" value="{{ session.buyin.id }}">
+								<input name="id" type="hidden" value="{{ buyin.id }}">
 								
-								<input name="idSessionUser" id="idSessionUser" type="hidden" required= "true" value="">
+								<input name="idSessionUser" id="idSessionUser" type="hidden" required= "true" value="{{ buyin.user_session.id }}">
 
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCash"> amountCash: </label>
-									<input class="form-control" name="amountCash" id="amountCash" type="text" autofocus="true" placeholder="amountCash" required="true" value="{{ session.buyin.amountCash }}">
+									<input class="form-control" name="amountCash" id="amountCash" type="text" autofocus="true" placeholder="amountCash" required="true" value="{{ buyin.amountCash }}">
 								</div>
 
 								<div class="form-group">
 									<label class="sr-only" for="amountCredit"> amountCredit: </label>
-									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="amountCredit" required="true" value="{{ session.buyin.amountCredit }}">
+									<input class="form-control" name="amountCredit" id="amountCredit" type="text" placeholder="amountCredit" required="true" value="{{ buyin.amountCredit }}">
 								</div>
 
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hora: </label>
-									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ session.buyin.hour | date('Y-m-d') }}T{{ session.buyin.hour | date('H:i') }}">
+									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ buyin.hour | date('Y-m-d') }}T{{ buyin.hour | date('H:i') }}">
 									<small id="hour" class="form-tet text-muted"> Fecha y hora </small>
 								</div>
 
-									<input name="approved" id="approved" type="hidden" required="true" value="">
+									<input name="approved" id="approved" type="hidden" required="true" value="{{ buyin.approved }}">
 
 								<div class="form-group">
 									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />

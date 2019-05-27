@@ -1,21 +1,28 @@
 <?php
 include "../vendor/autoload.php";
 
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+Use \Solcre\lmsuy\Service\DealerTipSessionService;
+Use \Solcre\lmsuy\Service\ServiceTipSessionService;
+Use \Solcre\lmsuy\Service\SessionService;
 Use \Solcre\lmsuy\Entity\SessionEntity;
 Use \Solcre\lmsuy\Entity\DealerTipSession;
-Use \Solcre\lmsuy\Entity\ServiceTipSession;
+Use \Solcre\lmsuy\MySQL\Connect;
+Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $connection = new ConnectLmsuy_db;
+$sessionService = new SessionService($connection);
+$dealerTipSessionService = new DealerTipSessionService($connection);
+$serviceTipSessionService = new ServiceTipSessionService($connection);
 /*if (!isset($_GET["id"]) or !is_numeric($_GET["id"]) or !isset($_GET["idT"]))
 {
 	die("error 404"); //porque esa id no existe, no tiene ninguna comission asociada.
 }*/
+$session = $sessionService->findOne($_GET['id']);
 
-$datos = $connection->getDatosSessionDealerTipById($_GET["idT"]);
+$datosUI = array();
+
 /*
 if (sizeof($datos)==0)
 {
@@ -24,75 +31,48 @@ if (sizeof($datos)==0)
 
 if (isset($_POST["id"]))
 {
-	$connection->updateDealerTip($_POST["idSession"], $_POST["hour"], $_POST["dealerTip"], $_POST["id"]);
-	$message = "DealerTip actualizado exitosamente";
-	$template = 'tips.html.twig';	
-	$datosUI['breadcrumb'] = 'Tips';
+	$dealerTip = new DealerTipSession($_GET['idT'], $_GET['id'], $_POST['hour'], $_POST['dealerTip']);
+
+	$dealerTipSessionService->update($dealerTip);
+
+	$template = 'tips.html.twig';
+	$message = 'El Dealer Tip se actualizó exitosamente.';
+
+	//BUSQUEDA DE DATOS PARA LA UI
+	$session = $sessionService->findOne($_GET['id']);
 
 	// extraigo datos de al bdd
-	$datosSession = $connection->getDatosSessionById($_GET['id']);
-	$datosSessionDealerTips = $connection->getDatosSessionDealerTips($_GET['id']);
-	$datosSessionServiceTips = $connection->getDatosSessionServiceTips($_GET['id']);
 
-	// hidrato objetos con datos de la bdd y a la vez desarrollo datosUI segun requierimientos.
-
-	$session = new SessionEntity($datosSession->id, $datosSession->created_at, $datosSession->title, $datosSession->description, null /*photo*/, $datosSession->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $datosSession->start_at, $datosSession->real_start_at, $datosSession->end_at);
-
-	foreach ($datosSessionDealerTips as $dealerTip) 
+	$dealerTips = array();
+	$datosDealerTips = $dealerTipSessionService->find($_GET['id']);
+	foreach ($datosDealerTips as $dealerTip)
 	{
-		$dealerTipObject = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
-
-		$dealerTips[] = [
-			'id' => $dealerTipObject->getId(),
-			'idSession' => $dealerTipObject->getIdSession(),
-			'dealerTip' => $dealerTipObject->getDealerTip(),
-			'hour' => $dealerTipObject->getHour()
-		];	
+		$dealerTips[] = $dealerTip->toArray(); 
 	}
 
-
-	foreach ($datosSessionServiceTips as $serviceTip) 
+	$serviceTips = array();
+	$datosServiceTips = $serviceTipSessionService->find($_GET['id']);
+	foreach ($datosServiceTips as $serviceTip)
 	{
-		$serviceTipsObject = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
-
-		$serviceTips[] = [
-			'id' => $serviceTipsObject->getId(),
-			'idSession' => $serviceTipsObject->getIdSession(),
-			'serviceTip' => $serviceTipsObject->getServiceTip(),
-			'hour' => $serviceTipsObject->getHour()
-		];
+		$serviceTips[] = $serviceTip->toArray(); 
 	}
 
-	$datosUI['session'] = [
-		'idSession' => $session->getIdSession(),
-		'serviceTips' => $serviceTips,
-		'dealerTips' => $dealerTips
-	];
+	$datosUI['session'] = $session->toArray();
+	$datosUI['session']['dealerTips'] = $dealerTips;
+	$datosUI['session']['serviceTips'] = $serviceTips;
+	$datosUI['breadcrumb'] = 'Tips';
 	$datosUI['message'] = $message;
 }
 else
 {
 	//proporcionar datosUI con datos de autorreleno
-	$dealerTip = $connection->getDatosSessionDealerTipById($_GET["idT"]);
+	$dealerTip = $dealerTipSessionService->findOne($_GET["idT"]);
 
-	$dealerTipObject = new DealerTipSession($dealerTip[0]->id, $dealerTip[0]->session_id, $dealerTip[0]->created_at, $dealerTip[0]->dealer_tip);
-
-	$dealerTip = [
-		'id' => $dealerTipObject->getId(),
-		'idSession' => $dealerTipObject->getIdSession(),
-		'dealerTip' => $dealerTipObject->getDealerTip(),
-		'hour' => $dealerTipObject->getHour()
-	];	
-	
-
-		$datosUI['session'] = [
-			'dealerTip' => $dealerTip,
-			'idSession' => $dealerTipObject->getIdSession()
-		];
-
-	$template = 'editDealerTip.html.twig';
+	$datosUI['session'] = $session->toArray();
+	$datosUI['session']['dealerTip'] = $dealerTip->toArray();
 	$datosUI['breadcrumb'] = 'Editar Dealer Tip';
-}
+	$template = 'editDealerTip.html.twig';
+}	
 
 
 // DISPLAY DE LA UI
