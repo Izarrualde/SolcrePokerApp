@@ -1,19 +1,68 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
-class BuyinSession
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Table(name="users")
+*/
+class BuyinSessionEntity
 {
+
+   /**
+   * @ORM\Column(type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
 	protected $id;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="session_id")
+	 */
 	protected $idSession;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="session_user_id")
+	 */
 	protected $sessionUserId;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="amount_of_cash_money")
+	 */
 	protected $amountCash;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="amount_of_credit_money")
+	 */
 	protected $amountCredit;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="currency_id")
+	 */
 	protected $currency;
+
+	/**
+	 * @ORM\Column(type="datetime", name="created_at")
+	 */
 	protected $hour;
+
+
+	/**
+	 * @ORM\Column(type="integer")
+	 */
 	protected $isApproved;
 
+
 	protected $session;
+
 	protected $userSession;
+
 
 	public function __construct($id=null, $idSession=null, $sessionUserId=null, $amountCash=null, $amountCredit=null, $currency=null, $hour=null, $isApproved=null)
 	{

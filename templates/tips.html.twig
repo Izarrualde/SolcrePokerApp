@@ -69,7 +69,7 @@
 										<tr class="text-center">
 											<td> {{ dealerTip.hour }}  </td>
 											<td> {{ dealerTip.dealerTip }}  </td>
-											<td> <a href="/lmsuy/actions/editDealerTip_twig.php?idT={{ dealerTip.id }}&id={{ dealerTip.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/lmsuy/actions/deleteDealerTip_twig.php?idT={{ dealerTip.id }}&id={{ dealerTip.idSession }}"> <i class="fas fa-trash-alt"></i> </a></td>
+											<td> <a href="/sessions/{{ dealerTip.idSession }}/tips/dealerTip/{{ dealerTip.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/tips/dealertip/{{ dealerTip.id }}/remove"> <i class="fas fa-trash-alt"></i> </a></td>
 												<!--<i class="fas fa-pencil-alt"> </i> </a> <a href="javascript:void(0);" 
 												onclick="eliminar('actions/deleteDealerTip.php?id=<?php echo $dealerTip->getId(); ?>');"> <i class="fas fa-trash-alt"></i> </a></td>-->
 										</tr>
@@ -112,7 +112,7 @@
 											<tr>
 												<td> {{ serviceTip.hour }}  </td>
 												<td> {{ serviceTip.serviceTip }}  </td>
-												<td> <a href="/lmsuy/actions/editServiceTip_twig.php?idT={{ serviceTip.id }}&id={{ serviceTip.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/lmsuy/actions/deleteServiceTip_twig.php?idT={{ serviceTip.id }}&id={{ serviceTip.idSession }}"> <i class="fas fa-trash-alt"></i> </a></td>
+												<td> <a href="/sessions/{{ serviceTip.idSession }}/tips/serviceTip/{{ serviceTip.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/tips/servicetip/{{ serviceTip.id }}/remove"> <i class="fas fa-trash-alt"></i> </a></td>
 
 
 													<!--<a href="javascript:void(0);" onclick="eliminar('actions/deleteServiceTip.php?id= <?php echo $serviceTip->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>-->
@@ -131,7 +131,7 @@
 					<table class="table table-bordered table-hover table-condensed">
 						<thead>
 							<td colspan="8">
-								<a href="/lmsuy/newtips_twig.php?id={{ session.idSession }}" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+								<a href="/{{ session.idSession }}/tips/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 							</td>
 						</thead>
 					</table>

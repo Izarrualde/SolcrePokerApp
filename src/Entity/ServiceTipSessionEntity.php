@@ -1,12 +1,39 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
-class ServiceTipSession 
+
+/**
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Table(name="users")
+*/
+class ServiceTipSessionEntity 
 {
+
+   /**
+   * @ORM\Column(type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
 	protected $id;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="session_id")
+	 */
 	protected $idSession;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="created_at")
+	 */
 	protected $hour;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="service_tip")
+	 */
 	protected $serviceTip;
+
 
 	public function __construct($id=null, $idSession=null, $hour="", $tip=null)
 	{

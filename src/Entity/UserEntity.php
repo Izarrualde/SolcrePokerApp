@@ -1,24 +1,99 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Table(name="users")
+*/
 class UserEntity 
 {
+
+   /**
+   * @ORM\Column(type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
 	protected $id;
+
+
+	/**
+	 * @ORM\Column(type="string")
+	 */
 	protected $password;
+
+
 	protected $mobile;
+
+
+	/**
+	 * @ORM\Column(type="string")
+	 */
 	protected $email;
+
+
+	/**
+	 * @ORM\Column(type="string")
+	 */
 	protected $name;
+
+
+	/**
+	 * @ORM\Column(type="string", name="last_name")
+	 */
 	protected $lastname;
+
+
+	/**
+	 * @ORM\Column(type="string")
+	 */
 	protected $username;
+
+
+	/**
+	 * @ORM\Column(type="decimal")
+	 */
 	protected $multiplier;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="is_active")
+	 */
 	protected $isActive;
-	//for cache
+
+
+	/**
+	 * @ORM\Column(type="decimal")
+	 */
 	protected $hours;
+
+
+	/**
+	 * @ORM\Column(type="integer")
+	 */
 	protected $points;
+
+
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	protected $sessions;
+
+
+	/**
+	 * @ORM\Column(type="decimal")
+	 */
 	protected $results;
+
+
+	/**
+	 * @ORM\Column(type="integer")
+	 */
 	protected $cashin;
 
-	public function __construct($id=null, $password="", $mobile="", $email="", $lastname="", $name="",  $username="", $multiplier=null, $isActive=null, $hours=0, $points=0, $results=0, $cashin=0) 
+
+	public function __construct($id=null, $password="", $mobile="", $email="", $lastname="", $name="",  $username="", $multiplier=null, $isActive=null, $hours=0, $points=0, $sessions=0, $results=0, $cashin=0) 
 	{
 		$this->setId($id);
 		$this->setPassword($password);
@@ -30,7 +105,8 @@ class UserEntity
 		$this->setMultiplier($multiplier);
 		$this->setIsActive($isActive);
 		$this->setHours($hours);
-		$this->setpoints($points);
+		$this->setPoints($points);
+		$this->setSessions($sessions);
 		$this->setResults($results);
 		$this->setCashin($cashin);
 	}
@@ -132,7 +208,7 @@ class UserEntity
 
 	public function setMultiplier($multiplier)
 	{
-		$this->multiplicador = $multiplier;
+		$this->multiplier = $multiplier;
 		return $this;
 	}
 
@@ -169,6 +245,17 @@ class UserEntity
 		return $this;
 	}
 
+	public function getSessions() 
+	{
+		return $this->sessions;
+	}
+
+	public function setSessions($sessions)
+	{
+		$this->sessions = $sessions;
+		return $this;
+	}	
+
 	public function getResults() 
 	{
 		return $this->results;
@@ -201,6 +288,7 @@ class UserEntity
 			'lastname' => $this->getLastname(), 
 			'username' => $this->getUsername(),
 			'multiplier' => $this->getMultiplier(),
+			'sessions' => $this->getSessions(),
 			'isActive' => $this->getIsActive(),
 			'hours' => $this->getHours(),
 			'points' => $this->getPoints(),

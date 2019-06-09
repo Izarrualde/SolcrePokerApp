@@ -9,20 +9,70 @@ use Solcre\lmsuy\Exception\ComissionAlreadyAddedException;
 use Solcre\lmsuy\Exception\DealerTipAlreadyAddedException;
 use Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
 
+
+/**
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Table(name="users")
+*/
 class SessionEntity 
 {
-	protected $idSession; //solo id
+
+   /**
+   * @ORM\Column(type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+	protected $idSession; 
+
+
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
 	protected $date;
+
+
+	/**
+	 * @ORM\Column(type="string")
+	 */
 	protected $title;
+
+
+	/**
+	 * @ORM\Column(type="string")
+	 */
 	protected $description;
+
+
 	protected $photo;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="count_of_seats")
+	 */
 	protected $seats;
+
+
 	protected $seatsWaiting;
 	protected $reserveWaiting;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="start_at")
+	 */
 	protected $startTime;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="real_start_at")
+	 */
 	protected $startTimeReal;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="end_at")
+	 */
 	protected $endTime;
-	//protected $comision;
+
 	
 	public $sessionDealerTips = array();
 	public $sessionServiceTips = array();
@@ -502,6 +552,7 @@ class SessionEntity
 		return  [
 			'idSession' => $this->getIdSession(),
 			'created_at' => $this->getDate(),
+			'title' => $this->getTitle(),
 			'description' => $this->getDescription(),
 			'startTime' => $this->getStartTimeReal(),
 			'activePlayers' => $this->getActivePlayers(),

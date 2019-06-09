@@ -1,19 +1,45 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
-class ComissionSession
+/**
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Table(name="users")
+*/
+class DealerTipSessionEntity 
 {
-	protected $id;
-	protected $idSession;
-	protected $hour;
-	protected $comission;
 
-	public function __construct($id=null, $idSession=null, $hour=null, $comission=null)
+   /**
+   * @ORM\Column(type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+	protected $id;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="session_id")
+	 */
+	protected $idSession;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="created_at")
+	 */
+	protected $hour;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="dealer_tip")
+	 */
+	protected $dealerTip;
+
+
+	public function __construct($id=null, $idSession=null, $hour="", $tip=null)
 	{
 		$this->setId($id);
 		$this->setIdSession($idSession);
 		$this->setHour($hour);
-		$this->setComission($comission);
+		$this->setDealerTip($tip);
 	}
 
 	public function getId()
@@ -49,23 +75,22 @@ class ComissionSession
 		return $this;
 	}
 
-	public function getComission()
+	public function getDealerTip()
 	{
-		return $this->comission;
+		return $this->dealerTip;
 	}
 
-	public function setComission($comission)
+	public function setDealerTip($tip)
 	{
-		$this->comission = $comission;
+		$this->dealerTip = $tip;
 		return $this;
 	}
-
 	public function toArray(){
 		return  [
 			'id' => $this->getId(),
 			'idSession' => $this->getIdSession(),
 			'hour' => $this->getHour(),
-			'comission' => $this->getComission()
+			'dealerTip' => $this->getDealerTip()
 		];
 	}
 

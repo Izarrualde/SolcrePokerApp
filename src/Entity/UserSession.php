@@ -1,17 +1,63 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
-class UserSession 
+
+
+/**
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Table(name="users")
+*/
+class UserSessionEntity 
 {
+
+   /**
+   * @ORM\Column(type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
 	protected $id;
+
+
 	protected $session;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="user_id")
+	 */
 	protected $idUser;
+
+
+	/**
+	 * @ORM\Column(type="integer",name="is_approved")
+	 */
 	protected $isApproved;
+
+
+	/**
+	 * @ORM\Column(type="integer", name="points")
+	 */
 	protected $accumulatedPoints;
+
+
+	/**
+	 * @ORM\Column(type="integer")
+	 */
 	protected $cashout;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="start_at")
+	 */
 	protected $start;
+
+
+	/**
+	 * @ORM\Column(type="datetime", name="end_at")
+	 */
 	protected $end;
 
+
 	protected $user;
+
 
 	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
 	{
@@ -177,9 +223,7 @@ class UserSession
 			'idSession' => $this->getSession()->getIdSession(),
 			'idUser' => $this->getIdUser(),
 			'isApproved' => $this->getIsApproved(),
-			'points' => $this->getAccumulatedPoints(),
 			'cashout' => $this->getCashout(),
-			'cashin' => $this->getCashin(),
 			'startTime' => $this->getStart(),
 			'endTime' => $this->getEnd(),
 			'cashin' => $this->getCashin(),

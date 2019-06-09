@@ -22,21 +22,26 @@
 						<article class="col-md-12">
 							<table class="table table-bordered table-hover text-center">
 								<thead class="text-center bg-dark text-white">
+									<th> # </th>
 									<th> Jugador </th>
 									<th> Teléfono </th>
 									<th> horas </th>
 									<th> acciones </th>
 										<tbody>
 											{% for user in users %}
-												<tr>
+												<tr>	
+														<th> {% set counter = ( counter | default(0) ) + 1 %}
+															  <p>{{ counter }}</p> 
+														</th>
 														<td> {{ user.name }} {{ user.lastname }} </td>
 														<td> {{ user.username }} </td>
 														<td> {{ user.hours }} </td>
-														<td> <a href="/lmsuy/actions/editPlayer_twig.php?id={{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a><a href="/lmsuy/actions/deletePlayer_twig.php?id={{ user.id }}"> <i class="fas fa-trash-alt"></i> </a> </td>
+														<td> <a href="/users/{{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a><a href="/users/{{ user.id }}/remove"> <i class="fas fa-trash-alt"></i> </a> </td>
 												</tr>
 											{% endfor %}
 										</tbody>
 									</table>
+									<a href="/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 						</article>
 					</section>
 				</div>

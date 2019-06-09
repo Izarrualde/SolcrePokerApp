@@ -15,12 +15,12 @@
 					<section class="container row justify-content-center">
 
 						<article>
-							<form class="was-validated" action="" method="post">
-								<input name="id" type="hidden" value="{{ session.userSession.id }}">
+							<form class="was-validated" action="/userssession/{{ userSession.id }}/close" method="post">
+								<input name="id" type="hidden" value="{{ userSession.id }}">
 
-								<input name="idSession" type="hidden" value="{{ session.idSession }}">
+								<input name="idSession" type="hidden" value="{{ userSession.idSession }}">
 								
-								<input name="idUser" type="hidden" value="{{ session.userSession.user.id }}">
+								<input name="idUser" type="hidden" value="{{ userSession.user.id }}">
 
 								<div class="form-group">
 									<label class="sr-only" for="Cashout"> Cashout: </label>

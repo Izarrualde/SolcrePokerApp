@@ -19,13 +19,14 @@
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
-							<form class="was-validated" action="" method="post">
+							<form class="was-validated" action="/users/{iduser}/update" method="post">
 								<input name="id" type="hidden" value="{{ user.id }}">
 								<input name="password" type="hidden" value="{{ user.password }}">
 								<input name="isActive" type="hidden" value="{{ user.isActive }}">
-								<input name="id" type="hidden" value="{{ user.multiplier }}">
 								<input name="hours" type="hidden" value="{{ user.hours }}">
 								<input name="points" type="hidden" value="{{ user.points }}">
+								<input name="multiplier" type="hidden" value="{{ user.multiplier }}">
+								<input name="sessions" type="hidden" value="{{ user.sessions }}">
 								<input name="results" type="hidden" value="{{ user.results }}">
 								<input name="cashin" type="hidden" value="{{ user.cashin }}">
 

@@ -1,47 +1,74 @@
 <?php
 Namespace Solcre\lmsuy\Service;
 
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\UserSession;
+Use \Solcre\lmsuy\Entity\UserSessionEntity;
+Use Doctrine\ORM\EntityManager;
 
-class UserSessionService {
+class UserSessionService extends BaseService {
 
-	protected $connection;
-	protected $userService;
-	protected $sessionService;
-
-	public function __construct(ConnectLmsuy_db $connection, UserService $userService, SessionService $sessionService)
+	public function __construct(EntityManager $em)
 	{
-		$this->connection = $connection;
-		$this->userService = $userService;
-		$this->sessionService = $sessionService;
+		parent::__construct($em);
 	}
 
-	public function add(UserSession $userSession)
+
+	public function add($data, $strategies = null)
 	{
-		$this->connection->insertUserInSession(date('c'), $userSession->getAccumulatedPoints(), $userSession->getCashout(), $userSession->getStart(), $userSession->getEnd(), $userSession->getIsApproved(), $userSession->getSession()->getIdSession());
+		/*
+		return $this->connection->insertUserInSession(date('c'), $userSession->getAccumulatedPoints(), $userSession->getCashout(), $userSession->getStart(), $userSession->getEnd(), $userSession->getIsApproved(), $userSession->getSession()->getIdSession(), $userSession->getIdUser());
+		*/
+
+		$userSession = new UserSessionEntity();
+		$userSession->setAccumulatedPoints($data['accumulatedPoints']);
+		$userSession->setCashout($data['cashout']);
+		$userSession->setStart($data['start']);
+		$userSession->setEnd($data['end']);
+		$userSession->setIsApproved($data['isApproved']);
+		$userSession->setSession() ???? 
+		$userSession->setIdSession($data['idSession']);
+		$userSession->setIdUser($data['idUser']);
+
+		$this->EntityManager->persist($userSession);
+		$this->EntityManager->flush($userSession);
 	}
 
 	public function update(UserSession $userSession)
 	{
-		$this->connection-> updateUserSession($userSession->getAccumulatedPoints(), $userSession->getCashout(), $userSession->getStart(), $userSession->getEnd() , $userSession->getIsApproved() , $userSession->getIdSession(), $userSession->getIdUser(), $userSession->getId());
+		$userSession = parent::fetch($data['id']);
+		$userSession->setAccumulatedPoints($data['accumulatedPoints']);
+		$userSession->setCashout($data['cashout']);
+		$userSession->setStart($data['start']);
+		$userSession->setEnd($data['end']);
+		$userSession->setIsApproved($data['isApproved']);
+		$userSession->setSession() ???? 
+		$userSession->setIdSession($data['idSession']);
+		$userSession->setIdUser($data['idUser']);
+
+		$this->EntityManager->persist($userSession);
+		$this->EntityManager->flush($userSession);
 	}
 
-	public function delete(UserSession $userSession)
+	public function delete($id, $entityObj = null)
 	{	
-		$this->connection->deleteUser($userSession->getId());
+		$userSession = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserSessionEntity', $id);
+
+		$this->entityManager->remove($userSession);
+		$this->entityManager->flush();
 	}
 
+
+	hacer
+	*********************************
 	public function close(UserSession $userSession, $cashout, $end)
 	{
 		$this->connection->closeUserSession($userSession->getId(), $userSession->getUser()->getId(), $cashout, $userSession->getStart(), $end);
 	}
 
+	/*
 	public function findOne($id)
 	{
 		$user = $this->connection->getDatosSessionUserById($id);
-		var_dump($id);
-		$userObject = new UserSession($user->id, /*$sessionService->findOne($connection->getIdSessionbyIdUserSession($id)) */null, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
+		$userObject = new UserSession($user->id, /*$sessionService->findOne($connection->getIdSessionbyIdUserSession($id)) *//*null, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
 		$this->findEntities($userObject);
 		return $userObject;
 	}
@@ -70,4 +97,5 @@ class UserSessionService {
 		$session = $this->sessionService->findOne($idSession);
 		$userSession->setSession($session);
 	}
+	*/
 }

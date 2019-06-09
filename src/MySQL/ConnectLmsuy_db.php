@@ -15,7 +15,7 @@ class ConnectLmsuy_db extends Connect
 
 	public function getDatosSessionsUsers($idSession)
 	{
-		$sql="SELECT id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, points, cashout, DATE_FORMAT(start_at, '%d-%m-%Y %H:%i') as start_at,  DATE_FORMAT(end_at, '%d-%m-%Y %H:%i') as end_at, is_approved, session_id, user_id FROM sessions_users WHERE session_id='$idSession'";
+		$sql="SELECT sessions_users.id, DATE_FORMAT(created_at, '%d-%m-%Y %H:%i') as created_at, sessions_users.points, cashout, DATE_FORMAT(start_at, '%d-%m-%Y %H:%i') as start_at,  DATE_FORMAT(end_at, '%d-%m-%Y %H:%i') as end_at, is_approved, session_id, user_id FROM sessions_users INNER JOIN users ON sessions_users.user_id=users.id WHERE session_id='$idSession' ORDER BY name ASC, last_name ASC";
 
 		$datos = $this->db->query($sql);
 		$arreglo = array();
@@ -127,6 +127,7 @@ class ConnectLmsuy_db extends Connect
 		return $datos->fetch_object();
 	}
 
+
 	public function getIdUserByUserSessionId($userSessionId)
 	{
 		$sql="SELECT user_id FROM sessions_users WHERE id='$userSessionId'";
@@ -141,7 +142,7 @@ class ConnectLmsuy_db extends Connect
 		}
 	}
 /*
-	public function getIdUserSessionByIdUser($idUser)
+	public function getIdUserSessionByIdUser($idUserSesssion)
 	{
 		echo $idUser;
 		$sql="SELECT id FROM sessions_users WHERE user_id='$idUser' and end_at IS null";
@@ -170,7 +171,7 @@ class ConnectLmsuy_db extends Connect
 
 	public function getDatosSessions()
 	{
-		$sql="SELECT id, created_at, title, description, count_of_seats, start_at, real_start_at, end_at FROM sessions";
+		$sql="SELECT id, created_at, title, description, count_of_seats, start_at, real_start_at, end_at FROM sessions ORDER BY created_at DESC";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg=$datos->fetch_object())
@@ -190,7 +191,7 @@ class ConnectLmsuy_db extends Connect
 
 	public function getDatosUsers()
 	{
-		$sql="SELECT id, created_date, username, password, name, last_name, email, cashin, points, hours, sessions, results, multiplier, is_active, avatar_hashed_filename, avatar_visible_filename  FROM users";
+		$sql="SELECT id, created_date, username, password, name, last_name, email, cashin, points, hours, sessions, results, multiplier, is_active, avatar_hashed_filename, avatar_visible_filename  FROM users ORDER BY name ASC, last_name ASC";
 		
 		$datos = $this->db->query($sql);
 		$arreglo = array();
@@ -230,6 +231,14 @@ class ConnectLmsuy_db extends Connect
 	public function getIdSessionbyIdUserSession($idUserSession)
 	{
 		$sql="SELECT session_id FROM sessions_Users WHERE id='$idUserSession'";
+		$datos = $this->db->query($sql);
+		$reg=$datos->fetch_object();
+		return $reg->session_id;
+	}
+
+	public function getIdSessionbyIdComission($idComission)
+	{
+		$sql="SELECT session_id FROM sessions_comissions WHERE id='$idComission'";
 		$datos = $this->db->query($sql);
 		$reg=$datos->fetch_object();
 		return $reg->session_id;
@@ -278,39 +287,24 @@ class ConnectLmsuy_db extends Connect
 
 	//INSERT INTO `buyinsession` (`id`, `idSession`, `idPlayer`, `amountCash`, `amountCredit`, `currency`, `hour`, `approved`) VALUES (NULL, '1', 'uo', '12', '12', 'usdf', '2019-04-11 00:00:00', '1');
 
-	public function insertUserInSession($created_at, $accumulatedPoints, $cashout, $start_at, $end_at, $is_approved, $idSession)
+	public function insertUserInSession($created_at, $accumulatedPoints, $cashout, $start_at, $end_at, $is_approved, $idSession, $idUser)
 	{
 		$users_session = $this->getDatosSessionsUsers($idSession);
-		$idUser = $_POST['user_id'];
-		$mensaje ='';
-		
+		//$idUser = $_POST['user_id'];
+
 		foreach ($users_session as $user) 
 		{
 			if ($user->user_id==$idUser)
 			{
-				echo "<br>";
-				echo " el jugador ya esta en la tabla";
-				echo "<br>";
-				if ($user->end_at != null)				
-				{
-					$mensaje = "";					
-				}else
-				{
-					$mensaje = "El usuario ya habia sido agregado a esta sesión";
-					break;	
+				if ($user->end_at == null)	{
+					return false;	
 				}
 			}
 		}
-
-
-		if ($mensaje=='')
-		{
-			$sql="INSERT into sessions_users VALUES (null, '$created_at', '$accumulatedPoints', '$cashout',".(!empty($start_at)?$start_at:'null').", ".(!empty($end_at)?$end_at:'null').", '$is_approved', '$idSession', '$idUser')"; 
-
-			$mensaje = "El usuario se ingresó exitosamente";
-			$this->db->query($sql);			
-		}
-		return $mensaje;
+		$sql="INSERT into sessions_users VALUES (null, '$created_at', '$accumulatedPoints', '$cashout',".(!empty($start_at)?$start_at:'null').", ".(!empty($end_at)?$end_at:'null').", '$is_approved', '$idSession', '$idUser')"; 
+		$ret = $this->db->query($sql);
+		var_dump($ret);
+		return $ret;
 	}
 
 	public function insertSession($date, $title, $description, $seats, $startTime, $startTimeReal, $endTime)
@@ -319,7 +313,7 @@ class ConnectLmsuy_db extends Connect
 		$this->db->query($sql);
 	}
 
-	public function addUser($created_at, $lastname, $name, $username, $mobile, $email, $password, $multiplier, $active, $hours, $points, $results, $cashin)
+	public function addUser($created_at, $lastname, $name, $username, $mobile, $email, $password, $multiplier, $active, $hours, $points, $sessions, $results, $cashin)
 	{
 		$users = $this->getDatosUsers();
 		$mensaje = '';
@@ -333,10 +327,8 @@ class ConnectLmsuy_db extends Connect
 		}
 		if ($mensaje=='')
 		{
-			$sql="INSERT into users VALUES (null, '$created_at', '$username', '$password', '$name', '$lastname', '$email', '$cashin', '$points', '$hours', '1', '$results', '$multiplier', '$active', null, null)"; 
+			$sql="INSERT into users VALUES (null, '$created_at', '$username', '$password', '$name', '$lastname', '$email', '$cashin', '$points', '$sessions', '$hours', '$results', '$multiplier', '$active', null, null)"; 
 			$this->db->query($sql);
-			echo "<br>";
-			echo $hours; echo "<br>";
 			$mensaje = "El usuario se ingreso exitosamente";		
 		}
 		return $mensaje;
@@ -396,9 +388,10 @@ class ConnectLmsuy_db extends Connect
 		$this->db->query($sql);
 	}
 
-		public function updateUser($name, $lastname, $username, $email, $id)
+		public function updateUser($name, $lastname, $username, $email, $password, $multiplier, $isActive, $sessions, $id)
 	{
-		$sql= "UPDATE users SET name='$name', last_name='$lastname', username='$username', email='$email' WHERE id='$id'";
+
+		$sql= "UPDATE users SET name='$name', last_name='$lastname', username='$username', email='$email', password='$password', multiplier='$multiplier', is_active='$isActive', sessions='$sessions' WHERE id='$id'";
 		//".(!empty($end_at)?$end_at:'null')."
 		$this->db->query($sql);
 	}

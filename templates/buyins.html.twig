@@ -17,17 +17,8 @@
 							{{ message }} 
 						</div>
 					{% endif %}					
-					<!--<?php
-					if (isset($_GET["m"]) and ($_GET["m"]==1))
-					{
-						?>
-						<div class="alert alert-success">
-							<button type="button" class="close" data-dismiss="alert">x</button>
-							El buyin se ha eliminado exitosamente.
-						</div>
-						<?php
-					}
-						?> -->
+
+
 					Buyins
 				</div>
 				<div class="card-body">
@@ -54,22 +45,22 @@
 									<?php
 									} else
 									{ -->
-										{% for buyin in buyins %} 
+										{% for buyin in session.buyins %} 
 	
 											<tr>
 												<td> {{ buyin.user_session.user.name }} {{ buyin.user_session.user.lastname }}  </td>
 												<td> {{ buyin.amountCash }} </td>
 												<td> {{ buyin.amountCredit }} </td>
 												<td> {{ buyin.hour|date('H:i') }} </td>
-												<td> <a href="/lmsuy/actions/editBuyin_twig.php?idB={{ buyin.id }}&id={{ buyin.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a><a href="/lmsuy/actions/deleteBuyin_twig.php?idB={{ buyin.id }}&id={{ buyin.idSession }}"> <i class="fas fa-trash-alt"></i> </a> </td> 
+												<td> <a href="/sessions/{{ buyin.idSession }}/buyins/{{ buyin.id }}"> <i class="fas fa-pencil-alt"> </i> </a><a href="/{{ buyin.idSession }}/buyins/{{ buyin.id }}/remove"> <i class="fas fa-trash-alt"></i> </a> </td> 
 
 
-												<!-- <a href="javascript:void(0);" onclick="eliminar('actions/deleteBuyin.php?id= <?php echo $buyin->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td> -->
+												
 											</tr>
 										{% endfor %}
 											<tr>
 												<td colspan="9"> 
-												<a href="/lmsuy/newbuyins_twig.php?id={{ session.idSession }}" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+												<a href="/{{ session.idSession }}/buyins/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 												</td>
 											</tr>
 							
@@ -85,7 +76,7 @@
 
 		<script src="../../js/functions.js"></script>
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<!--<script type="text/javascript" src=”js/jquery-3.4.0.min.js”> </script>-->
+		
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 		<script src=”../../js/jquery.js”> </script>
 		<script src=”../../js/bootstrap.min.js”> </script>

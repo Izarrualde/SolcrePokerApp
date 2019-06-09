@@ -7,13 +7,20 @@
         <div class="col-md-12 col-sm-8 col-xs-8">
             <nav aria-label="breadcrumb">
                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                    <li class="breadcrumb-item active" aria-current="page">Inicio  </li>
+
                   </ol>
             </nav>
             <div class="card">
                 <div class="card-header bg-primary text-white">
+                    {% if message is not empty %}
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            {{ message }} 
+                        </div>
+                    {% endif %}
 
-                    Listado Sesiones
+                    Listado Sesiones 
                 </div>
                 <div class="card-body">
                     <section class="container row"  style="width: auto; margin: auto auto;">
@@ -32,7 +39,7 @@
                             </thead>
                             <tbody>
                                 {% for session in sessions %}
-                                    <tr>
+                                    <tr class="{{ session.endTime ? '' : 'active'}}">
                                             <td>{{ session.idSession }}</td>
                                             <td>{{ session.created_at|date("d/m/Y") }}</td>
                                             <td>{{ session.created_at|date('l')  }}</td>
@@ -42,19 +49,19 @@
                                             <td>{{ session.seats }}</td> 
                                             <td>{{ session.endTime ? session.endTime|date('H:i') : "-" }}</td>
                                             <td> 
-                                                <a href="users_twig.php?id={{ session.idSession }}" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
-                                                <a href="buyins_twig.php?id={{ session.idSession }}" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
-                                                <a href="tips_twig.php?id={{ session.idSession }}" class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
-                                                <a href="comissions_twig.php?id={{ session.idSession }}" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-                                                <a href="actions/editsession_twig.php?id={{ session.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a>
-                                                <a href="actions/deletesession_twig.php?id={{ session.idSession }}"> <i class="fas fa-trash-alt"></i> </a>
+                                                <a href="/sessions/{{ session.idSession }}/usersSession/" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
+                                                <a href="/sessions/{{ session.idSession }}/buyins/" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
+                                                <a href="/sessions/{{ session.idSession }}/tips/" class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
+                                                <a href="/sessions/{{ session.idSession }}/comissions/" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
+                                                <a href="/sessions/{{ session.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a>
+                                                <a href="/sessions/{{ session.idSession }}/remove"> <i class="fas fa-trash-alt"></i> </a>
                                                 <a href="actions/revisionsession_twig.php?id={{ session.idSession }}"> <i class="far fa-eye"></i></a>
                                             </td>
                                     {% endfor %}
                                     </tr>
                                     <tr>
                                         <td colspan="9">
-                                        <a href="newsession_twig.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+                                        <a href="/sessions/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
                                         </td>
                                     </tr>
                             </tbody>
@@ -66,15 +73,11 @@
         <br>
         <br>
         <br>
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    Usuarios
-                </div>
-                <div class="card-body">
-                    <section class="container row"  style="width: auto; margin: auto auto;">
-                        <article class="col-md-12 col-sm-8 col-xs-8">
-                                <a href="viewUsers_twig.php" class="btn btn-lg btn-block btn-info"> <i class="far fa-eye"></i></i></a>                                       
-                                <a href="adduser_twig.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>          
+
+ <br>
+ <br>
+                                <a href="/users/" class="btn btn-sm btn-info"> <i class="fas fa-user-circle"></i></a>                                       
+                                          
                         </article>
                     </section>
                 </div>

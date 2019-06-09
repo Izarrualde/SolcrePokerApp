@@ -1,33 +1,45 @@
 <?php
 Namespace Solcre\lmsuy\Service;
 
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\ServiceTipSession;
+Use \Solcre\lmsuy\Entity\ServiceTipSessionEntity;
+Use Doctrine\ORM\EntityManager;
 
-class ServiceTipSessionService {
+class ServiceTipSessionService extends BaseService {
 
-	protected $connection;
-
-	public function __construct(ConnectLmsuy_db $connection)
+	public function __construct(EntityManager $em)
 	{
-		$this->connection = $connection;
+		parent::__construct($em);
 	}
 
-	public function add(ServiceTipSession $serviceTip)
+	public function add($data, $strategies = null)
 	{
-		$this->connection->insertServiceTip($serviceTip->getHour(), $serviceTip->getServiceTip(), $serviceTip->getIdSession());
+		$serviceTip = new  ServiceTipSession();
+		$serviceTip->setHour($data['hour']);
+		$serviceTip->setServiceTip($data['serviceTip']);
+
+		$this->EntityManager->persist($serviceTip);
+		$this->EntityManager->flush($serviceTip);
 	}
 
 	public function update(ServiceTipSession $serviceTip)
 	{
-		$this->connection-> updateServiceTip($serviceTip->getIdSession(), $serviceTip->getHour(), $serviceTip->getServiceTip(), $serviceTip->getId());
+		$serviceTip = parent::fetch($data['id']);
+		$serviceTip->setHour($data['hour']);
+		$serviceTip->setServiceTip($data['serviceTip']);
+
+		$this->EntityManager->persist($serviceTip);
+		$this->EntityManager->flush($serviceTip);
 	}
 
-	public function delete(serviceTipSession $serviceTip)
+	public function delete($id, $entityObj = null)
 	{	
-		$this->connection->deleteServiceTip($serviceTip->getId());
+		$user = $this->entityManager->getReference('Solcre\lmsuy\Entity\ServiceTipSessionEntity', $id);
+
+		$this->entityManager->remove($serviceTip);
+		$this->entityManager->flush();
 	}
 
+	/*
 	public function findOne($id)
 	{
 		$serviceTip = $this->connection->getDatosSessionServiceTipById($id);
@@ -38,7 +50,7 @@ class ServiceTipSessionService {
 	public function find($idSession)
 	{
 		$datosServiceTips = $this->connection->getDatosSessionServiceTips($idSession);
-		$users = array();//
+		$serviceTips = array();
 
 		foreach ($datosServiceTips as $serviceTip) 
 		{
@@ -48,5 +60,5 @@ class ServiceTipSessionService {
 		}
 		return $serviceTips;
 	}
-
+	*/
 }

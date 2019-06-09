@@ -1,232 +1,163 @@
 <?php
-include "vendor/autoload.php";
 
-Use \Solcre\lmsuy\Entity\SessionEntity;
-Use \Solcre\lmsuy\Entity\UserEntity;
-Use \Solcre\lmsuy\Entity\UserSession;
-Use \Solcre\lmsuy\Entity\BuyinSession;
-Use \Solcre\lmsuy\Entity\ComissionSession;
-Use \Solcre\lmsuy\Entity\DealerTipSession;
-Use \Solcre\lmsuy\Entity\ServiceTipSession;
-Use \Solcre\lmsuy\MySQL\Connect;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Exception\InsufficientBuyinException;
-Use \Solcre\lmsuy\Exception\PlayerNotFoundException;
-Use \Solcre\lmsuy\Exception\SessionFullException;
-Use \Solcre\lmsuy\Exception\ComissionAlreadyAddedException;
-Use \Solcre\lmsuy\Exception\DealerTipAlreadyAddedException;
-Use \Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
+use DI\Container;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
+use Slim\Middleware\ErrorMiddleware;
+use Solcre\lmsuy\Controller\SessionController;
+use Solcre\lmsuy\Controller\BuyinSessionController;
+use Solcre\lmsuy\Controller\ComissionSessionController;
+use Solcre\lmsuy\Controller\TipSessionController;
+use Solcre\lmsuy\Controller\UserSessionController;
+use Solcre\lmsuy\Controller\UserController;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Tools\Setup;
+Use Solcre\lmsuy\Entity\UserEntity;
+Use Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+use Solcre\lmsuy\Service\UserService;
 
-$connection = new ConnectLmsuy_db;
+require __DIR__ . '/vendor/autoload.php';
 
-$datosUsers = $connection->getDatosUsers();
-$datosSessions = $connection->getDatosSessions();
+// Create Container using PHP-DI
+$container = new Container();
 
+// Set container to create App with on AppFactory
+AppFactory::setContainer($container);
 
-if (!empty($_POST))
-{
-	$connection->insertSession();
-	$mensaje = "La sesion se agregó exitosamente";
-}
+// Instantiate App
+$app = AppFactory::create();
 
-$users = array();
+// Add error middleware
 
-foreach ($datosUsers as $user) 
-{
-	$users[]= new UserEntity($user->id, $user->password, null /*mobile*/, $user->email, $user->last_name, $user->name, $user->username, $user->multiplier, $user->is_active, $user->hours, $user->points, $user->results, $user->cashin);
-}
+$responseFactory = $app->getResponseFactory();
+$errorMiddleware = new ErrorMiddleware($app->getCallableResolver(), $responseFactory, true, true, true);
+$app->add($errorMiddleware);
 
+// Get container
+$container = $app->getContainer();
 
-$sessions = array();
+$container->set('settings', function ($container): Array {
+	$set = require __DIR__ . '/settings.php';
+	return $set;
+});
+$container->set(EntityManager::class, function ($container): EntityManager {
+    $config = Setup::createAnnotationMetadataConfiguration(
+        $container->get('settings')['doctrine']['metadata_dirs'],
+        $container->get('settings')['doctrine']['dev_mode']
+    );
 
-foreach ($datosSessions as $session) 
-{
-$sessions[] = new SessionEntity($session->id, $session->created_at, $session->title, $session->description, null /*photo*/, $session->count_of_seats, null /*seatswaiting*/ , null /*reservewainting*/, $session->start_at, $session->real_start_at, $session->end_at);
-}
+    $config->setMetadataDriverImpl(
+        new AnnotationDriver(
+            new AnnotationReader,
+            $container->get('settings')['doctrine']['metadata_dirs']
+        )
+    );
 
-foreach ($sessions as $session ) 
-{
-	$datosUsersSession = $connection->getDatosSessionsUsers($session->getIdSession());
-	$datosSessionComissions = $connection->getDatosSessionComissions($session->getIdSession());
-	$datosSessionBuyins = $connection->getDatosSessionBuyins($session->getIdSession());
-	$datosDealerTipSession = $connection->getDatosSessionDealerTips($session->getIdSession());
-	$datosServiceTipSession = $connection->getDatosSessionServiceTips($session->getIdSession());
+    $config->setMetadataCacheImpl(
+        new FilesystemCache(
+            $container->get('settings')['doctrine']['cache_dir']
+        )
+    );
+    return EntityManager::create(
+        $container->get('settings')['doctrine']['connection'],
+        $config
+    );
+});
 
-	
-	
-	foreach ($datosUsersSession as $user) 
-	{
-		$session->sessionUsers[] = new UserSession($user->id, $session, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
-	}
+// Register component on container
+$container->set('view', function ($container) {
+    $view = new \Slim\Views\Twig('templates');
 
-	foreach ($datosDealerTipSession as $dealerTip) 
-	{
-		$session->sessionDealerTips[] = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
-	}
+    // Instantiate and add Slim specific extension
+    //$router = $container->get('router');
+    //$uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
+    //$view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+    return $view;
+});
 
-	foreach ($datosServiceTipSession as $serviceTip) 
-	{
-		$session->sessionServiceTips[] = new ServiceTipSession($serviceTip->id, $serviceTip->session_id, $serviceTip->created_at, $serviceTip->service_tip);
-	}
+$container->set('SessionController', function($c) {
+    $view = $c->get("view"); // retrieve the 'view' from the container
+    return new SessionController($view);
+});
+$container->set('BuyinSessionController', function($c) {
+    $view = $c->get("view"); // retrieve the 'view' from the container
+    return new BuyinSessionController($view);
+});
 
-	foreach ($datosSessionComissions as $comission) 
-	{
-		$session->sessionComissions[] = new ComissionSession($comission->id, $comission->session_id, $comission->created_at, $comission->comission);
-	}
+$container->set('ComissionSessionController', function($c) {
+    $view = $c->get("view"); // retrieve the 'view' from the container
+    return new ComissionSessionController($view);
+});
 
-	foreach ($datosSessionBuyins as $buyin) 
-	{
-		$session->sessionBuyins[] = new BuyinSession($buyin->id, null, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
-	}
+$container->set('TipSessionController', function($c) {
+    $view = $c->get("view"); // retrieve the 'view' from the container
+    return new TipSessionController($view);
+});
 
-}
+$container->set('UserController', function($c) {
+    $view = $c->get("view"); // retrieve the 'view' from the container
+    $em = $c->get(EntityManager::class);
+    return new UserController($view, $em);
+});
 
-//var_dump($session->sessionUsers);
+$container->set('UserSessionController', function($c) {
+    $view = $c->get("view"); // retrieve the 'view' from the container
+    return new UserSessionController($view);
+});
 
+// Add route
+$app->get('/', 'SessionController:listAll'); //listar sesiones
+$app->get('/sessions/{idSession:[0-9]+}', 'SessionController:list'); //sesion especifica
+$app->get('/sessions', 'SessionController:listAll'); //listar sesiones
+$app->post('/sessions', 'SessionController:add'); //nueva sesion si vengo a esta direccion por post
+$app->get('/sessions/form', 'SessionController:form'); //formulario para nueva sesion
+$app->get('/sessions/{idSession}/remove', 'SessionController:delete'); 
+$app->post('/sessions/{idSession}/update', 'SessionController:update');
 
-
-
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title> lmsuy </title>
-	<meta name="vierwport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">	
-
-	<script type="text/javascript" src=”js/jquery-3.4.0.min.js”> </script>
-	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-	<script src=”js/bootstrap.min.js”> </script>
-
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<script src="js/functions.js"></script>
-
-</head>
-<body>
-	<div class="container">
-		<div class="col-md-12 col-sm-8 col-xs-8">
-			<nav aria-label="breadcrumb">
-				 <ol class="breadcrumb">
-				    <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-				  </ol>
-			</nav>
-			<div class="card">
-				<div class="card-header bg-primary text-white">
-					<?php
-					if ((isset($_POST["id"])) and (isset($mensaje)))
-					{
-					?>
-					<div class="alert alert-success">
-						<button type="button" class="close" data-dismiss="alert">x</button>
-							<?php echo $mensaje; ?>
-						</div>
-						<?php
-					} elseif (isset($_GET['m']) and $_GET['m']=='1') 
-					{
-						?>
-						<div class="alert alert-success">
-						<button type="button" class="close" data-dismiss="alert">x</button>
-							<?php echo "La sesión se eliminó exitosamente"; ?>
-						</div>
-						<?php
-					}
-					?>
+$app->get('/sessions/{idSession}/buyins/', 'BuyinSessionController:listAll');
+$app->get('/sessions/{idSession}/buyins/{idbuyin}', 'BuyinSessionController:list');
+$app->post('/sessions/{idSession}/buyins', 'BuyinSessionController:add');
+$app->get('/{idSession}/buyins/form', 'BuyinSessionController:form'); //formulario para nueva sesion
+$app->get('/{idSession}/buyins/{idbuyin}/remove', 'BuyinSessionController:delete'); 
+$app->post('/buyins/{idBuyin}/update', 'BuyinSessionController:update');
 
 
-					Listado Sesiones
-				</div>
-				<div class="card-body">
-					<section class="container row"  style="width: auto; margin: auto auto;">
-						<article class="col-md-12 col-sm-12 col-xs-12">
-						<table class="table table-bordered table-hover text-center">
-							<thead class="text-center bg-dark text-white">
-								<th> Id </th>
-								<th> Fecha </th>
-								<th> Dia </th>
-								<th> Descrip. </th>
-								<th> inicio </th>
-								<th> Jugando/Total </th>
-								<th> Asientos L </th>								
-								<th> fin </th>
-								<th> Acciones</th>
-							</thead>
-							<tbody>
-									<?php 
-									foreach ($sessions as $session) 
-									{
-									?>
-									<tr>
-											<td> <?php echo $session->getIdSession(); ?>  </td>
-											<td> <?php echo date_format(date_create($session->getDate()), 'd-m-Y'); ?> </td>
-											<td> <?php if ($session->getDate() != null) 
-												       {
-												       		echo date_format(date_create($session->getDate()), 'l');
-												       } 
-												 ?> 
-											</td>
-											<td> <?php echo $session->getDescription(); ?></td>
-											<td> <?php 
-												 if (($session->getStartTimeReal()) != null) 
-												 	echo substr($session->getStartTimeReal(), 11, 5) ; 
-												 ?> 
-											</td>
-											<td> <?php echo $session->getActivePlayers(); echo "/"; echo $session->getTotalDistinctPlayers(); ?> </td>
-											<td> <?php echo ($session->getSeats()-$session->getActivePlayers()); //- getAsientosOcupados() ?> </td>	
-											<td> <?php 
-												 if (($session->getEndTime()) != null)
-												 	echo substr($session->getEndTime(), 11, 5) ; 
-												 ?> 
-											</td>
-											<td> 
-												<a href="src/links/users.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
-												<a href="src/links/buyins.php?id=<?php echo $session->getIdSession();?>" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
-												<a href="src/links/tips.php?id=<?php echo $session->getIdSession(); ?> " class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
-												<a href="src/links/comissions.php?id=<?php echo $session->getIdSession(); ?>" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-												<a href="src/links/actions/editsession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="fas fa-pencil-alt"> </i> </a>
-												<a href="src/links/actions/deletesession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="fas fa-trash-alt"></i> </a>
-												<a href="src/links/actions/revisionsession.php?id=<?php echo $session->getIdSession(); ?>"> <i class="far fa-eye"></i></a>
 
-											</td>
-											<?php
-										}
-										?>
-									</tr>
-									<tr>
-										<td colspan="9">
-										<a href="src/links/newsession.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
-										</td>
-									</tr>
-							</tbody>
-						</table>
-					    </article>
-					</section>
-				</div>
-			</div>
-		<br>
-		<br>
-		<br>
-			<div class="card">
-				<div class="card-header bg-primary text-white">
-					Usuarios
-				</div>
-				<div class="card-body">
-					<section class="container row"  style="width: auto; margin: auto auto;">
-						<article class="col-md-12 col-sm-8 col-xs-8">
-								<a href="src/links/viewUsers.php" class="btn btn-lg btn-block btn-info"> <i class="far fa-eye"></i></i></a>										
-								<a href="src/links/adduser.php" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>			
-						</article>
-					</section>
-				</div>
-			</div>
-		</div>
-	</div>
-	<br><br><br><br><br>
-</body>
+$app->get('/sessions/{idSession}/comissions/', 'ComissionSessionController:listAll');
+$app->get('/sessions/{idSession}/comissions/{idcomission}', 'ComissionSessionController:list'); //{idcomission:[0-9]} no funciona
+$app->post('/sessions/{idSession}/comissions', 'ComissionSessionController:add');
+$app->get('/{idSession}/comissions/form', 'ComissionSessionController:form'); //formulario para nueva sesion
+$app->get('/{idSession}/comissions/{idcomission}/remove', 'ComissionSessionController:delete');
+$app->post('/comissions/{idcomission}/update', 'ComissionSessionController:update');
 
+$app->get('/sessions/{idSession}/tips/', 'TipSessionController:listAll');
+$app->get('/sessions/{idSession}/tips/dealerTip/{idDealerTip}', 'TipSessionController:list'); //{idcomission:[0-9]} no funciona
+$app->get('/sessions/{idSession}/tips/serviceTip/{idServiceTip}', 'TipSessionController:list');
+$app->post('/sessions/{idSession}/tips', 'TipSessionController:add');
+$app->get('/{idSession}/tips/form', 'TipSessionController:form'); //formulario para nueva sesion
+$app->get('/tips/dealertip/{idDealerTip}/remove', 'TipSessionController:delete');
+$app->get('/tips/servicetip/{idServiceTip}/remove', 'TipSessionController:delete');
+$app->post('/tips/dealertip/{idDealerTip}/update', 'TipSessionController:update');
+$app->post('/tips/servicetip/{idServiceTip}/update', 'TipSessionController:update');
 
-</html>
+$app->get('/sessions/{idSession}/usersSession/', 'UserSessionController:listAll');
+$app->get('/sessions/{idSession}/usersSession/{idusersession}', 'UserSessionController:list'); //{idcomission:[0-9]} no funciona
+$app->post('/sessions/{idSession}/usersSession', 'UserSessionController:add');
+$app->get('/{idSession}/usersSession/form', 'UserSessionController:form'); //formulario para nueva sesion
+$app->get('/{idSession}/usersSession/{idusersession}/remove', 'UserSessionController:delete');
+$app->post('/usersSession/{idusersession}/update', 'UserSessionController:update');
+$app->get('/userssession/{idusersession}/formclose', 'UserSessionController:formClose');
+$app->post('/userssession/{idusersession}/close', 'UserSessionController:close');
+
+$app->get('/users/', 'UserController:listAll');
+$app->get('/users/{iduser}', 'UserController:list'); //{idcomission:[0-9]} no funciona
+$app->post('/users/', 'UserController:add');
+$app->get('/form', 'UserController:form'); //formulario para nueva sesion
+$app->get('/users/{iduser}/remove', 'UserController:delete');
+$app->post('/users/{iduser}/update', 'UserController:update');
+
+$app->run();

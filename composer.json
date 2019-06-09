@@ -11,7 +11,15 @@
     ],
     "minimum-stability": "beta",
     "require": {
-        "twig/twig": "^2.10"
+        "twig/twig": "^2.10",
+        "slim/php-view": "^2.2",
+        "slim/slim": "^4.0@beta",
+        "slim/psr7": "^0.3.0",
+        "slim/http": "^0.7.0",
+        "slim/twig-view": "^2.5",
+        "php-di/php-di": "^6.0",
+        "doctrine/orm": "^2.6",
+        "doctrine/doctrine-module": "^2.1"
     },
     "autoload": {
     "psr-4": {

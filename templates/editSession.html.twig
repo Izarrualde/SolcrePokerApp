@@ -13,7 +13,7 @@
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
-							<form class="was-validated" action="" method="post">
+							<form class="was-validated" action="/sessions/{{ session .idSession }}/update" method="post">
 
 								<input name="count_of_seats" type="hidden" value="{{ session.seats }}">
 								

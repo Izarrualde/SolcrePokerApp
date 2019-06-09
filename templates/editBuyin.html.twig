@@ -13,10 +13,12 @@
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
-							<form class="was-validated" action="" method="post">
+							<form class="was-validated" action="/buyins/{{ buyin.id }}/update" method="post">
 								<input name="id" type="hidden" value="{{ buyin.id }}">
+
+								<input name="idSession" type="hidden" value="{{ buyin.session.idSession }}">
 								
-								<input name="idSessionUser" id="idSessionUser" type="hidden" required= "true" value="{{ buyin.user_session.id }}">
+								<input name="idUserSession" id="idUserSession" type="hidden" required= "true" value="{{ buyin.user_session.id }}">
 
 
 								<div class="form-group">

@@ -13,18 +13,18 @@
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
-							<form class="was-validated" action="" method="post">
-								<input name="id" type="hidden" value="{{ session.userSession.id }}">
+							<form class="was-validated" action="/usersSession/{{ userSession.id }}/update" method="post">
+								<input name="id" type="hidden" value="{{ userSession.id }}">
 								
-								<input name="idUser" id="idUser" type="hidden" value="{{ session.userSession.idUser }}">
+								<input name="idUser" id="idUser" type="hidden" value="{{ userSession.idUser }}">
 
-								<input name="idSession" id="idSession" type="hidden" value="{{ session.idSession }}">
+								<input name="idSession" id="idSession" type="hidden" value="{{ userSession.idSession }}">
 
-								<input class="form-control" name="accumulatedPoints" id="accumulatedPoints" type="hidden" required="true" value="{{ session.userSession.points }}">
+								<input class="form-control" name="accumulatedPoints" id="accumulatedPoints" type="hidden" required="true" value="{{ userSession.points }}">
 
-								<input name="approved" id="approved" type="hidden" value="{{ session.userSession.isApproved }}">
+								<input name="approved" id="approved" type="hidden" value="{{ userSession.isApproved }}">
 
-								<input class="form-control" name="cashout" id="cashout" type="hidden" required="true" value="">
+								<input class="form-control" name="cashout" id="cashout" type="hidden" required="true" value="{{ userSession.cashout }}">
 
 								<!-- usar en usuario inactivo
 								<div class="form-group">

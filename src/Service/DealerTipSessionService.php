@@ -1,33 +1,47 @@
 <?php
 Namespace Solcre\lmsuy\Service;
 
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\DealerTipSession;
+Use \Solcre\lmsuy\Entity\DealerTipSessionEntity;
+Use Doctrine\ORM\EntityManager;
 
-class DealerTipSessionService {
+class DealerTipSessionService extends BaseService {
 
-	protected $connection;
 
-	public function __construct(ConnectLmsuy_db $connection)
+	public function __construct(EntityManager $em)
 	{
-		$this->connection = $connection;
+		parent::__construct($em);
 	}
 
 	public function add(DealerTipSession $dealerTip)
 	{
-		$this->connection->insertDealerTip($dealerTip->getHour(), $dealerTip->getDealerTip(), $dealerTip->getIdSession());
+		$dealerTip = new DealerTipSession();
+		$dealerTip->setHour($data['hour']);
+		$dealerTip->setIdSession($data['idSession']);
+		$dealerTip->setDealerTip($data['dealerTip']);
+
+		$this->EntityManager->persist($dealerTip);
+		$this->EntityManager->flush($dealerTip);
 	}
 
-	public function update(DealerTipSession $dealerTip)
+	public function update($data, $strategies = null)
 	{
-		$this->connection-> updateDealerTip($dealerTip->getIdSession(), $dealerTip->getHour(), $dealerTip->getDealerTip(), $dealerTip->getId());
+		$dealerTip = parent::fetch($data['id']);
+		$dealerTip->setHour($data['hour']);
+		$dealerTip->setDealerTip($data['dealerTip']);
+
+		$this->EntityManager->persist($dealerTip);
+		$this->EntityManager->flush($dealerTip);		
 	}
 
-	public function delete(DealerTipSession $dealerTip)
+	public function delete($id, $entityObj = null)
 	{	
-		$this->connection->deleteDealerTip($dealerTip->getId());
+		$dealerTip = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $id);
+
+		$this->entityManager->remove($dealerTip);
+		$this->entityManager->flush();
 	}
 
+	/*
 	public function findOne($id)
 	{
 		$dealerTip = $this->connection->getDatosSessionDealerTipById($id);
@@ -38,7 +52,7 @@ class DealerTipSessionService {
 	public function find($idSession)
 	{
 		$datosDealerTips = $this->connection->getDatosSessionDealerTips($idSession);
-		$users = array();//
+		$dealerTips = array();//
 
 		foreach ($datosDealerTips as $dealerTip) 
 		{
@@ -48,5 +62,6 @@ class DealerTipSessionService {
 		}
 		return $dealerTips;
 	}
-
+	*/
+	
 }

@@ -1,49 +1,65 @@
 <?php
 Namespace Solcre\lmsuy\Service;
 
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\BuyinSession;
+Use \Solcre\lmsuy\Entity\BuyinSessionEntity;
+Use Doctrine\ORM\EntityManager;
 
-class BuyinSessionService {
+class BuyinSessionService extends BaseService {
 
-	protected $connection;
-	protected $sessionService;
-	protected $userSessionService;
-
-	public function __construct(ConnectLmsuy_db $connection, SessionService $sessionService, userSessionService $userSessionService)
+	public function __construct(EntityManager $em)
 	{
-		$this->connection = $connection;
-		$this->sessionService = $sessionService;
-		$this->userSessionService = $userSessionService;
+		parent::__construct($em);
 	}
 
-	public function add(BuyinSession $buyin)
+	public function add($data, $strategies = null)
 	{
+		$buyin = new BuyinSessionEntity();
+		$buyin->setHour($data['hour']);
+		$buyin->setAmountCash($data['amountCash']);
+		$buyin->setAmountCredit(['setAmountCredit']);
+		$buyin->setSessionUserId($data['IdUserSession']);
+		$buyin->setIsApproved($data['approved']);
 
-		$this->connection->insertBuyin($buyin->getHour(), $buyin->getAmountCash(), $buyin->getAmountCredit(), $buyin->getSessionUserId(), $buyin->getIsApproved(), '2');
+		$this->EntityManager->persist($buyin);
+		$this->EntityManager->flush($buyin);
 	}
 
-	public function update(BuyinSession $buyin)
+	public function update($data, $strategies = null)
 	{
-		$this->connection-> updateBuyin($buyin->getAmountCash(), $buyin->getAmountCredit(), '2', $buyin->getHour(), $buyin->getIsApproved(), $buyin->getId());
+		$buyin = parent::fetch($data['id']);
+				$buyin = new BuyinSessionEntity();
+		$buyin->setHour($data['hour']);
+		$buyin->setAmountCash($data['amountCash']);
+		$buyin->setAmountCredit(['setAmountCredit']);
+
+		$this->EntityManager->persist($buyin);
+		$this->EntityManager->flush($buyin);
+
 	}
 
 	public function delete(BuyinSession $buyin)
 	{	
-		$this->connection->deleteBuyin($buyin->getId());
+		$buyin = $this->entityManager->getReference('Solcre\lmsuy\Entity\BuyinSessionEntity', $id);
+
+		$this->entityManager->remove($buyin);
+		$this->entityManager->flush();
 	}
 
+	/*
 	public function findOne($id)
 	{
 		$buyin = $this->connection->getDatosSessionBuyinById($id);
-		$buyinObject = new BuyinSession($buyin->id, $_GET['id'], $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
+		$idSession = $this->connection->getIdSessionbyIdUserSession($buyin->session_user_id);
+		$buyinObject = new BuyinSession($buyin->id, $idSession, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
 		$this->findEntities($buyinObject);
 		return $buyinObject;
 	}
 
 	public function find($idSession)
 	{
+
 		$datosBuyins = $this->connection->getDatosSessionBuyins($idSession);
+
 		$buyins = array();
 
 		foreach ($datosBuyins as $buyin) 
@@ -54,6 +70,7 @@ class BuyinSessionService {
 
 			$buyins[] = $buyinObject; 
 		}
+
 		return $buyins;
 	}
 
@@ -61,11 +78,12 @@ class BuyinSessionService {
 		$idSession = $buyinSession->getIdSession();
 		$session = $this->sessionService->findOne($idSession);
 		$buyinSession->setSession($session);
-
 		$sessionUserId = $buyinSession->getSessionUserId();
 		$userSession = $this->userSessionService->findOne($sessionUserId);
 		$userSession->setSession($session);
 		$buyinSession->setUserSession($userSession);
+
 	}
+	*/
 }
 

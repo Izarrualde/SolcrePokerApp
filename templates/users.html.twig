@@ -30,17 +30,13 @@
 									<th> Acciones </th>
 								</thead> 
 								<tbody class="text-center">
-									<!--<?php 
-									if (sizeof($datosUsers)==0)
-									{
-										?>
+									{% if session.usersSession is empty %} 
 										<tr>
 											<td colspan="9"> sin registros </td>
 										</tr>
-									<?php
-									} else
-									{ -->
+									{% endif %}
 										{% for user in session.usersSession %} 
+											{% if user.endTime is empty  %}
 										 
 											<!-- if (empty($user->getEnd())) -->
 													<tr class="text-center">
@@ -52,15 +48,16 @@
 															
 														<td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
 														<td> {{ user.cashout|default("-") }}  </td>
-														<td> <a href="/lmsuy/actions/closeSession_twig.php?id={{ user.idSession }}&idUS={{ user.id }}&idU={{ user.idUser }}"> <i class="fas fa-sign-out-alt"></i> </a> <a href="/lmsuy/actions/editUser_twig.php?idU={{ user.idUser }}&id={{ user.idSession }}&idUS={{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/lmsuy/actions/deleteUser_twig.php?idUS={{ user.id }}&id={{ user.idSession }}"> <i class="fas fa-trash-alt"></i> </a> </td>
+														<td> <a href="/userssession/{{ user.id }}/formclose"> <i class="fas fa-sign-out-alt"></i> </a> <a href="/sessions/{{ user.idSession }}/usersSession/{{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/{{ user.idSession }}/usersSession/{{ user.id }}/remove"> <i class="fas fa-trash-alt"></i> </a> </td>
 												
 													</tr> 
-
+											{% endif %}
+							
 									{% endfor %}
 											
 												<tr>
 													<td colspan="9">
-													<a href="/lmsuy/newusers_twig.php?id={{ session.idSession }}" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+													<a href="/{{ session.idSession }}/usersSession/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 													</td>
 												</tr>
 							
@@ -102,10 +99,7 @@
 									} else
 									{ -->
 										{% for user in session.usersSession %} 
-										<!-- {
-											if (!empty($user->getEnd()))
-											{
-												?> -->
+											{% if user.endTime is not empty  %}
 													<tr class="text-center">
 														<td>
 															{{ user.user.name }} {{ user.user.lastname }}
@@ -118,11 +112,9 @@
 												        </td>
 
 														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>
-												
 													</tr>
+											{% endif %}
 										{% endfor %}
-
-							
 								</tbody>  
 							</table>
 						</article>	

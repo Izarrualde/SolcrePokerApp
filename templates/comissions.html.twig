@@ -60,7 +60,7 @@
 											<tr>
 												<td> {{ comission.hour|date('H:i') }} </td>
 												<td> {{ comission.comission }} </td>
-												<td> <a href="/lmsuy/actions/editComission_twig.php?idC={{ comission.id }}&id={{ comission.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/lmsuy/actions/deleteComission_twig.php?idC={{ comission.id }}&id={{ comission.idSession }}"> <i class="fas fa-trash-alt"></i> </a></td> 
+												<td> <a href="/sessions/{{ comission.idSession }}/comissions/{{ comission.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/{{ comission.idSession }}/comissions/{{ comission.id }}/remove"> <i class="fas fa-trash-alt"></i> </a></td> 
 
 
 													<!-- <a href="javascript:void(0);" onclick="eliminar('actions/deleteComission.php?id= <?php echo $comission->getId(); ?>');"> <i class="fas fa-trash-alt"> </i> </a></td>-->
@@ -75,7 +75,7 @@
 	
 											<tr>
 												<td colspan="8">
-												<a href="/lmsuy/newcomissions_twig.php?id={{ session.idSession }}" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+												<a href="/{{ session.idSession }}/comissions/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 												</td>
 											</tr>
 
