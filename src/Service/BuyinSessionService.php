@@ -11,6 +11,11 @@ class BuyinSessionService extends BaseService {
 		parent::__construct($em);
 	}
 
+	public function fetchAllBuyins($sessionId)
+    {
+        return $this->repository->fetchAll($sessionId);
+    }
+
 	public function add($data, $strategies = null)
 	{
 		$buyin = new BuyinSessionEntity();
@@ -84,4 +89,3 @@ class BuyinSessionService extends BaseService {
 	}
 	*/
 }
-

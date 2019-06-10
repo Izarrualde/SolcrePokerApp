@@ -3,6 +3,7 @@ Namespace Solcre\lmsuy\Controller;
 
 use \Solcre\lmsuy\Service\DealerTipSessionService;
 use \Solcre\lmsuy\Service\ServiceTipSessionService;
+use \Solcre\lmsuy\Service\SessionService;
 use \Solcre\lmsuy\Entity\DealerTipSessionEntity;
 use \Solcre\lmsuy\Entity\ServiceTipSessionEntity;
 use Doctrine\ORM\EntityManager;
@@ -82,14 +83,14 @@ class TipSessionController
             'idSession' => $post['idSession'],
             'hour' => $post['hour'],
             'dealerTip' => $post['dealerTip']
-        ]
+        ];
 
         $postServiceTip = [
             'id' => $post['id'],
             'idSession' => $post['idSession'],
             'hour' => $post['hour'],
             'serviceTip' => $post['serviceTip']
-        ]
+        ];
 
         $datosUI = array();
         if (is_array($post))

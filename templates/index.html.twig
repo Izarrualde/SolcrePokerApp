@@ -40,7 +40,7 @@
                             <tbody>
                                 {% for session in sessions %}
                                     <tr class="{{ session.endTime ? '' : 'active'}}">
-                                            <td>{{ session.idSession }}</td>
+                                            <td>{{ session.id }}</td>
                                             <td>{{ session.created_at|date("d/m/Y") }}</td>
                                             <td>{{ session.created_at|date('l')  }}</td>
                                             <td>{{ session.description|default("-") }}</td>
@@ -49,13 +49,13 @@
                                             <td>{{ session.seats }}</td> 
                                             <td>{{ session.endTime ? session.endTime|date('H:i') : "-" }}</td>
                                             <td> 
-                                                <a href="/sessions/{{ session.idSession }}/usersSession/" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
-                                                <a href="/sessions/{{ session.idSession }}/buyins/" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
-                                                <a href="/sessions/{{ session.idSession }}/tips/" class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
-                                                <a href="/sessions/{{ session.idSession }}/comissions/" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-                                                <a href="/sessions/{{ session.idSession }}"> <i class="fas fa-pencil-alt"> </i> </a>
-                                                <a href="/sessions/{{ session.idSession }}/remove"> <i class="fas fa-trash-alt"></i> </a>
-                                                <a href="actions/revisionsession_twig.php?id={{ session.idSession }}"> <i class="far fa-eye"></i></a>
+                                                <a href="/sessions/{{ session.id }}/usersSession/" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
+                                                <a href="/sessions/{{ session.id }}/buyins/" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
+                                                <a href="/sessions/{{ session.id }}/tips/" class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
+                                                <a href="/sessions/{{ session.id }}/comissions/" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
+                                                <a href="/sessions/{{ session.id }}"> <i class="fas fa-pencil-alt"> </i> </a>
+                                                <a href="/sessions/{{ session.id }}/remove"> <i class="fas fa-trash-alt"></i> </a>
+                                                <a href="actions/revisionsession_twig.php?id={{ session.id }}"> <i class="far fa-eye"></i></a>
                                             </td>
                                     {% endfor %}
                                     </tr>

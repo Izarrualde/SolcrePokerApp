@@ -8,12 +8,11 @@ class ComissionSessionService extends BaseService {
 
 	public function __construct(EntityManager $em)
 	{
-		parent::_construct($em);
+		parent::__construct($em);
 	}
 
 	public function add($data, $strategies = null)
 	{
-		/*$this->connection->insertComission($comission->getHour(), $comission->getComission(), $comission->getIdSession());*/
 		$comission = new ComissionSessionEntity();
 		$comission->setIdSession($data['idSession']);
 		$comission->setHour($data['hour']);
@@ -33,7 +32,7 @@ class ComissionSessionService extends BaseService {
 		$this->EntityManager->flush($comission);
 	}
 
-	public function delete($id, entityObj = null)
+	public function delete($id, $entityObj = null)
 	{	
 		$comission = $this->entityManager->getReference('Solcre\lmsuy\Entity\ComissionSessionEntity', $id);
 		$this->EntityManager->remove($comission);

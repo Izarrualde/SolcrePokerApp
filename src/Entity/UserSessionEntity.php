@@ -1,6 +1,7 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
@@ -57,6 +58,8 @@ class UserSessionEntity
 
 
 	protected $user;
+
+	protected $buyins;
 
 
 	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)

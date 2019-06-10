@@ -4,7 +4,7 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BuyinSessionRepository")
  * @ORM\Table(name="session_buyins")
 */
 class BuyinSessionEntity
@@ -25,8 +25,10 @@ class BuyinSessionEntity
 
 
 	/**
-	 * @ORM\Column(type="integer", name="session_user_id")
-	 */
+	* @ORM\Column(type="integer", name="session_user_id")
+    * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\UserSessionEntity", inversedBy="buyins")
+    * @ORM\JoinColumn(name="session_user_id", referencedColumnName="id")
+    */
 	protected $sessionUserId;
 
 

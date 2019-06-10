@@ -2,6 +2,7 @@
 Namespace Solcre\lmsuy\Controller;
 
 use \Solcre\lmsuy\Service\ComissionSessionService;
+use \Solcre\lmsuy\Service\SessionService;
 use \Solcre\lmsuy\Entity\ComissionSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
@@ -12,10 +13,10 @@ class ComissionSessionController
     protected $comissionSessionService;
     protected $sessionService;
 
-	public function __construct(Twig $view, $em EntityManager) {
+	public function __construct(Twig $view, EntityManager$em) {
         $this->view = $view;
     	$this->comissionSessionService = new ComissionSessionService($em);
-        $this->sessionService = new sessionService($em); 
+        $this->sessionService = new SessionService($em); 
     }
 
     public function listAll($request, $response, $args) {

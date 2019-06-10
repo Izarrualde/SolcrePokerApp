@@ -1,6 +1,8 @@
 <?php
 Namespace Solcre\lmsuy\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="session_dealer_tips")

@@ -8,7 +8,7 @@ use Solcre\lmsuy\Exception\InsufficientBuyinException;
 use Solcre\lmsuy\Exception\ComissionAlreadyAddedException;
 use Solcre\lmsuy\Exception\DealerTipAlreadyAddedException;
 use Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
-
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
@@ -22,11 +22,11 @@ class SessionEntity
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-	protected $idSession; 
+	protected $id; 
 
 
 	/**
-	 * @ORM\Column(type="datetime")
+	 * @ORM\Column(type="datetime", name="created_at")
 	 */
 	protected $date;
 
@@ -81,9 +81,9 @@ class SessionEntity
 	public $sessionBuyins = array();
 
 
-	public function __construct($idSession=null, $date=null, $title="", $description="", $photo=null, $seats=null, $seatsWaiting=null, $reserveWaiting=null, $startTime=null, $startTimeReal=null, $endTime=null)
+	public function __construct($id=null, $date=null, $title="", $description="", $photo=null, $seats=null, $seatsWaiting=null, $reserveWaiting=null, $startTime=null, $startTimeReal=null, $endTime=null)
 	{
-		$this->setIdSession($idSession);
+		$this->setId($id);
 		$this->setDate($date);
 		$this->setTitle($title);
 		$this->setDescription($description);
@@ -102,14 +102,14 @@ class SessionEntity
 	}
 
 
-	public function getIdSession()
+	public function getId()
 	{
-		return $this->idSession;
+		return $this->id;
 	}
 
-	public function setIdSession($idSession)
+	public function setId($id)
 	{
-		$this->idSession=$idSession;
+		$this->id=$id;
 		return $this;
 	}
 
@@ -316,10 +316,10 @@ class SessionEntity
 
 	protected function getDealerTipIds() 
 	{
-		return array_map (function(DealerTipSession $tip) { return $tip->getId();}, $this->sessionDealerTips);
+		return array_map (function(DealerTipSessionEntity $tip) { return $tip->getId();}, $this->sessionDealerTips);
 	}
 
-	protected function isAddedDealerTip(DealerTipSession $tip)
+	protected function isAddedDealerTip(DealerTipSessionEntity $tip)
 	{
 		$idsDealerTips = $this->getDealerTipIds();
 		return in_array($tip->getId(), $idsDealerTips);
@@ -333,7 +333,7 @@ class SessionEntity
 		}
 	}
 
-	public function addDealerTip(DealerTipSession $tip) 
+	public function addDealerTip(DealerTipSessionEntity $tip) 
 	{
 		if ($this->isAddedDealerTip($tip)) 
 		{
@@ -361,14 +361,14 @@ class SessionEntity
 
 	protected function getServiceTipIds() 
 	{
-		return array_map (function(ServiceTipSession $tip) {
+		return array_map (function(ServiceTipSessionEntity $tip) {
 			return $tip->getId();
 
 		}, $this->sessionServiceTips);
 	}
 
 
-	protected function isAddedServiceTip(ServiceTipSession $tip)
+	protected function isAddedServiceTip(ServiceTipSessionEntity $tip)
 	{
 		$idsServiceTips = $this->getServiceTipIds();
 		return in_array($tip->getId(), $idsServiceTips);
@@ -381,7 +381,7 @@ class SessionEntity
 		}
 	}
 
-	public function addServiceTip(ServiceTipSession $tip) 
+	public function addServiceTip(ServiceTipSessionEntity $tip) 
 	{
 		if ($this->isAddedServiceTip($tip)) 
 		{
@@ -408,14 +408,14 @@ class SessionEntity
 
 	protected function getComissionIds() 
 	{
-		return array_map (function(ComissionSession $comission) {
+		return array_map (function(ComissionSessionEntity $comission) {
 			return $comission->getId();
 
 		}, $this->sessionComissions);
 	}
 
 
-	protected function isAddedComission(ComissionSession $comission)
+	protected function isAddedComission(ComissionSessionEntity $comission)
 	{
 		$ComissionsIds = $this->getComissionIds();
 		return in_array($comission->getId(), $ComissionsIds);
@@ -428,7 +428,7 @@ class SessionEntity
 		}
 	}
 
-	protected function addComission(ComissionSession $comission) 
+	protected function addComission(ComissionSessionEntity $comission) 
 	{
 		if ($this->isAddedComission($comission)) {
 			throw new ComissionAlreadyAddedException();	
@@ -441,12 +441,12 @@ class SessionEntity
 
 	private function getUserIds() 
 	{
-		return array_map(function (UserSession $user) {  
+		return array_map(function (UserSessionEntity $user) {  
 		    		return $user->getId();
 		}, $this->sessionUsers);
 	}
 
-	protected function isAdded(UserSession $user) 
+	protected function isAdded(UserSessionEntity $user) 
 	{
 		$usersIds = $this->getUserIds();
 		return in_array($user->getId(), $usersIds);
@@ -460,7 +460,7 @@ class SessionEntity
 		}
 	}
 		
-	public function addUser(UserSession $user) 
+	public function addUser(UserSessionEntity $user) 
 	{
 		if (($this->getSeats() - $this->getConfirmedPlayers()) == 0) 
 		{
@@ -480,7 +480,7 @@ class SessionEntity
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-	public function addBuyin(BuyinSession $buyin)
+	public function addBuyin(BuyinSessionEntity $buyin)
 	{
 		if (!$this->isPlayer($buyin->getIdPlayer())) 
 		{
@@ -550,7 +550,7 @@ class SessionEntity
 
 	public function toArray(){
 		return  [
-			'idSession' => $this->getIdSession(),
+			'id' => $this->getId(),
 			'created_at' => $this->getDate(),
 			'title' => $this->getTitle(),
 			'description' => $this->getDescription(),

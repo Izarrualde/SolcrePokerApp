@@ -2,6 +2,9 @@
 Namespace Solcre\lmsuy\Controller;
 
 use \Solcre\lmsuy\Service\BuyinSessionService;
+use \Solcre\lmsuy\Service\SessionService;
+use \Solcre\lmsuy\Service\UserSessionService;
+use \Solcre\lmsuy\Service\UserService;
 use \Solcre\lmsuy\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
@@ -25,7 +28,7 @@ class BuyinSessionController
     public function listAll($request, $response, $args) {
         $idSession = $args['idSession'];
         $template = 'buyins.html.twig';
-    	$datosBuyins = $this->buyinSessionService->fetchAll($idSession);
+    	$datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
         $session = $this->sessionService->fetchOne($idSession);
         $buyins = array(); //dejo cada buyin como un array para entregarlo a datosUI en ese formato
     	$datosUI = array();
@@ -63,7 +66,7 @@ class BuyinSessionController
             $this->buyinSessionService->add($post);  
             $template = 'buyins.html.twig';
             $message = 'El buyin se agregó exitosamente';
-            $datosBuyins = $this->buyinSessionService->fetchAll($buyin['idSession']);
+            $datosBuyins = $this->buyinSessionService->fetchAllBuyins($buyin['idSession']);
 
         //extraigo datos de la bdd
 
@@ -112,7 +115,7 @@ class BuyinSessionController
 
         //extraigo datos de la BD
         $session = $this->sessionService->fetchOne($post['idSession']);
-        $datosBuyins = $this->buyinSessionService->fetchAll($post['idSession']);
+        $datosBuyins = $this->buyinSessionService->fetchAllBuyins($post['idSession']);
         $buyins = array();
         $datosUI = array();
         foreach ($datosBuyins as $buyin) {
@@ -141,7 +144,7 @@ class BuyinSessionController
         //extraigo datos de la DB
         $session = $this->sessionService->fetchOne($idSession);
 
-        $datosBuyins = $this->buyinSessionService->fetchAll($idSession);
+        $datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
         $buyins = array();
 
         foreach ($datosBuyins as $buyin)  {

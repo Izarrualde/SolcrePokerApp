@@ -11,7 +11,7 @@ class DealerTipSessionService extends BaseService {
 		parent::__construct($em);
 	}
 
-	public function add(DealerTipSession $dealerTip)
+	public function add($data, $strategies = null)
 	{
 		$dealerTip = new DealerTipSession();
 		$dealerTip->setHour($data['hour']);

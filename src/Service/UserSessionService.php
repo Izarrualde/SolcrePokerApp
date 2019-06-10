@@ -25,7 +25,7 @@ class UserSessionService extends BaseService {
 		$userSession->setStart($data['start']);
 		$userSession->setEnd($data['end']);
 		$userSession->setIsApproved($data['isApproved']);
-		$userSession->setSession() ???? 
+		//$userSession->setSession(); // como?
 		$userSession->setIdSession($data['idSession']);
 		$userSession->setIdUser($data['idUser']);
 
@@ -41,7 +41,7 @@ class UserSessionService extends BaseService {
 		$userSession->setStart($data['start']);
 		$userSession->setEnd($data['end']);
 		$userSession->setIsApproved($data['isApproved']);
-		$userSession->setSession() ???? 
+		// $userSession->setSession(); // como? 
 		$userSession->setIdSession($data['idSession']);
 		$userSession->setIdUser($data['idUser']);
 

@@ -2,9 +2,11 @@
 Namespace Solcre\lmsuy\Controller;
 
 use Psr\Container\ContainerInterface;
-Use \Solcre\lmsuy\Service\SessionService;
-Use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-Use \Solcre\lmsuy\Entity\SessionEntity;
+use \Solcre\lmsuy\Service\SessionService;
+use \Solcre\lmsuy\MySQL\ConnectLmsuy_db;
+use \Solcre\lmsuy\Entity\SessionEntity;
+use Doctrine\ORM\EntityManager;
+use Slim\Views\Twig;
 
 class SessionController
 {
@@ -34,6 +36,7 @@ class SessionController
 	    $session = $this->sessionService->fetchOne($idSession);
         $datosUI = array();
 		$datosUI['session'] = $session->toArray();
+        $datosUI['breadcrumb'] = 'Editar Sesión';
 
     	return $this->view->render($response, 'editSession.html.twig', $datosUI);
     }
