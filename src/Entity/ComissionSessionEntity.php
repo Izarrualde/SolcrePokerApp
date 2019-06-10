@@ -3,7 +3,7 @@ Namespace Solcre\lmsuy\Entity;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
- * @ORM\Table(name="users")
+ * @ORM\Table(name="session_comissions")
 */
 class ComissionSessionEntity
 {

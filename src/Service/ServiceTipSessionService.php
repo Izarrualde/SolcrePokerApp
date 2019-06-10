@@ -21,7 +21,7 @@ class ServiceTipSessionService extends BaseService {
 		$this->EntityManager->flush($serviceTip);
 	}
 
-	public function update(ServiceTipSession $serviceTip)
+	public function update($data, $strategies = null)
 	{
 		$serviceTip = parent::fetch($data['id']);
 		$serviceTip->setHour($data['hour']);

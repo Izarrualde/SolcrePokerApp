@@ -6,7 +6,6 @@ Use Doctrine\ORM\EntityManager;
 
 class DealerTipSessionService extends BaseService {
 
-
 	public function __construct(EntityManager $em)
 	{
 		parent::__construct($em);

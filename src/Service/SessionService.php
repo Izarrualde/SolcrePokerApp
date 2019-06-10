@@ -13,11 +13,11 @@ class SessionService extends BaseService {
 
 	public function add($data, $strategies = null)
 	{
-		$this->connection->insertSession($session->getDate(), $session->getTitle(), $session->getDescription(), $session->getSeats(), $session->getStartTime(), $session->getStartTimeReal(), $session->getEndTime());
+		// $this->connection->insertSession($session->getDate(), $session->getTitle(), $session->getDescription(), $session->getSeats(), $session->getStartTime(), $session->getStartTimeReal(), $session->getEndTime());
 
 		$session = new SessionEntity();
 		$session->setDate($data['date']);
-		$session->setTitle($data['title'])''
+		$session->setTitle($data['title']);
 		$session->setDescription($data['description']);
 		$session->setSeats($data['seats']);
 		$session->setStartTime($data['startTime']);
@@ -28,11 +28,11 @@ class SessionService extends BaseService {
 		$this->EntityManager->flush($session);
 	}
 
-	public function update(SessionEntity $session)
+	public function update($data, $strategies = null)
 	{
 		$session = parent::fetch($data['id']);
 		$session->setDate($data['date']);
-		$session->setTitle($data['title'])''
+		$session->setTitle($data['title']);
 		$session->setDescription($data['description']);
 		$session->setSeats($data['seats']);
 		$session->setStartTime($data['startTime']);

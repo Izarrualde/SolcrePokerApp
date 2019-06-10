@@ -177,7 +177,7 @@ class UserSessionController
         $post = $request->getParsedBody();
         $userSessionObject = $this->userSessionService->fetchOne($id);
         $idSession = $userSessionObject->getIdSession();
-        $this->userSessionService->close($userSessionObject, $post['cashout'], $post['end']);
+        $this->userSessionService->close($post);
         $message = 'El usuario ha salido de la sesión';
         $template = 'users.html.twig'; 
 

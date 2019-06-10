@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
- * @ORM\Table(name="users")
+ * @ORM\Table(name="session_buyins")
 */
 class BuyinSessionEntity
 {

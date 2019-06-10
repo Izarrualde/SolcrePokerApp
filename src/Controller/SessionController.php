@@ -11,13 +11,13 @@ class SessionController
     protected $view;
     protected $sessionService;
 
-	public function __construct(\Slim\Views\Twig $view) {
+	public function __construct(Twig $view, EntityManager $em) {
         $this->view = $view;
-    	$this->sessionService = new SessionService(new ConnectLmsuy_db()); 
+    	$this->sessionService = new SessionService($em); 
     }
 
     public function listAll($request, $response, $args) {
-    	$datosSessions = $this->sessionService->find();
+    	$datosSessions = $this->sessionService->fetchAll();
     	$sessions = array();
         $datosUI = array();
 
@@ -31,7 +31,7 @@ class SessionController
 
     public function list($request, $response, $args) {
 	    $idSession = $args['idSession'];
-	    $session = $this->sessionService->findOne($idSession);
+	    $session = $this->sessionService->fetchOne($idSession);
         $datosUI = array();
 		$datosUI['session'] = $session->toArray();
 
@@ -43,11 +43,10 @@ class SessionController
     	$datosUI = array();
     	if (is_array($post))
     	{
-    		$sessionObject = new SessionEntity(null, $post['date'], $post['title'], $post['description'], null /*photo*/, $post['seats'], null /*seatswaiting*/ , null /*reservewainting*/, $post['startTime'], $post['startTimeReal'], $post['endTime']);
-	   	 	$this->sessionService->add($sessionObject);
+    		$this->sessionService->add($post);
    			$message = 'La sesión se agregó exitosamente';
             $template = 'index.html.twig';
-			$datosSessions = $this->sessionService->find();
+			$datosSessions = $this->sessionService->fetchAll();
             $sessions = array();
             $datosUI = array();
 
@@ -71,10 +70,9 @@ class SessionController
     	$post = $request->getParsedBody();
 
 	    //$idSession = $args['idSession'];
-		$sessionObject = new SessionEntity($post['idSession'], $post['created_at'], $post['title'], $post['description'], null /*photo*/, $post['count_of_seats'], null /*seatswaiting*/ , null /*reservewainting*/, $post['created_at'], $post['real_start_at'], $post['end_at']);
-	    $this->sessionService->update($sessionObject);
+	    $this->sessionService->update($post);
    		$message = 'La Sesión se actualizó exitosamente';
-		$datosSessions = $this->sessionService->find();
+		$datosSessions = $this->sessionService->fetchAll();
         $sessions = array();
         $datosUI = array();
 
@@ -91,9 +89,9 @@ class SessionController
     public function delete($request, $response, $args) {
 	    $idSession = $args['idSession'];
 	    //if (is_array($_GET))
-	    $this->sessionService->delete($this->sessionService->findOne($idSession));
+	    $this->sessionService->delete($idSession);
 	    $message = 'La Sesión se eliminó exitosamente';
-		$datosSessions = $this->sessionService->find();
+		$datosSessions = $this->sessionService->fetchAll();
     	$datosUI = array();
         $sessions = array();
 

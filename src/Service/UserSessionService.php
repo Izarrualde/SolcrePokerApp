@@ -2,6 +2,7 @@
 Namespace Solcre\lmsuy\Service;
 
 Use \Solcre\lmsuy\Entity\UserSessionEntity;
+Use \Solcre\lmsuy\Entity\UserEntity;
 Use Doctrine\ORM\EntityManager;
 
 class UserSessionService extends BaseService {
@@ -32,7 +33,7 @@ class UserSessionService extends BaseService {
 		$this->EntityManager->flush($userSession);
 	}
 
-	public function update(UserSession $userSession)
+	public function update($data, $strategies = null)
 	{
 		$userSession = parent::fetch($data['id']);
 		$userSession->setAccumulatedPoints($data['accumulatedPoints']);
@@ -57,11 +58,26 @@ class UserSessionService extends BaseService {
 	}
 
 
-	hacer
-	*********************************
-	public function close(UserSession $userSession, $cashout, $end)
+	public function close($data, $strategies = null)
 	{
 		$this->connection->closeUserSession($userSession->getId(), $userSession->getUser()->getId(), $cashout, $userSession->getStart(), $end);
+
+		$userSession = parent::fetch($data['id']);
+		$userSession->setEnd($data['end']);
+		$userSession->setCashout($data['cashout']);
+
+		$date1=date_create($userSession->getEndTime());
+		$date2=date_create($userSession->getStartTime());
+		$minutes=date_diff($date1, $date2)->format('%i');
+		$roundedMinutes=floor((($minutes/60)/.25))*.25;
+		$hours=date_diff($date1, $date2)->format('%h') + $roundedMinutes;
+
+		$user = parent::fetch($data['idUser']);
+		$user->setHours($user->getHours()+$hours);
+		// $sql="UPDATE users SET hours=hours+".$hours." WHERE id='$idUser'";
+
+		$this->EntityManager->persist($userSession);
+		$this->EntityManager->flush($userSession);
 	}
 
 	/*

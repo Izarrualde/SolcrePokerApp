@@ -81,21 +81,25 @@ $container->set('view', function ($container) {
 
 $container->set('SessionController', function($c) {
     $view = $c->get("view"); // retrieve the 'view' from the container
-    return new SessionController($view);
+    $em = $c->get(EntityManager::class);
+    return new SessionController($view, $em);
 });
 $container->set('BuyinSessionController', function($c) {
     $view = $c->get("view"); // retrieve the 'view' from the container
-    return new BuyinSessionController($view);
+    $em = $c->get(EntityManager::class);
+    return new BuyinSessionController($view, $em);
 });
 
 $container->set('ComissionSessionController', function($c) {
     $view = $c->get("view"); // retrieve the 'view' from the container
-    return new ComissionSessionController($view);
+    $em = $c->get(EntityManager::class);
+    return new ComissionSessionController($view, $em);
 });
 
 $container->set('TipSessionController', function($c) {
     $view = $c->get("view"); // retrieve the 'view' from the container
-    return new TipSessionController($view);
+    $em = $c->get(EntityManager::class);
+    return new TipSessionController($view, $em);
 });
 
 $container->set('UserController', function($c) {
@@ -106,7 +110,8 @@ $container->set('UserController', function($c) {
 
 $container->set('UserSessionController', function($c) {
     $view = $c->get("view"); // retrieve the 'view' from the container
-    return new UserSessionController($view);
+    $em = $c->get(EntityManager::class);
+    return new UserSessionController($view, $em);
 });
 
 // Add route

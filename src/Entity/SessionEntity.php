@@ -12,7 +12,7 @@ use Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
- * @ORM\Table(name="users")
+ * @ORM\Table(name="sessions")
 */
 class SessionEntity 
 {

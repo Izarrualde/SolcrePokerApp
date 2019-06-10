@@ -27,17 +27,15 @@ class BuyinSessionService extends BaseService {
 	public function update($data, $strategies = null)
 	{
 		$buyin = parent::fetch($data['id']);
-				$buyin = new BuyinSessionEntity();
 		$buyin->setHour($data['hour']);
 		$buyin->setAmountCash($data['amountCash']);
 		$buyin->setAmountCredit(['setAmountCredit']);
 
 		$this->EntityManager->persist($buyin);
 		$this->EntityManager->flush($buyin);
-
 	}
 
-	public function delete(BuyinSession $buyin)
+	public function delete($id, $entityObj = null)
 	{	
 		$buyin = $this->entityManager->getReference('Solcre\lmsuy\Entity\BuyinSessionEntity', $id);
 
