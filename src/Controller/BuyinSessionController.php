@@ -30,7 +30,7 @@ class BuyinSessionController
         $template = 'buyins.html.twig';
 
     	$datosBuyins = $this->buyinSessionService->fetchAllBuyins(array('session' => $idSession));
-        echo "hola4sr44ssd";
+        
 
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $buyins = array(); //dejo cada buyin como un array para entregarlo a datosUI en ese formato
@@ -94,7 +94,7 @@ class BuyinSessionController
     {
         $idSession = $args['idSession'];
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
-        $datosUsersSession = $this->userSessionService->fetchAll(array('session_id' => $idSession));
+        $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
         $usersSession = array();
         foreach ($datosUsersSession as $userSessionObject) {
             $usersSession[] = $userSessionObject->toArray();

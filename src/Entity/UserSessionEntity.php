@@ -18,16 +18,13 @@ class UserSessionEntity
      */
 	protected $id;
 
+
 	/**
 	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionUsers")
 	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
 	protected $session;
 
-    /**
- 	 * @ORM\Column(type="integer", name="session_id")
- 	 */
-	protected $idSession;
 
     /**
  	 * @ORM\Column(type="integer", name="user_id")
@@ -78,9 +75,6 @@ class UserSessionEntity
      * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\BuyinSessionEntity", mappedBy="userSession")
      */
 	protected $buyins;
-
-
-
 
 
 	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
@@ -192,10 +186,6 @@ class UserSessionEntity
 		return $this;
 	}
 
-	public function getIdSession()
-	{
-		return  ($this->session instanceof SessionEntity) ? $this->session->getIdSession() : null;
-	}
 
 	public function getCashin() 
 	{

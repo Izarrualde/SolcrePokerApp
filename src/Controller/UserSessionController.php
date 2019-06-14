@@ -23,6 +23,7 @@ class UserSessionController
     }
 
     public function listAll($request, $response, $args) {
+
         
         $idSession = $args['idSession'];
         $template = 'users.html.twig';

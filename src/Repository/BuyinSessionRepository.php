@@ -19,10 +19,10 @@ class BuyinSessionRepository extends BaseRepository {
        $qb->join(UserSessionEntity::class, 'u', Join::WITH, 'b.sessionUserId = u.id');
 
 
-       $qb->where('u.idSession=:param');
+       $qb->where('u.session=:param');
 
-       $qb->setParameter('param', $sessionId);
-       echo "hola";
+       $qb->setParameter('param', 15);
+       
        //$qb->addOrderBy(‘c.order’, ‘ASC’);
        //$qb->addOrderBy(‘p.id’, ‘ASC’);
        return $qb->getQuery()->getResult();
