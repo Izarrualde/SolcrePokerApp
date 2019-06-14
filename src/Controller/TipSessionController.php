@@ -61,7 +61,7 @@ class TipSessionController
         if (isset($args['idDealerTip'])) 
         {
             $id = $args['idDealerTip'];
-            $dealerTip = $this->dealerTipSessionService->fetchOne(array('session_id' => $idSession));
+            $dealerTip = $this->dealerTipSessionService->fetchOne(array('session' => $idSession));
             $template = 'editDealerTip.html.twig';
             $datosUI['dealerTip'] = $dealerTip->toArray();
             $datosUI['breadcrumb'] = 'Editar DealerTip';
@@ -69,7 +69,7 @@ class TipSessionController
         elseif (isset($args['idServiceTip']))
         {
             $id = $args['idServiceTip'];
-            $serviceTip = $this->serviceTipSessionService->fetchOne(array('session_id' => $idSession));
+            $serviceTip = $this->serviceTipSessionService->fetchOne(array('session' => $idSession));
             $template = 'editServiceTip.html.twig';
             $datosUI['serviceTip'] = $serviceTip->toArray();
             $datosUI['breadcrumb'] = 'Editar ServiceTip';
@@ -107,9 +107,9 @@ class TipSessionController
             //extraigo datos de la bdd
             $idSession = $post['idSession'];
             $session = $this->sessionService->fetchOne(array('id' => $idSession));
-            $datosDealerTips = $this->dealerTipSessionService->fetchAll(array('session_id' => $idSession));
+            $datosDealerTips = $this->dealerTipSessionService->fetchAll(array('session' => $idSession));
             $dealerTips = array();
-            $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session_id' => $idSession));
+            $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session' => $idSession));
             $serviceTips = array();
 
             foreach ($datosDealerTips as $dealerTip)
