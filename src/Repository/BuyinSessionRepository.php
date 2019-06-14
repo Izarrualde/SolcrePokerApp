@@ -14,6 +14,7 @@ class BuyinSessionRepository extends BaseRepository {
 
        $qb = $this->_em->createQueryBuilder();
        $qb->select('b');
+       var_dump( $this->_entityName);
        $qb->from($this->_entityName, 'b');
 
        $qb->join(UserSessionEntity::class, 'u', Join::WITH, 'b.userSession = u.id');

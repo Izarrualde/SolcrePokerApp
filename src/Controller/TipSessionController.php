@@ -205,9 +205,9 @@ class TipSessionController
         }
             //extraigo datos de la DB
             $session = $this->sessionService->fetchOne(array('id' => $idSession));
-            $datosDealerTips = $this->dealerTipSessionService->fetchAll(array('session_id' => $idSession));
+            $datosDealerTips = $this->dealerTipSessionService->fetchAll(array('session' => $idSession));
             $dealerTips = array();
-            $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session_id' => $idSession));
+            $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session' => $idSession));
             $serviceTips = array();
             foreach ($datosDealerTips as $dealerTip)
             {
