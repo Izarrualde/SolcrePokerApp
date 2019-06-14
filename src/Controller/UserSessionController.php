@@ -23,11 +23,13 @@ class UserSessionController
     }
 
     public function listAll($request, $response, $args) {
+        
         $idSession = $args['idSession'];
         $template = 'users.html.twig';
         $datosUI = array();
-    	$datosUsersSession = $this->userSessionService->fetchAll($idSession);
-        $session = $this->sessionService->fetchOne($idSession);
+    	$datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
+        $session = $this->sessionService->fetchOne(array('session' => $idSession));
+
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSessionObject) {
@@ -43,7 +45,7 @@ class UserSessionController
 
     public function list($request, $response, $args) {
 	    $id = $args['idusersession'];
-	    $userSession = $this->userSessionService->fetchOne($id);
+	    $userSession = $this->userSessionService->fetchOne(array('id' => $id));
         $template = 'editUser.html.twig';
         $datosUI = array();
 
@@ -57,12 +59,13 @@ class UserSessionController
 //ver como convertir esta function
     public function add($request, $response, $args) {
         $post = $request->getParsedBody();
+        $idSession = $post['idSession'];
 
         $datosUI = array();
         
         if (is_array($post))
         {
-            $session = $this->sessionService->fetchOne($post['idSession']);
+            $session = $this->sessionService->fetchOne(array('session' => $idSession));
             $res = array();
             foreach ($post['user_id'] as $user_id) 
             {
@@ -76,8 +79,8 @@ class UserSessionController
 
             //extraigo datos de la bdd
             $datosUI = array();
-            $datosUsersSession = $this->userSessionService->find($post['idSession']);
-            $session = $this->sessionService->findOne($post['idSession']);
+            $datosUsersSession = $this->userSessionService->find(array('session' => $idSession));
+            $session = $this->sessionService->findOne(array('session' => $idSession));
             $usersSession = array();
 
             foreach ($datosUsersSession as $userSessionObject) {
@@ -95,7 +98,7 @@ class UserSessionController
     public function form($request, $response, $args) 
     {
         $idSession = $args['idSession'];
-        $session = $this->sessionService->fetchOne($idSession);
+        $session = $this->sessionService->fetchOne(array('session' => $idSession));
         $datosUsers = $this->userService->fetchAll();
         $users = array();
         foreach ($datosUsers as $userObject) 
@@ -113,6 +116,7 @@ class UserSessionController
 
     public function update($request, $response, $args) {
         $post = $request->getParsedBody();
+        $idSession = $post['idSession'];
         //$idSession = $args['idSession'];
         // $userSessionObject = new UserSession($post['id'], $this->sessionService->findOne($post['idSession']), $post['idUser'], $post['approved'], $post['accumulatedPoints'], $post['cashout'], $post['start'], $post['end']);
         $this->userSessionService->update($post);
@@ -120,8 +124,8 @@ class UserSessionController
         $template = 'users.html.twig';
         //extraigo datos de la bdd
         $datosUI = array();
-        $datosUsersSession = $this->userSessionService->fetchAll($post['idSession']);
-        $session = $this->sessionService->fetchOne($post['idSession']);
+        $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
+        $session = $this->sessionService->fetchOne(array('session' => $idSession));
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSessionObject) {
@@ -144,8 +148,8 @@ class UserSessionController
 
         //BUSQUEDA DE DATOS PARA LA UI
         $datosUI = array();
-        $datosUsersSession = $this->userSessionService->fetchAll($idSession);
-        $session = $this->sessionService->fetchOne($idSession);
+        $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
+        $session = $this->sessionService->fetchOne(array('session' => $idSession));
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSessionObject) {
@@ -162,7 +166,7 @@ class UserSessionController
 
     public function formClose($request, $response, $args) {
         $id = $args['idusersession'];
-        $userSession = $this->userSessionService->fetchOne($id);
+        $userSession = $this->userSessionService->fetchOne(array('id' => $id));
         $template = 'closeUserSession.html.twig';
         $datosUI = array();
 
@@ -175,7 +179,7 @@ class UserSessionController
     public function close($request, $response, $args) {
         $id = $args['idusersession'];
         $post = $request->getParsedBody();
-        $userSessionObject = $this->userSessionService->fetchOne($id);
+        $userSessionObject = $this->userSessionService->fetchOne(array('id' => $id));
         $idSession = $userSessionObject->getIdSession();
         $this->userSessionService->close($post);
         $message = 'El usuario ha salido de la sesión';
@@ -184,8 +188,8 @@ class UserSessionController
         //BUSQUEDA DE DATOS PARA LA UI
 
         $datosUI = array();
-        $datosUsersSession = $this->userSessionService->fetchAll($idSession);
-        $session = $this->sessionService->fetchOne($idSession);
+        $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
+        $session = $this->sessionService->fetchOne(array('session' => $idSession));
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSession) {

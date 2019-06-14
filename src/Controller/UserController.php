@@ -44,7 +44,7 @@ class UserController
     public function list($request, $response, $args) {
 	    $idUser = $args['iduser'];
         $template = 'editPlayer.html.twig';
-	    $user = $this->userService->fetchOne($idUser);
+	    $user = $this->userService->fetchOne(array('id' => $idUser));
 		$datosUI['user'] = $user->toArray();
         $datosUI['breadcrumb'] = 'Editar Usuario';
     	return $this->view->render($response, $template, $datosUI);

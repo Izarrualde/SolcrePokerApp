@@ -33,7 +33,7 @@ class SessionController
 
     public function list($request, $response, $args) {
 	    $idSession = $args['idSession'];
-	    $session = $this->sessionService->fetchOne($idSession);
+	    $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosUI = array();
 		$datosUI['session'] = $session->toArray();
         $datosUI['breadcrumb'] = 'Editar Sesión';

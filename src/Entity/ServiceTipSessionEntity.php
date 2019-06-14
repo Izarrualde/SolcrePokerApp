@@ -4,44 +4,49 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="session_service_tips")
-*/
+ */
 class ServiceTipSessionEntity 
 {
 
    /**
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
+    * @ORM\Id
+    * @ORM\Column(type="integer")
+    * @ORM\GeneratedValue(strategy="IDENTITY")
+    */
 	protected $id;
 
 
 	/**
-	 * @ORM\Column(type="integer", name="session_id")
-	 */
+	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionComissions")
+	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     */
+	protected $sesion;
+
 	protected $idSession;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="datetime", name="created_at")
 	 */
 	protected $hour;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="integer", name="service_tip")
 	 */
 	protected $serviceTip;
 
 
-	public function __construct($id=null, $idSession=null, $hour="", $tip=null)
+	public function __construct($id=null, $idSession=null, $hour="", $tip=null, $session=null)
 	{
 		$this->setId($id);
 		$this->setIdSession($idSession);
 		$this->setHour($hour);
 		$this->setServiceTip($tip);
+		$this->setSession($session);
 	}
 
 	public function getId()
@@ -63,6 +68,17 @@ class ServiceTipSessionEntity
 	public function setIdSession($idSession)
 	{
 		$this->idSession = $idSession;
+		return $this;
+	}
+
+	public function getSession()
+	{
+		return $this->session;
+	}
+
+	public function setSession($session)
+	{
+		$this->session = $session;
 		return $this;
 	}
 

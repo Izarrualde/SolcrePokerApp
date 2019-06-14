@@ -25,8 +25,9 @@ class ComissionSessionController
     	//$datosComissions = $this->comissionSessionService->find($idSession);
         //$session = $this->sessionService->findOne($idSession);
 
-        $datosComissions = $this->comissionSessionService->fetchAll($idSession);
-        $session = $this->sessionService->fetchAll();
+        $datosComissions = $this->comissionSessionService->fetchAll(array('session' => $idSession));
+
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
 
         $comissions = array();
         $datosUI = array();
@@ -42,6 +43,7 @@ class ComissionSessionController
     	return $this->view->render($response, $template, $datosUI);
     }
 
+ 
     public function list($request, $response, $args) {
 	    $id = $args['idcomission'];
         $idSession = $args['idSession'];
@@ -49,8 +51,8 @@ class ComissionSessionController
 	    // $comission = $this->comissionSessionService->findOne($id);
         // $session = $this->sessionService->findOne($idSession);
 
-        $comission = $this->comissionSessionService->fetchOne($id);
-        $session = $this->sessionService->fetchOne($idSession);
+        $comission = $this->comissionSessionService->fetchOne(array('session_id' => $idSession));
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosUI = array();
         
         $datosUI['session'] = $session->toArray();
@@ -72,12 +74,12 @@ class ComissionSessionController
             $message = 'la comission se ingresó exitosamente.';
 
             //extraigo datos de la bdd
-            $datosComissions = $this->comissionSessionService->fetchAll($post['idSession']);
+            $datosComissions = $this->comissionSessionService->fetchAll(array('session_id' => $idSession));
             // como sabe fetchAll que lo que le paso es una idSession.
 
             $comissions = array();
             $datosUI = array();
-            $session = $this->sessionService->fetchOne($post['idSession']);
+            $session = $this->sessionService->fetchOne(array('id' => $idSession));
 
 
             foreach ($datosComissions as $comission)
@@ -96,7 +98,7 @@ class ComissionSessionController
     public function form($request, $response, $args) 
     {
         $idSession = $args['idSession'];
-        $session = $this->sessionService->fetchOne($idSession);
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosUI = array();
         $datosUI['session'] = $session->toArray();
         $datosUI['breadcrumb'] = 'Nueva Comision';
@@ -114,8 +116,9 @@ class ComissionSessionController
         $template = 'comissions.html.twig';
 
         //extraigo datos de la BD
-        $session = $this->sessionService->fetchOne($post['idSession'],);
-        $datosComissions = $this->comissionSessionService->fetchAll($post['idSession']);
+        $idSession = $post['idSession'];
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
+        $datosComissions = $this->comissionSessionService->fetchAll(array('session_id' => $idSession));
         $comissions = array();
         $datosUI = array();
         foreach ($datosComissions as $comission) {
@@ -143,8 +146,8 @@ class ComissionSessionController
 
         //extraigo datos para DB
         $comissions = array();
-        $session = $this->sessionService->fetchOne($idSession);
-        $datosComissions = $this->comissionSessionService->fetchAll($idSession);
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
+        $datosComissions = $this->comissionSessionService->fetchAll(array('session_id' => $idSession));
 
         foreach ($datosComissions as $comission)  {
             $comissions[] = $comission->toArray(); 

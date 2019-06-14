@@ -4,6 +4,7 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="session_dealer_tips")
 */
@@ -11,37 +12,42 @@ class DealerTipSessionEntity
 {
 
    /**
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
+    * @ORM\Id
+    * @ORM\Column(type="integer")
+    * @ORM\GeneratedValue(strategy="IDENTITY")
+    */
 	protected $id;
 
 
 	/**
-	 * @ORM\Column(type="integer", name="session_id")
-	 */
+	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionDealerTips")
+	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     */
+	protected $session;
+
+
 	protected $idSession;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="datetime", name="created_at")
 	 */
 	protected $hour;
 
 
-	/**
-	 * @ORM\Column(type="integer", name="dealer_tip")
-	 */
+   /**
+    * @ORM\Column(type="integer", name="dealer_tip")
+    */
 	protected $dealerTip;
 
 
-	public function __construct($id=null, $idSession=null, $hour="", $tip=null)
+	public function __construct($id=null, $idSession=null, $hour="", $tip=null, $session=null)
 	{
 		$this->setId($id);
 		$this->setIdSession($idSession);
 		$this->setHour($hour);
 		$this->setDealerTip($tip);
+		$this->setSession($session);
 	}
 
 	public function getId()
@@ -63,6 +69,17 @@ class DealerTipSessionEntity
 	public function setIdSession($idSession)
 	{
 		$this->idSession = $idSession;
+		return $this;
+	}
+
+	public function getSession()
+	{
+		return $this->session;
+	}
+
+	public function setSession($session)
+	{
+		$this->session = $session;
 		return $this;
 	}
 

@@ -4,42 +4,46 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="session_comissions")
-*/
+ */
 class ComissionSessionEntity
 {
 
-   /**
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
 	protected $id;
 
 
 	/**
-	 * @ORM\Column(type="integer", name="session_id")
-	 */
+	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionComissions")
+	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     */
+	protected $session;
+
 	protected $idSession;
 
-
-	/**
-	 * @ORM\Column(type="datetime", name="crated_at")
+    /**
+	 * @ORM\Column(type="datetime", name="created_at")
 	 */
 	protected $hour;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="integer")
 	 */
 	protected $comission;
 
 
-	public function __construct($id=null, $idSession=null, $hour=null, $comission=null)
+	public function __construct($id=null, $idSession=null, $hour=null, $comission=null, $session=null)
 	{
 		$this->setId($id);
-		$this->setIdSession($idSession);
+		$this->setId($idSession);
+		$this->setSession($session);
 		$this->setHour($hour);
 		$this->setComission($comission);
 	}
@@ -63,6 +67,17 @@ class ComissionSessionEntity
 	public function setIdSession($idSession)
 	{
 		$this->idSession = $idSession;
+		return $this;
+	}
+
+	public function getSession()
+	{
+		return $this->session;
+	}
+
+	public function setSession($session)
+	{
+		$this->session = $session;
 		return $this;
 	}
 

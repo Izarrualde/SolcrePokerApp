@@ -28,8 +28,11 @@ class BuyinSessionController
     public function listAll($request, $response, $args) {
         $idSession = $args['idSession'];
         $template = 'buyins.html.twig';
-    	$datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
-        $session = $this->sessionService->fetchOne($idSession);
+
+    	$datosBuyins = $this->buyinSessionService->fetchAllBuyins(array('session' => $idSession));
+        echo "hola4sr44ssd";
+
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $buyins = array(); //dejo cada buyin como un array para entregarlo a datosUI en ese formato
     	$datosUI = array();
         foreach ($datosBuyins as $buyinObject) 
@@ -46,7 +49,7 @@ class BuyinSessionController
 
     public function list($request, $response, $args) {
 	    $id = $args['idbuyin'];
-	    $buyin = $this->buyinSessionService->fetchOne($id);
+	    $buyin = $this->buyinSessionService->fetchOne(array('id' => $id));
 
         $template = 'editBuyin.html.twig';
         $datosUI = array();
@@ -71,7 +74,7 @@ class BuyinSessionController
         //extraigo datos de la bdd
 
             $buyins = array();
-            $session = $this->sessionService->fetchOne($buyin['idSession']);
+            $session = $this->sessionService->fetchOne(array('id' => $idSession));
 
             foreach ($datosBuyins as $buyin)
             {
@@ -90,8 +93,8 @@ class BuyinSessionController
     public function form($request, $response, $args) 
     {
         $idSession = $args['idSession'];
-        $session = $this->sessionService->fetchOne($idSession);
-        $datosUsersSession = $this->userSessionService->fetchAll($idSession);
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
+        $datosUsersSession = $this->userSessionService->fetchAll(array('session_id' => $idSession));
         $usersSession = array();
         foreach ($datosUsersSession as $userSessionObject) {
             $usersSession[] = $userSessionObject->toArray();
@@ -106,6 +109,7 @@ class BuyinSessionController
 
     public function update($request, $response, $args) {
         $post = $request->getParsedBody();
+        $idSession = $post['idSession'];
 
         // $idSession = $args['idSession'];
         // $buyinObject = new BuyinSession($post['id'], $post['idSession'], $post['idUserSession'], $post['amountCash'], $post['amountCredit'], '2', date('c'), $post['approved']);
@@ -114,7 +118,7 @@ class BuyinSessionController
         $template = 'buyins.html.twig';
 
         //extraigo datos de la BD
-        $session = $this->sessionService->fetchOne($post['idSession']);
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosBuyins = $this->buyinSessionService->fetchAllBuyins($post['idSession']);
         $buyins = array();
         $datosUI = array();
@@ -142,7 +146,7 @@ class BuyinSessionController
         $datosUI = array();
 
         //extraigo datos de la DB
-        $session = $this->sessionService->fetchOne($idSession);
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
 
         $datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
         $buyins = array();

@@ -4,92 +4,93 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="users")
 */
 class UserEntity 
 {
 
-   /**
-   * @ORM\Column(type="integer")
+  /**
    * @ORM\Id
+   * @ORM\Column(type="integer")
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
 	protected $id;
 
 
-	/**
-	 * @ORM\Column(type="string")
-	 */
+   /**
+	* @ORM\Column(type="string")
+	*/
 	protected $password;
 
 
 	protected $mobile;
 
 
-	/**
-	 * @ORM\Column(type="string")
-	 */
+   /**
+	* @ORM\Column(type="string")
+	*/
 	protected $email;
 
 
-	/**
-	 * @ORM\Column(type="string")
-	 */
+   /**
+	* @ORM\Column(type="string")
+	*/
 	protected $name;
 
 
-	/**
-	 * @ORM\Column(type="string", name="last_name")
-	 */
+   /**
+	* @ORM\Column(type="string", name="last_name")
+	*/
 	protected $lastname;
 
 
-	/**
-	 * @ORM\Column(type="string")
-	 */
+   /**
+	* @ORM\Column(type="string")
+	*/
 	protected $username;
 
 
-	/**
-	 * @ORM\Column(type="decimal")
-	 */
+   /**
+	* @ORM\Column(type="decimal")
+	*/
 	protected $multiplier;
 
 
-	/**
-	 * @ORM\Column(type="integer", name="is_active")
-	 */
+   /**
+	* @ORM\Column(type="integer", name="is_active")
+	*/
 	protected $isActive;
 
 
-	/**
-	 * @ORM\Column(type="decimal")
-	 */
+   /**
+	* @ORM\Column(type="decimal")
+	*/
 	protected $hours;
 
 
-	/**
-	 * @ORM\Column(type="integer")
-	 */
+   /**
+	* @ORM\Column(type="integer")
+	*/
 	protected $points;
 
 
-	/**
-	 * @ORM\Column(type="integer")
-	 */
+   /**
+	* @ORM\Column(type="integer")
+	*/
 	protected $sessions;
 
 
-	/**
-	 * @ORM\Column(type="decimal")
-	 */
+   /**
+	* @ORM\Column(type="decimal")
+	*/
 	protected $results;
 
 
-	/**
-	 * @ORM\Column(type="integer")
-	 */
+   /**
+	* @ORM\Column(type="integer")
+	*/
 	protected $cashin;
 
 

@@ -18,8 +18,8 @@ class SessionEntity
 {
 
    /**
-   * @ORM\Column(type="integer")
    * @ORM\Id
+   * @ORM\Column(type="integer")
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
 	protected $id; 
@@ -73,12 +73,31 @@ class SessionEntity
 	 */
 	protected $endTime;
 
-	
-	public $sessionDealerTips = array();
+	/**
+	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\DealerTipSessionEntity", mappedBy="session")
+     */		
+	public $sessionDealerTips;
+
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\ServiceTipSessionEntity", mappedBy="session")
+     */		
 	public $sessionServiceTips = array();
-	public $sessionUsers = array();
-	public $sessionComissions = array();
-	public $sessionBuyins = array();
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\UserSessionEntity", mappedBy="session")
+     */	
+	public $sessionUsers;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\ComissionSessionEntity", mappedBy="session")
+     */
+	public $sessionComissions;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\BuyinSessionEntity", mappedBy="session")
+     */
+	public $sessionBuyins;
 
 
 	public function __construct($id=null, $date=null, $title="", $description="", $photo=null, $seats=null, $seatsWaiting=null, $reserveWaiting=null, $startTime=null, $startTimeReal=null, $endTime=null)
@@ -94,6 +113,11 @@ class SessionEntity
 		$this->setStartTime($startTime);
 		$this->setStartTimeReal($startTimeReal);
 		$this->setEndTime($endTime);
+		$this->sessionComissions = new ArrayCollection();
+		$this->sessionBuyins = new ArrayCollection();
+		$this->sessionUsers = new ArrayCollection();
+		$this->sessionDealerTips = new ArrayCollection();
+		$this->sessionServiceTips = new ArrayCollection();
 		//$this->setSessionDealerTips($sessionDealerTips);
 		//$this->setSessionServiceTips($sessionServiceTips);
 		//$this->setSessionUsers($sessionUsers);

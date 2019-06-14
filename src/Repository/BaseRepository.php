@@ -21,12 +21,13 @@ class BaseRepository extends EntityRepository
     {
         //Pre find by
         $filtersOptions = $this->preFindBy($params, $orderBy, $limit, $offset);
-
         //Legacy
-        if (empty($filtersOptions['fields'])) {
+        if (empty($filtersOptions['fields'])) { 
             $result = parent::findBy($params, $orderBy, $limit, $offset);
+
         } else {
             //Execute
+
             $query = $this->getFindByQuery($params, $orderBy, $filtersOptions['fields']);
             $result = $query->getResult();
         }
@@ -65,7 +66,6 @@ class BaseRepository extends EntityRepository
 //        }
             }
         }
-
         return $filtersOptions;
     }
 

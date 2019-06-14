@@ -4,31 +4,26 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BuyinSessionRepository")
  * @ORM\Table(name="session_buyins")
-*/
+ */
 class BuyinSessionEntity
 {
 
-   /**
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
 	protected $id;
 
-
-	/**
-	 * @ORM\Column(type="integer", name="session_id")
-	 */
 	protected $idSession;
 
 
 	/**
-	* @ORM\Column(type="integer", name="session_user_id")
-    * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\UserSessionEntity", inversedBy="buyins")
-    * @ORM\JoinColumn(name="session_user_id", referencedColumnName="id")
-    */
+	 * @ORM\Column(type="integer", name="session_user_id")
+     */
 	protected $sessionUserId;
 
 
@@ -56,13 +51,21 @@ class BuyinSessionEntity
 
 
 	/**
-	 * @ORM\Column(type="integer")
+	 * @ORM\Column(type="integer", name="approved")
 	 */
 	protected $isApproved;
 
-
+	/**
+	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionBuyins")
+	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     */
 	protected $session;
+	
 
+	/**
+     * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\UserSessionEntity", inversedBy="buyins")
+     * @ORM\JoinColumn(name="session_user_id", referencedColumnName="id")
+     */
 	protected $userSession;
 
 

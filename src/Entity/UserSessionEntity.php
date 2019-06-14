@@ -4,62 +4,83 @@ Namespace Solcre\lmsuy\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="sessions_users")
-*/
+ */
 class UserSessionEntity 
 {
 
-   /**
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
 	protected $id;
 
-
+	/**
+	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionUsers")
+	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     */
 	protected $session;
 
+    /**
+ 	 * @ORM\Column(type="integer", name="session_id")
+ 	 */
+	protected $idSession;
 
-	/**
-	 * @ORM\Column(type="integer", name="user_id")
-	 */
+    /**
+ 	 * @ORM\Column(type="integer", name="user_id")
+ 	 */
 	protected $idUser;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="integer",name="is_approved")
 	 */
 	protected $isApproved;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="integer", name="points")
 	 */
 	protected $accumulatedPoints;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="integer")
 	 */
 	protected $cashout;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="datetime", name="start_at")
 	 */
 	protected $start;
 
 
-	/**
+    /**
 	 * @ORM\Column(type="datetime", name="end_at")
 	 */
 	protected $end;
 
 
+
+   	/**
+     * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\UserEntity", inversedBy="sessionUsers")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
 	protected $user;
 
+
+    /**  
+     * One User Session has many Buyins. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\BuyinSessionEntity", mappedBy="userSession")
+     */
 	protected $buyins;
+
+
+
 
 
 	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
@@ -223,7 +244,7 @@ class UserSessionEntity
 	public function toArray(){
 		$ret =  [
 			'id' => $this->getId(),
-			'idSession' => $this->getSession()->getIdSession(),
+			'idSession' => $this->getSession()->getId(),
 			'idUser' => $this->getIdUser(),
 			'isApproved' => $this->getIsApproved(),
 			'cashout' => $this->getCashout(),
