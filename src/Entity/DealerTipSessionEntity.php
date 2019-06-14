@@ -18,12 +18,12 @@ class DealerTipSessionEntity
     */
 	protected $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionDealerTips")
 	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
 	protected $session;
+
 
 
 	protected $idSession;
@@ -41,13 +41,13 @@ class DealerTipSessionEntity
 	protected $dealerTip;
 
 
-	public function __construct($id=null, $idSession=null, $hour="", $tip=null, $session=null)
+	public function __construct($id=null, $idSession=null, $hour=null, $tip=null, $session=null)
 	{
 		$this->setId($id);
 		$this->setIdSession($idSession);
+		$this->setSession($session);
 		$this->setHour($hour);
 		$this->setDealerTip($tip);
-		$this->setSession($session);
 	}
 
 	public function getId()

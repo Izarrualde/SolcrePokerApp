@@ -51,12 +51,6 @@ class BuyinSessionEntity
 	 */
 	protected $isApproved;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionBuyins")
-	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
-     */
-	protected $session;
-	
 
 	/**
      * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\UserSessionEntity", inversedBy="buyins")
@@ -65,10 +59,9 @@ class BuyinSessionEntity
 	protected $userSession;
 
 
-	public function __construct($id=null, $idSession=null, $sessionUserId=null, $amountCash=null, $amountCredit=null, $currency=null, $hour=null, $isApproved=null)
+	public function __construct($id=null, $sessionUserId=null, $amountCash=null, $amountCredit=null, $currency=null, $hour=null, $isApproved=null)
 	{
 		$this->setId($id);
-		$this->setIdSession($idSession);
 		$this->setSessionUserId($sessionUserId);
 		$this->setamountCash($amountCash);
 		$this->setamountCredit($amountCredit);
@@ -87,7 +80,7 @@ class BuyinSessionEntity
 		$this->id = $id;
 		return $this;
 	}
-
+/*
 	public function getIdSession()
 	{
 		return $this->idSession;
@@ -98,6 +91,7 @@ class BuyinSessionEntity
 		$this->idSession = $idSession;
 		return $this;
 	}
+*/
 
 	public function getSessionUserId() 
 	{
@@ -167,14 +161,16 @@ class BuyinSessionEntity
 
 	public function getSession()
 	{
-		return $this->session;
+		return $this->getUserSession()->getSession();
 	}
-
+/*
 	public function setSession(SessionEntity $session)
 	{
 		$this->session = $session;
 		return $this;
 	}
+*/
+
 	public function getUserSession()
 	{
 		return $this->userSession;

@@ -42,7 +42,7 @@ class ComissionSessionEntity
 	public function __construct($id=null, $idSession=null, $hour=null, $comission=null, $session=null)
 	{
 		$this->setId($id);
-		$this->setId($idSession);
+		$this->setIdSession($idSession);
 		$this->setSession($session);
 		$this->setHour($hour);
 		$this->setComission($comission);

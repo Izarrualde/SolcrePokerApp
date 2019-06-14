@@ -27,11 +27,12 @@ class TipSessionController
 
     public function listAll($request, $response, $args) {
         $idSession = $args['idSession'];
-    	// $datosDealerTips = $this->dealerTipSessionService->find($idSession);
-        // $datosServiceTips = $this->serviceTipSessionService->find($idSession);
+
 
         $datosDealerTips = $this->dealerTipSessionService->fetchAll(array('session' => $idSession));
-        $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session' => $idSession));
+
+         $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session' => $idSession));
+
 
 
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
