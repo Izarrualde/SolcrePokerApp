@@ -26,9 +26,7 @@ class UserSessionEntity
 	protected $session;
 
 
-    /**
- 	 * @ORM\Column(type="integer", name="user_id")
- 	 */
+
 	protected $idUser;
 
 

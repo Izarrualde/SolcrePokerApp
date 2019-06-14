@@ -20,10 +20,6 @@ class BuyinSessionEntity
 
 	protected $idSession;
 
-
-	/**
-	 * @ORM\Column(type="integer", name="session_user_id")
-     */
 	protected $sessionUserId;
 
 
