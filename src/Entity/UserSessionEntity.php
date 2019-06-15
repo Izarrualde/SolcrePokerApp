@@ -26,7 +26,6 @@ class UserSessionEntity
 	protected $session;
 
 
-
 	protected $idUser;
 
 
@@ -164,6 +163,10 @@ class UserSessionEntity
 	
 	public function getEnd() 
 	{
+		/*If ($this->end != null)
+		{
+			return $this->end->format('d-m-Y');	
+		}*/
 		return $this->end;
 	}
 	
@@ -188,14 +191,21 @@ class UserSessionEntity
 	public function getCashin() 
 	{
 		$cashin = 0;
-		$session = $this->getSession();
-		$buyins = $session->getSessionBuyins();
-		if ($session instanceof SessionEntity) {
-			foreach($session->getSessionBuyins() as $buyin) {
+		$session1 = $this->getSession();
+		
+		$b = $session1->getSessionComissions();
+		
+		$c = $b->toArray();
+		
+
+		// la funcion toArray en arrayCollection funciona bien, el tema es que en buyins tengo un indice
+		if ($session1 instanceof SessionEntity) {
+			$buyins = $session1->getSessionBuyins();
+			/*foreach($buyins as $buyin) {
 				if ($buyin->getSessionUserId() == $this->getId()) {
 					$cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
 				}
-			}
+			}*/
 		} 
 		return $cashin;
 	}
@@ -204,9 +214,13 @@ class UserSessionEntity
 	{
 		$credit = 0;
 		$session = $this->getSession();
-		$buyins = $session->getSessionBuyins();	
+			
 		if ($session instanceof SessionEntity) {
-			foreach($session->getSessionBuyins() as $buyin) {
+			$buyins = $session->getSessionBuyins();
+
+		 	$buyinsArray = $buyins->toArray();
+			var_dump(get_class($buyinsArray));
+			foreach($buyinsArray as $buyin) {
 				if ($buyin->getSessionUserId() == $this->getId()) {
 					$credit += $buyin->getAmountCredit();
 				}
@@ -230,6 +244,7 @@ class UserSessionEntity
 	}
 
 	public function toArray(){
+		
 		$ret =  [
 			'id' => $this->getId(),
 			'idSession' => $this->getSession()->getId(),
@@ -239,7 +254,7 @@ class UserSessionEntity
 			'startTime' => $this->getStart(),
 			'endTime' => $this->getEnd(),
 			'cashin' => $this->getCashin(),
-			'totalCredit' => $this->getTotalCredit()
+			//'totalCredit' => $this->getTotalCredit()
 		];
 
 		$user = $this->getUser();

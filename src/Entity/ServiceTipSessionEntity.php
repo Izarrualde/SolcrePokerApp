@@ -20,10 +20,10 @@ class ServiceTipSessionEntity
 
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionComissions")
+	 * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionServiceTips")
 	 * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
-	protected $sesion;
+	protected $session;
 
 	protected $idSession;
 

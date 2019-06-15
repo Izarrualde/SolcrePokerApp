@@ -80,7 +80,7 @@ class BuyinSessionEntity
 		$this->id = $id;
 		return $this;
 	}
-/*
+
 	public function getIdSession()
 	{
 		return $this->idSession;
@@ -91,7 +91,7 @@ class BuyinSessionEntity
 		$this->idSession = $idSession;
 		return $this;
 	}
-*/
+
 
 	public function getSessionUserId() 
 	{

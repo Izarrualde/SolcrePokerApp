@@ -29,7 +29,7 @@ class BuyinSessionController
         $idSession = $args['idSession'];
         $template = 'buyins.html.twig';
 
-    	$datosBuyins = $this->buyinSessionService->fetchAllBuyins(array('session' => $idSession));
+    	$datosBuyins = $this->buyinSessionService->fetchAllBuyins( $idSession);
         
 
         $session = $this->sessionService->fetchOne(array('id' => $idSession));

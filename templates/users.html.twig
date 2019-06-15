@@ -108,7 +108,7 @@
 														<td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
 														<td> {{ user.cashout }}  </td>
 
-														<td> {{ user.endTime }}
+														<td> {# } {{ user.endTime }} #}
 												        </td>
 
 														<td> <a href="actions/editUser.php?idU=<?php echo $user->getIdUser(); ?>&id=<?php echo $_GET['id']; ?>&idUS=<?php echo $user->getId(); ?>"> <i class="fas fa-pencil-alt"> </i> </a> <a href="actions/deleteUser.php?idU=<?php echo $user->getId(); ?>&id=<?php echo $_GET['id']; ?>"> <i class="fas fa-trash-alt"></i> </a></td>

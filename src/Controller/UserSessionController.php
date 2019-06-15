@@ -29,19 +29,24 @@ class UserSessionController
         $template = 'users.html.twig';
         $datosUI = array();
     	$datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
-        $session = $this->sessionService->fetchOne(array('session' => $idSession));
+
+
+
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
 
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSessionObject) {
-            $usersSession[] = $userSessionObject->toArray();            
+            $usersSession[] = $userSessionObject->toArray();   
+
         }
 
         $datosUI['session'] = $session->toArray();
         $datosUI['session']['usersSession'] = $usersSession;
         $datosUI['breadcrumb'] = 'Usuarios de Sesión';
 
-    	return $this->view->render($response, $template, $datosUI);
+       	return $this->view->render($response, $template, $datosUI);
+
     }
 
     public function list($request, $response, $args) {

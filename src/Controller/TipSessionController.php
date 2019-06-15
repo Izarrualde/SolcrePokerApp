@@ -31,14 +31,19 @@ class TipSessionController
 
         $datosDealerTips = $this->dealerTipSessionService->fetchAll(array('session' => $idSession));
 
+
          $datosServiceTips = $this->serviceTipSessionService->fetchAll(array('session' => $idSession));
 
-
+            
 
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
+ 
         $template = 'tips.html.twig';
         $serviceTips = array();
         $dealerTips = array();
+        //$a=$datosDealerTips->toArray();
+        var_dump($datosDealerTips);
+
         foreach ($datosDealerTips as $dealerTip) 
         {
             $dealerTips[] = $dealerTip->toArray();  
@@ -53,7 +58,7 @@ class TipSessionController
         $datosUI['session']['serviceTips'] = $serviceTips;
         $datosUI['session']['dealerTips'] = $dealerTips;
         $datosUI['breadcrumb'] = 'Tips';
-    	
+ 
     	return $this->view->render($response, $template, $datosUI);
     }
 
