@@ -40,6 +40,7 @@ class ComissionSessionController
         $datosUI['session'] = $session->toArray();
         $datosUI['session']['comissions'] = $comissions;
         $datosUI['breadcrumb'] = 'Comissions';
+
     	return $this->view->render($response, $template, $datosUI);
     }
 
@@ -51,8 +52,10 @@ class ComissionSessionController
 	    // $comission = $this->comissionSessionService->findOne($id);
         // $session = $this->sessionService->findOne($idSession);
 
-        $comission = $this->comissionSessionService->fetchOne(array('session' => $idSession));
+        $comission = $this->comissionSessionService->fetchOne(array('id' => $id));
+
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
+
         $datosUI = array();
         
         $datosUI['session'] = $session->toArray();
@@ -63,6 +66,8 @@ class ComissionSessionController
 
     public function add($request, $response, $args) {
         $post = $request->getParsedBody();
+        $idSession = $args['idSession'];
+
         $datosUI = array();
         
         if (is_array($post))
@@ -101,13 +106,18 @@ class ComissionSessionController
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosUI = array();
         $datosUI['session'] = $session->toArray();
+
         $datosUI['breadcrumb'] = 'Nueva Comision';
         $template = 'newcomissions.html.twig';
+
         return $this->view->render($response, $template, $datosUI);
     }
 
     public function update($request, $response, $args) {
         $post = $request->getParsedBody();
+
+        $id = $args['idcomission'];
+        $idSession = $post['idSession'];
 
         // $idSession = $args['idSession'];
         // $comissionObject = new ComissionSession($post['id'], $post['idSession'], $post['hour'], $post['comission']);

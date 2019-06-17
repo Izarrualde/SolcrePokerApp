@@ -176,7 +176,7 @@ class BuyinSessionEntity
 		return $this->userSession;
 	}
 
-	public function setUserSession(UserSession $userSession)
+	public function setUserSession(UserSessionEntity $userSession)
 	{
 		$this->userSession = $userSession;
 		return $this;
@@ -191,14 +191,16 @@ class BuyinSessionEntity
 			'hour' => $this->getHour(),
 		];
 
-		$session = $this->getSession();
+		/*$session = $this->getSession();
 
 		if ($session instanceof SessionEntity) {
 			$ret['session'] = $session->toArray();
-		}
+		}*/
 
 		$userSession = $this->getUserSession();
-		if ($userSession instanceof UserSession) {
+
+		if ($userSession instanceof UserSessionEntity) {
+			
 			$ret['user_session'] = $userSession->toArray();
 		}
 

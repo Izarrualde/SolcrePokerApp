@@ -29,9 +29,7 @@ class UserSessionController
         $template = 'users.html.twig';
         $datosUI = array();
     	$datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
-
-
-
+        
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
 
         $usersSession = array();
@@ -51,6 +49,7 @@ class UserSessionController
 
     public function list($request, $response, $args) {
 	    $id = $args['idusersession'];
+
 	    $userSession = $this->userSessionService->fetchOne(array('id' => $id));
         $template = 'editUser.html.twig';
         $datosUI = array();
@@ -64,29 +63,43 @@ class UserSessionController
 
 //ver como convertir esta function
     public function add($request, $response, $args) {
+
         $post = $request->getParsedBody();
+
+
         $idSession = $post['idSession'];
 
         $datosUI = array();
         
         if (is_array($post))
         {
-            $session = $this->sessionService->fetchOne(array('session' => $idSession));
+            
+            
             $res = array();
             foreach ($post['user_id'] as $user_id) 
             {
-                $userSessionObject = new UserSession($post['id'], $session, $user_id, $post['approved'], $post['accumulatedPoints'], $post['cashout'], $post['start'], $post['end']);
-                $res[$user_id] = $this->userSessionService->add($userSessionObject);
+                $data = [
+                    'start' => $post['start'],
+                    'end' => $post['end'],
+                    'isApproved' => $post['approved'],
+                    'points' => $post['accumulatedPoints'],
+                    'idSession' => $post['idSession'],
+                    'idUser' => $user_id
+                ];
+
+
+                $this->userSessionService->add($data);    
             }
 
             $template = 'users.html.twig';
-            $errors = array_filter($res, function ($item){return !$item;});
-            $message = (count($post['user_id'])==count($errors))? 'Los usuarios se agregaron exitosamente' : count($errors) .' usuarios no se agregaron';
+            $message = '';
+
 
             //extraigo datos de la bdd
-            $datosUI = array();
-            $datosUsersSession = $this->userSessionService->find(array('session' => $idSession));
-            $session = $this->sessionService->findOne(array('session' => $idSession));
+            $session = $this->sessionService->fetchOne(array('session' => $idSession));
+
+            $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
+
             $usersSession = array();
 
             foreach ($datosUsersSession as $userSessionObject) {
@@ -117,6 +130,7 @@ class UserSessionController
         $datosUI['users'] = $users;
         $datosUI['breadcrumb'] = 'Nuevo UserSession';
         $template = 'newusers.html.twig';
+
         return $this->view->render($response, $template, $datosUI);
     }
 
@@ -128,10 +142,11 @@ class UserSessionController
         $this->userSessionService->update($post);
         $message = 'El usuario se actualizó exitosamente';
         $template = 'users.html.twig';
+
         //extraigo datos de la bdd
         $datosUI = array();
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
-        $session = $this->sessionService->fetchOne(array('session' => $idSession));
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSessionObject) {
@@ -155,7 +170,7 @@ class UserSessionController
         //BUSQUEDA DE DATOS PARA LA UI
         $datosUI = array();
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
-        $session = $this->sessionService->fetchOne(array('session' => $idSession));
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
         $usersSession = array();
 
         foreach ($datosUsersSession as $userSessionObject) {

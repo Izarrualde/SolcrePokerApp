@@ -13,27 +13,33 @@ class ServiceTipSessionService extends BaseService {
 
 	public function add($data, $strategies = null)
 	{
-		$serviceTip = new  ServiceTipSession();
+
+		$data['hour'] = new \DateTime($data['hour']);
+
+		$serviceTip = new  ServiceTipSessionEntity();
 		$serviceTip->setHour($data['hour']);
+		$serviceTip->setSession($this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']));
 		$serviceTip->setServiceTip($data['serviceTip']);
 
-		$this->EntityManager->persist($serviceTip);
-		$this->EntityManager->flush($serviceTip);
+		$this->entityManager->persist($serviceTip);
+		$this->entityManager->flush($serviceTip);
 	}
 
 	public function update($data, $strategies = null)
 	{
-		$serviceTip = parent::fetch($data['id']);
+		$data['hour'] = new \DateTime($data['hour']);
+		$serviceTip = $this->entityManager->getReference('Solcre\lmsuy\Entity\ServiceTipSessionEntity', $data['id']);
+		// $serviceTip = parent::fetch($data['id']);
 		$serviceTip->setHour($data['hour']);
 		$serviceTip->setServiceTip($data['serviceTip']);
 
-		$this->EntityManager->persist($serviceTip);
-		$this->EntityManager->flush($serviceTip);
+		$this->entityManager->persist($serviceTip);
+		$this->entityManager->flush($serviceTip);
 	}
 
 	public function delete($id, $entityObj = null)
 	{	
-		$user = $this->entityManager->getReference('Solcre\lmsuy\Entity\ServiceTipSessionEntity', $id);
+		$serviceTip = $this->entityManager->getReference('Solcre\lmsuy\Entity\ServiceTipSessionEntity', $id);
 
 		$this->entityManager->remove($serviceTip);
 		$this->entityManager->flush();

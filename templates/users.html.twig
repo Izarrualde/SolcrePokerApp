@@ -38,12 +38,12 @@
 										{% for user in session.usersSession %} 
 											{% if user.endTime is empty  %}
 										 
-											<!-- if (empty($user->getEnd())) -->
+											
 													<tr class="text-center">
 														<td> 
-															{{ user.user.name }} {{ user.user.lastname}} 
+															{{ user.user.name }} {{ user.user.lastname }} 
 														</td>
-														<td> {{ user.startTime }}  
+														<td> {{ user.startTime|date('H:i') }} 
 														</td>
 															
 														<td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
@@ -51,13 +51,13 @@
 														<td> <a href="/userssession/{{ user.id }}/formclose"> <i class="fas fa-sign-out-alt"></i> </a> <a href="/sessions/{{ user.idSession }}/usersSession/{{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/{{ user.idSession }}/usersSession/{{ user.id }}/remove"> <i class="fas fa-trash-alt"></i> </a> </td>
 												
 													</tr> 
-											{% endif %}
+											{% endif %} 
 							
 									{% endfor %}
 											
 												<tr>
 													<td colspan="9">
-													<a href="/{{ session.idSession }}/usersSession/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+													<a href="/{{ session.id }}/usersSession/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
 													</td>
 												</tr>
 							

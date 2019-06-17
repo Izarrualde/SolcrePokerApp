@@ -16,7 +16,7 @@
 							<form class="was-validated" action="/buyins/{{ buyin.id }}/update" method="post">
 								<input name="id" type="hidden" value="{{ buyin.id }}">
 
-								<input name="idSession" type="hidden" value="{{ buyin.session.idSession }}">
+								<input name="idSession" type="hidden" value="{{ buyin.user_session.session.id }}">
 								
 								<input name="idUserSession" id="idUserSession" type="hidden" required= "true" value="{{ buyin.user_session.id }}">
 

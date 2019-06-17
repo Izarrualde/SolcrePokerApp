@@ -15,22 +15,22 @@ class UserSessionService extends BaseService {
 
 	public function add($data, $strategies = null)
 	{
-		/*
-		return $this->connection->insertUserInSession(date('c'), $userSession->getAccumulatedPoints(), $userSession->getCashout(), $userSession->getStart(), $userSession->getEnd(), $userSession->getIsApproved(), $userSession->getSession()->getIdSession(), $userSession->getIdUser());
-		*/
+		$session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
+		$user = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserEntity', $data['idUser']);
 
+		$data['start'] = new \DateTime($data['start']);
+		
 		$userSession = new UserSessionEntity();
-		$userSession->setAccumulatedPoints($data['accumulatedPoints']);
-		$userSession->setCashout($data['cashout']);
-		$userSession->setStart($data['start']);
-		$userSession->setEnd($data['end']);
-		$userSession->setIsApproved($data['isApproved']);
-		//$userSession->setSession(); // como?
-		$userSession->setIdSession($data['idSession']);
-		$userSession->setIdUser($data['idUser']);
 
-		$this->EntityManager->persist($userSession);
-		$this->EntityManager->flush($userSession);
+		$userSession->setSession($session);
+		$userSession->setIdUser($data['idUser']);
+		$userSession->setIsApproved($data['isApproved']);
+		$userSession->setAccumulatedPoints((int)$data['points']);
+		$userSession->setStart($data['start']);
+		$userSession->setUser($user);
+		$this->entityManager->getConnection()->getConfiguration()->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+		$this->entityManager->persist($userSession);
+		$this->entityManager->flush($userSession);
 	}
 
 	public function update($data, $strategies = null)
@@ -41,12 +41,12 @@ class UserSessionService extends BaseService {
 		$userSession->setStart($data['start']);
 		$userSession->setEnd($data['end']);
 		$userSession->setIsApproved($data['isApproved']);
-		// $userSession->setSession(); // como? 
+		$userSession->setSession($this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']));  
 		$userSession->setIdSession($data['idSession']);
 		$userSession->setIdUser($data['idUser']);
 
-		$this->EntityManager->persist($userSession);
-		$this->EntityManager->flush($userSession);
+		$this->entityManager->persist($userSession);
+		$this->entityManager->flush($userSession);
 	}
 
 	public function delete($id, $entityObj = null)
@@ -76,42 +76,7 @@ class UserSessionService extends BaseService {
 		$user->setHours($user->getHours()+$hours);
 		// $sql="UPDATE users SET hours=hours+".$hours." WHERE id='$idUser'";
 
-		$this->EntityManager->persist($userSession);
-		$this->EntityManager->flush($userSession);
+		$this->entityManager->persist($userSession);
+		$this->entityManager->flush($userSession);
 	}
-
-	/*
-	public function findOne($id)
-	{
-		$user = $this->connection->getDatosSessionUserById($id);
-		$userObject = new UserSession($user->id, /*$sessionService->findOne($connection->getIdSessionbyIdUserSession($id)) *//*null, $user->user_id, $user->is_approved, $user->points, $user->cashout, $user->start_at, $user->end_at);
-		$this->findEntities($userObject);
-		return $userObject;
-	}
-
-	public function find($idSession)
-	{
-		$datosUsersSession = $this->connection->getDatosSessionsUsers($idSession);
-		$users = array();
-
-		foreach ($datosUsersSession as $userSession) 
-		{
-			$userObject = new UserSession($userSession->id, null, $userSession->user_id, $userSession->is_approved, $userSession->points, $userSession->cashout, $userSession->start_at, $userSession->end_at);
-			$this->findEntities($userObject);
-			$users[] = $userObject; 
-		}
-		return $users;
-	}
-
-	private function findEntities(UserSession $userSession) {
-		$idUser = $userSession->getIdUser();
-		$user = $this->userService->findOne($idUser);
-		$userSession->setUser($user);
-
-		//agrego lo mismo para session.
-		$idSession = $this->connection->getIdSessionbyIdUserSession($userSession->getId());
-		$session = $this->sessionService->findOne($idSession);
-		$userSession->setSession($session);
-	}
-	*/
 }

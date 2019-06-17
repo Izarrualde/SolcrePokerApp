@@ -8,6 +8,7 @@ use \Solcre\lmsuy\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 
+
 class SessionController
 {
     protected $view;
@@ -34,19 +35,22 @@ class SessionController
     public function list($request, $response, $args) {
 	    $idSession = $args['idSession'];
 	    $session = $this->sessionService->fetchOne(array('id' => $idSession));
-        $datosUI = array();
-		$datosUI['session'] = $session->toArray();
+        $datosUI = array();	
+        $datosUI['session'] = $session->toArray();
         $datosUI['breadcrumb'] = 'Editar Sesión';
-
     	return $this->view->render($response, 'editSession.html.twig', $datosUI);
     }
 
     public function add($request, $response, $args) {
     	$post = $request->getParsedBody();
-    	$datosUI = array();
+
+
+        $datosUI = array();
     	if (is_array($post))
     	{
+
     		$this->sessionService->add($post);
+
    			$message = 'La sesión se agregó exitosamente';
             $template = 'index.html.twig';
 			$datosSessions = $this->sessionService->fetchAll();
@@ -66,12 +70,12 @@ class SessionController
 	public function form($request, $response, $args) {
     	$datosUI = array();
     	$template = 'newsession.html.twig';
+
     	return $this->view->render($response, $template, $datosUI);
     }
 
     public function update($request, $response, $args) {
     	$post = $request->getParsedBody();
-
 	    //$idSession = $args['idSession'];
 	    $this->sessionService->update($post);
    		$message = 'La Sesión se actualizó exitosamente';

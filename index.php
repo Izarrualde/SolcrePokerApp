@@ -115,11 +115,11 @@ $container->set('UserSessionController', function($c) {
 });
 
 // Add route
-$app->get('/', 'SessionController:listAll'); //listar sesiones
-$app->get('/sessions/{idSession:[0-9]+}', 'SessionController:list'); //sesion especifica
-$app->get('/sessions', 'SessionController:listAll'); //listar sesiones
-$app->post('/sessions', 'SessionController:add'); //nueva sesion si vengo a esta direccion por post
-$app->get('/sessions/form', 'SessionController:form'); //formulario para nueva sesion
+$app->get('/', 'SessionController:listAll'); 
+$app->get('/sessions/{idSession:[0-9]+}', 'SessionController:list'); 
+$app->get('/sessions', 'SessionController:listAll'); 
+$app->post('/sessions', 'SessionController:add'); 
+$app->get('/sessions/form', 'SessionController:form'); 
 $app->get('/sessions/{idSession}/remove', 'SessionController:delete'); 
 $app->post('/sessions/{idSession}/update', 'SessionController:update');
 

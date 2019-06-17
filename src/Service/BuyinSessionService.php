@@ -18,26 +18,36 @@ class BuyinSessionService extends BaseService {
 
 	public function add($data, $strategies = null)
 	{
+		$data['hour'] = new \DateTime($data['hour']);
+
 		$buyin = new BuyinSessionEntity();
 		$buyin->setHour($data['hour']);
 		$buyin->setAmountCash($data['amountCash']);
-		$buyin->setAmountCredit(['setAmountCredit']);
-		$buyin->setSessionUserId($data['IdUserSession']);
+		$buyin->setAmountCredit($data['amountCredit']);
+		$buyin->setCurrency(1);
+		$userSession = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserSessionEntity', $data['idUserSession']);
+
+
+		$buyin->setUserSession($this->entityManager->getReference('Solcre\lmsuy\Entity\UserSessionEntity', $data['idUserSession']));
+		$buyin->setSessionUserId($data['idUserSession']);
 		$buyin->setIsApproved($data['approved']);
 
-		$this->EntityManager->persist($buyin);
-		$this->EntityManager->flush($buyin);
+		$this->entityManager->persist($buyin);
+		$this->entityManager->flush($buyin);
 	}
 
 	public function update($data, $strategies = null)
 	{
+
+		$data['hour'] = new \DateTime($data['hour']);
 		$buyin = parent::fetch($data['id']);
+
 		$buyin->setHour($data['hour']);
 		$buyin->setAmountCash($data['amountCash']);
-		$buyin->setAmountCredit(['setAmountCredit']);
+		$buyin->setAmountCredit($data['amountCredit']);
 
-		$this->EntityManager->persist($buyin);
-		$this->EntityManager->flush($buyin);
+		$this->entityManager->persist($buyin);
+		$this->entityManager->flush($buyin);
 	}
 
 	public function delete($id, $entityObj = null)
@@ -47,45 +57,4 @@ class BuyinSessionService extends BaseService {
 		$this->entityManager->remove($buyin);
 		$this->entityManager->flush();
 	}
-
-	/*
-	public function findOne($id)
-	{
-		$buyin = $this->connection->getDatosSessionBuyinById($id);
-		$idSession = $this->connection->getIdSessionbyIdUserSession($buyin->session_user_id);
-		$buyinObject = new BuyinSession($buyin->id, $idSession, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
-		$this->findEntities($buyinObject);
-		return $buyinObject;
-	}
-
-	public function find($idSession)
-	{
-
-		$datosBuyins = $this->connection->getDatosSessionBuyins($idSession);
-
-		$buyins = array();
-
-		foreach ($datosBuyins as $buyin) 
-		{
-			$buyinObject = new BuyinSession($buyin->id, $idSession, $buyin->session_user_id, $buyin->amount_of_cash_money, $buyin->amount_of_credit_money, $buyin->currency_id, $buyin->created_at, $buyin->approved);
-
-			$this->findEntities($buyinObject);
-
-			$buyins[] = $buyinObject; 
-		}
-
-		return $buyins;
-	}
-
-	private function findEntities(BuyinSession $buyinSession) {
-		$idSession = $buyinSession->getIdSession();
-		$session = $this->sessionService->findOne($idSession);
-		$buyinSession->setSession($session);
-		$sessionUserId = $buyinSession->getSessionUserId();
-		$userSession = $this->userSessionService->findOne($sessionUserId);
-		$userSession->setSession($session);
-		$buyinSession->setUserSession($userSession);
-
-	}
-	*/
 }

@@ -13,11 +13,11 @@
 				<div class="card-body">
 					<section class="container row justify-content-center">
 						<article>
-							<form class="was-validated" action="/sessions/{{ session.idSession }}/comissions" method="post">
+							<form class="was-validated" action="/sessions/{{ session.id }}/comissions" method="post">
 
 									<input type="hidden" class="form-control" name="id" id="id" type="text" required="true" value="null">
 								
-									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ session.idSession }}">
+									<input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ session.id }}">
 
 								<div class="form-group">
 									<label class="sr-only" for="hour"> hour: </label>

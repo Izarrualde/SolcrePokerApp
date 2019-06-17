@@ -30,16 +30,17 @@ class BuyinSessionController
         $template = 'buyins.html.twig';
 
     	$datosBuyins = $this->buyinSessionService->fetchAllBuyins( $idSession);
-        
 
         $session = $this->sessionService->fetchOne(array('id' => $idSession));
-        $buyins = array(); //dejo cada buyin como un array para entregarlo a datosUI en ese formato
+
+        $buyins = array(); 
     	$datosUI = array();
+
         foreach ($datosBuyins as $buyinObject) 
 		{
 			$buyins[] = $buyinObject->toArray();
 		}
-        //buyins es un array de arrays.
+
         $datosUI['session'] = $session->toArray();
         $datosUI['session']['buyins'] = $buyins;
         $datosUI['breadcrumb'] = 'Buyins';
@@ -60,21 +61,21 @@ class BuyinSessionController
     }
 
     public function add($request, $response, $args) {
-        $buyin = $request->getParsedBody();
+        $post = $request->getParsedBody();
+
         $datosUI = array();
-        if (is_array($buyin))
+        if (is_array($post))
         {
-            //$buyinObject = new BuyinSession($buyin['id'], $buyin['idSession'], $buyin['idUserSession'], $buyin['amountCash'], $buyin['amountCredit'], '2', date('c'), $buyin['approved']);
 
             $this->buyinSessionService->add($post);  
             $template = 'buyins.html.twig';
             $message = 'El buyin se agregó exitosamente';
-            $datosBuyins = $this->buyinSessionService->fetchAllBuyins($buyin['idSession']);
+            $datosBuyins = $this->buyinSessionService->fetchAllBuyins($post['idSession']);
 
         //extraigo datos de la bdd
 
             $buyins = array();
-            $session = $this->sessionService->fetchOne(array('id' => $idSession));
+            $session = $this->sessionService->fetchOne(array('id' => $post['idSession']));
 
             foreach ($datosBuyins as $buyin)
             {
@@ -111,8 +112,6 @@ class BuyinSessionController
         $post = $request->getParsedBody();
         $idSession = $post['idSession'];
 
-        // $idSession = $args['idSession'];
-        // $buyinObject = new BuyinSession($post['id'], $post['idSession'], $post['idUserSession'], $post['amountCash'], $post['amountCredit'], '2', date('c'), $post['approved']);
         $this->buyinSessionService->update($post);
         $message = 'El buyin se actualizó exitosamente';
         $template = 'buyins.html.twig';
@@ -125,8 +124,10 @@ class BuyinSessionController
         foreach ($datosBuyins as $buyin) {
             $buyins[] = $buyin->toArray(); 
         }
-
-        $datosUI['session'] = $session->toArray();
+        if ($session instanceof SessionEntity){
+           $datosUI['session'] = $session->toArray(); 
+        }
+        
         $datosUI['session']['buyins'] = $buyins;
         $datosUI['breadcrumb'] = 'Buyins';
         $datosUI['message'] = $message;
@@ -138,8 +139,7 @@ class BuyinSessionController
     public function delete($request, $response, $args) {
         $idSession = $args['idSession'];
         $id = $args['idbuyin'];
-        //if (is_array($_GET))
-        //$this->buyinSessionService->delete($this->buyinSessionService->findOne($id));
+
         $this->buyinSessionService->delete($id);
         $message = 'El buyin se eliminó exitosamente';
         $template = 'buyins.html.twig';

@@ -106,7 +106,7 @@ class ComissionSessionEntity
 	public function toArray(){
 		return  [
 			'id' => $this->getId(),
-			'idSession' => $this->getIdSession(),
+			'idSession' => $this->getSession()->getId(),
 			'hour' => $this->getHour(),
 			'comission' => $this->getComission()
 		];

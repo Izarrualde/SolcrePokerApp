@@ -2,6 +2,7 @@
 Namespace Solcre\lmsuy\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Embeddable
@@ -74,7 +75,7 @@ class UserSessionEntity
 	protected $buyins;
 
 
-	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null)
+	public function __construct($id=null, SessionEntity $session = null, $idUser=null, $isApproved=null, $accumulatedPoints=0, $cashout=0, $start=null, $end=null, UserEntity $user=null)
 	{
 		$this->setId($id);
 		$this->setSession($session);
@@ -84,6 +85,17 @@ class UserSessionEntity
 		$this->setCashout($cashout);
 		$this->setStart($start);
 		$this->setEnd($end);
+		/*if ($user instanceof UserEntity)
+		{
+			$this->setUser($user);	
+		} 
+		else
+		{
+			$userObject = new UserEntity();
+			$this->setUser($userObject);
+		} */
+		$this->setUser($user);
+		$this->buyins = new ArrayCollection();
 	}
 	
 	public function getId() 
@@ -130,12 +142,12 @@ class UserSessionEntity
 	
 	public function getAccumulatedPoints() 
 	{
-		return $this->AccumulatedPoints;
+		return $this->accumulatedPoints;
 	}
 	
-	public function setAccumulatedPoints($AccumulatedPoints)
+	public function setAccumulatedPoints($accumulatedPoints)
 	{
-		$this->AccumulatedPoints = $AccumulatedPoints;
+		$this->accumulatedPoints = $accumulatedPoints;
 		return $this;
 	}
 	
@@ -181,51 +193,45 @@ class UserSessionEntity
 		return $this->user;
 	}
 	
-	public function setUser(UserEntity $user)
+	public function setUser(UserEntity $user = null)
 	{
 		$this->user = $user;
 		return $this;
 	}
 
-
-	public function getCashin() 
+	public function getBuyins() 
 	{
-		$cashin = 0;
-		$session1 = $this->getSession();
-		
-		$b = $session1->getSessionComissions();
-		
-		$c = $b->toArray();
-		
-
-		// la funcion toArray en arrayCollection funciona bien, el tema es que en buyins tengo un indice
-		if ($session1 instanceof SessionEntity) {
-			$buyins = $session1->getSessionBuyins();
-			/*foreach($buyins as $buyin) {
-				if ($buyin->getSessionUserId() == $this->getId()) {
-					$cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
-				}
-			}*/
-		} 
-		return $cashin;
+		return $this->buyins;
 	}
+	
+	public function setBuyins($buyins)
+	{
+		$this->buyins = $buyins;
+		return $this;
+	}
+
+public function getCashin()
+    {
+        $cashin = 0;
+            $buyins = $this->getBuyins()->toArray();
+
+            foreach($buyins as $buyin) {
+                    $cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
+            }
+       
+        return $cashin;
+    }
+
+
 
 	public function getTotalCredit()
 	{
 		$credit = 0;
-		$session = $this->getSession();
-			
-		if ($session instanceof SessionEntity) {
-			$buyins = $session->getSessionBuyins();
+		 	$buyins = $this->getBuyins()->toArray();
 
-		 	$buyinsArray = $buyins->toArray();
-			var_dump(get_class($buyinsArray));
-			foreach($buyinsArray as $buyin) {
-				if ($buyin->getSessionUserId() == $this->getId()) {
+			foreach($buyins as $buyin) {
 					$credit += $buyin->getAmountCredit();
-				}
 			}
-		} 
 		return $credit;
 	}
 
@@ -254,12 +260,17 @@ class UserSessionEntity
 			'startTime' => $this->getStart(),
 			'endTime' => $this->getEnd(),
 			'cashin' => $this->getCashin(),
-			//'totalCredit' => $this->getTotalCredit()
+			'totalCredit' => $this->getTotalCredit()
 		];
 
 		$user = $this->getUser();
 		if ($user instanceof UserEntity) {
 			$ret['user'] = $user->toArray();
+		}
+		$session = $this->getSession();
+
+		if ($session instanceof SessionEntity) {
+			$ret['session'] = $session->toArray();
 		}
 
 		return $ret;

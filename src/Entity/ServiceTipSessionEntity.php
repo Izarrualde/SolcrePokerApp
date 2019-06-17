@@ -107,7 +107,7 @@ class ServiceTipSessionEntity
 	public function toArray(){
 		return  [
 			'id' => $this->getId(),
-			'idSession' => $this->getIdSession(),
+			'idSession' => $this->getSession()->getId(),
 			'hour' => $this->getHour(),
 			'serviceTip' => $this->getServiceTip()
 		];

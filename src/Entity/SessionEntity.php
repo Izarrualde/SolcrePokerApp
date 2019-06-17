@@ -9,6 +9,7 @@ use Solcre\lmsuy\Exception\ComissionAlreadyAddedException;
 use Solcre\lmsuy\Exception\DealerTipAlreadyAddedException;
 use Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
@@ -82,7 +83,7 @@ class SessionEntity
 	/**
 	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\ServiceTipSessionEntity", mappedBy="session")
      */		
-	public $sessionServiceTips = array();
+	public $sessionServiceTips;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\UserSessionEntity", mappedBy="session")
@@ -94,13 +95,11 @@ class SessionEntity
      */
 	public $sessionComissions;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\BuyinSessionEntity", mappedBy="session")
-     */
+
 	public $sessionBuyins;
 
 
-	public function __construct($id=null, $date=null, $title="", $description="", $photo=null, $seats=null, $seatsWaiting=null, $reserveWaiting=null, $startTime=null, $startTimeReal=null, $endTime=null)
+	public function __construct($id=null, DateTime $date=null, $title="", $description="", $photo=null, $seats=null, $seatsWaiting=null, $reserveWaiting=null, $startTime=null, $startTimeReal=null, $endTime=null)
 	{
 		$this->setId($id);
 		$this->setDate($date);
@@ -503,7 +502,7 @@ class SessionEntity
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------
-
+/*
 	public function addBuyin(BuyinSessionEntity $buyin)
 	{
 		if (!$this->isPlayer($buyin->getIdPlayer())) 
@@ -524,7 +523,7 @@ class SessionEntity
 			$this->addBuyin($buyin);
 		}
 	}
-
+*/
 	public function getTotalPlayed()
 	{
 	/* esta funcion recibe el buyin de los jugadores de la sesion y devuelve el total jugado */
@@ -578,7 +577,8 @@ class SessionEntity
 			'created_at' => $this->getDate(),
 			'title' => $this->getTitle(),
 			'description' => $this->getDescription(),
-			'startTime' => $this->getStartTimeReal(),
+			'startTime' => $this->getStartTime(),
+			'startTimeReal' => $this->getStartTimeReal(),
 			'activePlayers' => $this->getActivePlayers(),
 			'distinctPlayers' => $this->getTotalDistinctPlayers(),
 			'seats' => $this->getSeats(),

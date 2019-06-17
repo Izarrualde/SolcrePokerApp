@@ -13,23 +13,30 @@ class DealerTipSessionService extends BaseService {
 
 	public function add($data, $strategies = null)
 	{
-		$dealerTip = new DealerTipSession();
+
+		$data['hour'] = new \DateTime($data['hour']);
+
+		$dealerTip = new DealerTipSessionEntity();
 		$dealerTip->setHour($data['hour']);
-		$dealerTip->setIdSession($data['idSession']);
+		$dealerTip->setSession($this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']));
 		$dealerTip->setDealerTip($data['dealerTip']);
 
-		$this->EntityManager->persist($dealerTip);
-		$this->EntityManager->flush($dealerTip);
+		$this->entityManager->persist($dealerTip);
+		$this->entityManager->flush($dealerTip);
 	}
 
 	public function update($data, $strategies = null)
 	{
-		$dealerTip = parent::fetch($data['id']);
+		var_dump($data['hour']);
+		$data['hour'] = new \DateTime($data['hour']);
+
+		// $dealerTip = parent::fetch($data['id']);
+		$dealerTip = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $data['id']);
 		$dealerTip->setHour($data['hour']);
 		$dealerTip->setDealerTip($data['dealerTip']);
 
-		$this->EntityManager->persist($dealerTip);
-		$this->EntityManager->flush($dealerTip);		
+		$this->entityManager->persist($dealerTip);
+		$this->entityManager->flush($dealerTip);		
 	}
 
 	public function delete($id, $entityObj = null)
@@ -39,28 +46,5 @@ class DealerTipSessionService extends BaseService {
 		$this->entityManager->remove($dealerTip);
 		$this->entityManager->flush();
 	}
-
-	/*
-	public function findOne($id)
-	{
-		$dealerTip = $this->connection->getDatosSessionDealerTipById($id);
-		$dealerTipObject = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
-		return $dealerTipObject;
-	}
-
-	public function find($idSession)
-	{
-		$datosDealerTips = $this->connection->getDatosSessionDealerTips($idSession);
-		$dealerTips = array();//
-
-		foreach ($datosDealerTips as $dealerTip) 
-		{
-			$dealerTipObject = new DealerTipSession($dealerTip->id, $dealerTip->session_id, $dealerTip->created_at, $dealerTip->dealer_tip);
-			
-			$dealerTips[] = $dealerTipObject; 
-		}
-		return $dealerTips;
-	}
-	*/
 	
 }

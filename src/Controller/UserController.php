@@ -56,9 +56,7 @@ class UserController
         
         if (is_array($post))
         {
-            /*
-            $userObject = new UserEntity(null, $post['password'], null, $post['email'], $post['lastname'], $post['firstname'],  $post['username'], $post['multiplier'], $post['active'], $post['hours'], $post['points'], $post['sessions'], $post['results'], $post['cashin']);
-            */
+
             $this->userService->add($post); 
             $template = 'viewUsers.html.twig';
             $message = 'El usuario se agregó exitosamente.';
@@ -91,9 +89,7 @@ class UserController
 
     public function update($request, $response, $args) {
         $post = $request->getParsedBody();
-        //$idSession = $args['idSession'];
-        /*$userObject = new UserEntity($post['id'], $post['password'], null, $post['email'], $post['lastname'], $post['name'],  $post['name'], $post['multiplier'], $post['isActive'], $post['hours'], $post['points'], $post['sessions'], $post['results'], $post['cashin']);
-        */
+
         $this->userService->update($post);
         $message = 'El usuario se actualizó exitosamente';
         $template = 'viewUsers.html.twig';
