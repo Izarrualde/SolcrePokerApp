@@ -43,19 +43,12 @@ class SessionEntity
      */
     protected $description;
 
-
     protected $photo;
-
 
     /**
      * @ORM\Column(type="integer", name="count_of_seats")
      */
     protected $seats;
-
-
-    protected $seatsWaiting;
-    protected $reserveWaiting;
-
 
     /**
      * @ORM\Column(type="datetime", name="start_at")
@@ -95,23 +88,18 @@ class SessionEntity
      */
     protected $sessionComissions;
 
-    protected $sessionBuyins;
-
     /**
      * @ORM\OneToMany(targetEntity="Solcre\lmsuy\Entity\ExpensesSessionEntity", mappedBy="session")
      */
     protected $sessionExpenses;
 
-
     public function __construct(
         $id = null,
         \DateTime $date = null,
-        $title = "",
-        $description = "",
+        $title = null,
+        $description = null,
         $photo = null,
         $seats = null,
-        $seatsWaiting = null,
-        $reserveWaiting = null,
         $startTime = null,
         $startTimeReal = null,
         $endTime = null
@@ -122,24 +110,15 @@ class SessionEntity
         $this->setDescription($description);
         $this->setPhoto($photo);
         $this->setSeats($seats);
-        $this->setSeatsWaiting($seatsWaiting);
-        $this->setReserveWaiting($reserveWaiting);
         $this->setStartTime($startTime);
         $this->setStartTimeReal($startTimeReal);
         $this->setEndTime($endTime);
         $this->sessionExpenses    = new ArrayCollection();
         $this->sessionComissions  = new ArrayCollection();
-        $this->sessionBuyins      = new ArrayCollection();
         $this->sessionUsers       = new ArrayCollection();
         $this->sessionDealerTips  = new ArrayCollection();
         $this->sessionServiceTips = new ArrayCollection();
-        //$this->setSessionDealerTips($sessionDealerTips);
-        //$this->setSessionServiceTips($sessionServiceTips);
-        //$this->setSessionUsers($sessionUsers);
-        //$this->setSessionComissions($sessionComissions);
-        //$this->setSessionBuyins($sessionBuyins);
     }
-
 
     public function getId()
     {
@@ -205,28 +184,6 @@ class SessionEntity
     public function setSeats($seats)
     {
         $this->seats=$seats;
-        return $this;
-    }
-
-    public function getSeatsWaiting()
-    {
-        return $this->seatsWaiting;
-    }
-
-    public function setSeatsWaiting($seatsWaiting)
-    {
-        $this->seatsWaiting=$seatsWaiting;
-        return $this;
-    }
-
-    public function getReserveWaiting()
-    {
-        return $this->reserveWaiting;
-    }
-
-    public function setReserveWaiting($reserveWaiting)
-    {
-        $this->reserveWaiting=$reserveWaiting;
         return $this;
     }
 
@@ -310,13 +267,10 @@ class SessionEntity
     
     public function getSessionBuyins()
     {
-        return $this->sessionBuyins;
-    }
-    
-    public function setSessionBuyins($sessionBuyins)
-    {
-        $this->sessionBuyins=$sessionBuyins;
-        return $this;
+        $buyins = [];
+        // Recorrer todos los userSession y devolver los buyins.
+        // Usar array_map para resolverlo.
+        return $buyins;
     }
 
     public function getSessionExpenses()
@@ -329,82 +283,67 @@ class SessionEntity
         $this->sessionExpenses=$sessionExpenses;
         return $this;
     }
-/*
-    public function getConfirmedPlayers()
-    {
-        return count($this->sessionUsers);
-    }
-*/
-    public function getTotalCashout()
-    {
-        $cashout = 0;
-        foreach ($this->sessionUsers as $user) {
-            /**
 
-          *
-       * @var UsersSession $user
-*/
-            $cashout +=  $user->getCashout();
-        }
-        return $cashout;
+    protected function getTotalCashout()
+    {
+        return array_reduce(
+            $this->sessionUsers->toArray(),
+            function ($cashout, $user) {
+                return $cashout + $user->getCashout();
+            }
+        );
     }
 
     public function getDealerTipTotal()
     {
-        $dealerTipTotal = 0;
-        foreach ($this->sessionDealerTips as $tipHour) {
-            $dealerTipTotal += $tipHour->getDealerTip();
-        }
-        return $dealerTipTotal;
+        return array_reduce(
+            $this->sessionDealerTips->toArray(),
+            function ($dealerTipTotal, $tipHour) {
+                return $dealerTipTotal + $tipHour->getDealerTip();
+            }
+        );
     }
 
     public function getExpensesTotal()
     {
-        $expensesTotal = 0;
-        foreach ($this->sessionExpenses as $expenditure) {
-            $expensesTotal += $expenditure->getAmount();
-        }
-        return $expensesTotal;
-    }
-/*
-    protected function getDealerTipIds()
-    {
-        return array_map(
-            function (DealerTipSessionEntity $tip) {
-                return $tip->getId();
-            },
-            $this->sessionDealerTips
+        return array_reduce(
+            $this->sessionExpenses->toArray(),
+            function ($expensesTotal, $expenditure) {
+                return $expensesTotal + $expenditure->getAmount();
+            }
         );
     }
-*/
 
     public function getServiceTipTotal()
     {
-        $serviceTipTotal = 0;
-        foreach ($this->sessionServiceTips as $tipHour) {
-            $serviceTipTotal += $tipHour->getServiceTip();
-        }
-        return $serviceTipTotal;
+        return array_reduce(
+            $this->sessionServiceTips->toArray(),
+            function ($serviceTipTotal, $tipHour) {
+                return $serviceTipTotal + $tipHour->getServiceTip();
+            }
+        );
     }
 
     public function getComissionTotal()
     {
-        $comissionTotal = 0;
-        foreach ($this->sessionComissions as $comissionHour) {
-            $comissionTotal += $comissionHour->getComission();
-        }
-        return $comissionTotal;
+        return array_reduce(
+            $this->sessionComissions->toArray(),
+            function ($comissionTotal, $comissionHour) {
+                return $comissionTotal + $comissionHour->getComission();
+            }
+        );
     }
 
     public function getTotalPlayed()
     {
-        /* esta funcion recibe el buyin de los jugadores de la sesion y devuelve el total jugado */
-
-        $amountTotal = 0;
-        foreach ($this->sessionBuyins as $buyin) {
-            $amountTotal += $buyin->getAmountCash() + $buyin->getAmountCredit();
-        }
-        return $amountTotal;
+        return array_reduce(
+            $this->getSessionBuyins(),
+            function ($amountTotal, $buyin) {
+                return $amountTotal +
+                $buyin->getAmountCash() +
+                $buyin->getAmountCredit();
+            }
+        );
     }
 
     public function validateSession($session)
@@ -413,11 +352,7 @@ class SessionEntity
         $session->getComissionTotal() +
         $session->getDealerTipTotal()+
         $session-> getServiceTipTotal();
-        if ($session->getTotalPlayed() == $total) {
-            return true;
-        } else {
-            return false;
-        }
+        return $session->getTotalPlayed() == $total;
     }
 
     public function getActivePlayers()
@@ -459,7 +394,7 @@ class SessionEntity
         'seats'              => $this->getSeats(),
         'endTime'            => $this->getEndTime(),
         'comissionTotal'     => $this->getComissionTotal(),
-        'expensesTotal'     => $this->getExpensesTotal(),
+        'expensesTotal'      => $this->getExpensesTotal(),
         'dealerTipTotal'     => $this->getDealerTipTotal(),
         'serviceTipTotal'    => $this->getServiceTipTotal()
         ];

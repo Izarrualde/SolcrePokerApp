@@ -32,6 +32,9 @@ class ComissionSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
+        if (!is_numeric($data['comission'])) {
+            throw new ComissionInvalidException();
+        }
         
         $data['hour'] = new \DateTime($data['hour']);
         $comission    = parent::fetch($data['id']);

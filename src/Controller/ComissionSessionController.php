@@ -120,11 +120,18 @@ class ComissionSessionController
         $id        = $args['idcomission'];
         $idSession = $post['idSession'];
 
-        $this->comissionService->update($post);
-        $message  = 'La comisión se actualizó exitosamente';
+        if (is_array($post)) {
+            try {
+                $this->comissionService->update($post);
+                $message[] = 'la comission se actualizó exitosamente.';
+            } catch (ComissionInvalidException $e) {
+                $message[] = $e->getMessage();
+            }
+        }
+
         $template = 'comissions.html.twig';
 
-        //extraigo datos de la BD
+        //BUSQUEDA DE DATOS PARA LA UI
         $idSession = $post['idSession'];
 
         $session         = $this->sessionService->fetchOne(array('id' => $idSession));
@@ -153,7 +160,7 @@ class ComissionSessionController
 
         $this->comissionService->delete($id);
 
-        $message  = 'La comisión se eliminó exitosamente';
+        $message[]  = 'La comisión se eliminó exitosamente';
         $template = 'comissions.html.twig';
 
         //extraigo datos para DB

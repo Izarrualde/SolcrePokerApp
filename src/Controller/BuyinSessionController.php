@@ -119,16 +119,21 @@ class BuyinSessionController
 
     public function update($request, $response, $args)
     {
-        $post = $request->getParsedBody();
-
+        $post      = $request->getParsedBody();
         $idSession = $post['idSession'];
 
-        $this->buyinSessionService->update($post);
+        if (is_array($post)) {
+            try {
+                $this->buyinSessionService->update($post);
+                $message[] = 'El buyin se actualizó exitosamente';
+            } catch (BuyinInvalidException $e) {
+                $message[] = $e->getMessage();
+            }
+        }
 
-        $message  = 'El buyin se actualizó exitosamente';
         $template = 'buyins.html.twig';
 
-        //extraigo datos de la BD
+        //BUSQUEDA DE DATOS PARA LA UI
         $session     = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosBuyins = $this->buyinSessionService->fetchAllBuyins($post['idSession']);
 

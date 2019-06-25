@@ -209,9 +209,9 @@ class TipSessionController
         $datosUI = array();
 
         if (isset($args['idDealerTip'])) {
-            $idDealerTip =  $args['idDealerTip'];
-            $dealerTip   = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $idDealerTip);
-            $this->dealerTipService->delete($idDealerTip);
+            $idTip =  $args['idDealerTip'];
+            $dealerTip   = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $idTip);
+            $this->dealerTipService->delete($idTip);
             
             $idSession   = $dealerTip->getSession()->getId();
             $message[]   = 'El dealerTip se eliminó exitosamente';

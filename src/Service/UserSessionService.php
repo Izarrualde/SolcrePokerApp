@@ -85,8 +85,8 @@ class UserSessionService extends BaseService
             $roundedMinutes = floor((($minutes/60)/.25))*.25;
             $hours          = date_diff($date1, $date2)->format('%h') + $roundedMinutes;
             $user           = $this->userService->fetch($data['idUser']);
-
             $user->setHours($user->getHours()+$hours);
+
 
             $this->entityManager->persist($user);
         }

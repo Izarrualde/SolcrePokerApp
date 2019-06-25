@@ -53,7 +53,10 @@ class BuyinSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-
+        if (!is_numeric($data['amountCash']) ||
+            (!is_numeric($data['amountCredit']))) {
+            throw new BuyinInvalidException();
+        }
         $data['hour'] = new \DateTime($data['hour']);
         $buyin        = parent::fetch($data['id']);
 

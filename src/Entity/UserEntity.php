@@ -65,7 +65,7 @@ class UserEntity
 
 
     /**
-     * @ORM\Column(type="decimal")
+     * @ORM\Column(type="decimal", precision=5, scale=2)
      */
     protected $hours;
 
@@ -93,17 +93,19 @@ class UserEntity
      */
     protected $cashin;
 
-
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         $id = null,
-        $password = "",
-        $mobile = "",
-        $email = "",
-        $lastname = "",
-        $name = "",
-        $username = "",
-        $multiplier = null,
-        $isActive = null,
+        $password = null,
+        $mobile = null,
+        $email = null,
+        $lastname = null,
+        $name = null,
+        $username = null,
+        $multiplier = 0,
+        $isActive = 0,
         $hours = 0,
         $points = 0,
         $sessions = 0,
