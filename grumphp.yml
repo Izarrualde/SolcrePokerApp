@@ -1,0 +1,20 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    tasks:
+        phpcs:
+          standard: PSR2
+          ignore_patterns: [./tests/*, ./resources/*, ./database/*, ./bootstrap/*]
+        phpmd:
+          whitelist_patterns: []
+          exclude: ['/src/Repository/BaseRepository.php']
+          ruleset: ['cleancode', 'codesize', '/phpmd_custom_naming.xml']
+          triggered_by: ['php']
+        phpstan:
+            autoload_file: ~
+            configuration: ~
+            level: 0
+            force_patterns: []
+            ignore_patterns: []
+            triggered_by: ['php']
+            memory_limit: '-1'

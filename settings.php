@@ -2,8 +2,6 @@
 
 // settings.php
 
-define('APP_ROOT', __DIR__);
-
 return [
     'displayErrorDetails' => true,
     'determineRouteBeforeAppMiddleware' => false,
@@ -14,10 +12,10 @@ return [
 
         // path where the compiled metadata info will be cached
         // make sure the path exists and it is writable
-        'cache_dir' => APP_ROOT . '/data/cache',
+        'cache_dir' => __DIR__ . '/data/cache',
 
         // you should add any other path containing annotated entity classes
-        'metadata_dirs' => [APP_ROOT . '/src/Entity'],
+        'metadata_dirs' => [__DIR__ . '/src/Entity'],
 
         'connection' => [
             'driver' => 'pdo_mysql',

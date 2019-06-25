@@ -3,47 +3,42 @@
 {% include 'header.html.twig' %}
 
 <body>
-	<div class="container">
-		<div class="col-md-8">
-		{% include 'breadcrumb.html.twig' %}
-			<div class="card">
-				<div class="card-header bg-primary text-white">
-					Ingresar Tips
-				</div>
-				<div class="card-body">
-					<section class="container row justify-content-center">
-						<article>
-							<form class="was-validated" action="/sessions/{{ session.id }}/tips" method="post">
-
-									<input type="hidden" class="form-control" name="id" id="id" type="text"  required="true" value="null">
-								
-									<input type="hidden" class="form-control" name="idSession" id="idSession" type="text" placeholder="IdSession" required="true" value="{{ session.id }}">
-
-								<div class="form-group">
-									<label class="sr-only" for="hour"> hour: </label>
-									<input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ date('c') | date('Y-m-d') }}T{{ date('c') | date('H:i') }}">
-									<small id="hour" class="form-tet text-muted"> Hora </small>
-								</div>
-
-								<div class="form-group">
-									<label class="sr-only" for="tip"> dealerTip: </label>
-									<input class="form-control" name="dealerTip" id="dealerTip" type="text" placeholder="DealerTip" required="true" value="">
-								</div>
-
-								<div class="form-group">
-									<label class="sr-only" for="tip"> serviceTip: </label>
-									<input class="form-control" name="serviceTip" id="serviceTip" type="text" placeholder="ServiceTip" required="true" value="">
-								</div>
-
-								<div class="form-group">
-									<input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />
-								</div>
-							</form>
-						</article>
-					</section>
-				</div>
-			</div>
-		</div>
-	</div>	
+    <div class="container">
+        <div class="col-md-8">
+            {% include 'breadcrumb.html.twig' %}
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Ingresar Tips
+                </div>
+                <div class="card-body">
+                    <section class="container row justify-content-center">
+                        <article>
+                            <form class="was-validated" action="/sessions/{{ session.id }}/tips" method="post">
+                                <input type="hidden" class="form-control" name="id" id="id" type="text" required="true" value="null">
+                                <input type="hidden" class="form-control" name="idSession" id="idSession" type="text" placeholder="IdSession" required="true" value="{{ session.id }}">
+                                <div class="form-group">
+                                    <label class="sr-only" for="hour"> hour: </label>
+                                    <input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ now | date('Y-m-d\\TH:i') }}">
+                                    <small id="hour" class="form-tet text-muted"> Hora </small>
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="tip"> dealerTip: </label>
+                                    <input class="form-control" name="dealerTip" id="dealerTip" type="number" placeholder="DealerTip" required="true" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="tip"> serviceTip: </label>
+                                    <input class="form-control" name="serviceTip" id="serviceTip" type="number" placeholder="ServiceTip" required="true" value="">
+                                </div>
+                                <div class="form-group">
+                                    <input class="btn btn-lg btn-block btn-primary" type="submit" value="Enviar" />
+                                </div>
+                            </form>
+                        </article>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

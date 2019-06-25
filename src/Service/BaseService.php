@@ -6,6 +6,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Exception;
 use ReflectionClass;
+use BaseRepository;
 
 abstract class BaseService
 {
@@ -27,7 +28,7 @@ abstract class BaseService
     public function getEntityName()
     {
         $namespaceName = (new ReflectionClass($this))->getNamespaceName();
-        $className = (new ReflectionClass($this))->getShortName();
+        $className     = (new ReflectionClass($this))->getShortName();
         if (substr_count($className, 'Service') > 1) {
             $pos = strrpos($className, "Service");
             if ($pos !== false) {
@@ -68,13 +69,6 @@ abstract class BaseService
     public function setConfiguration($configuration)
     {
         $this->configuration = $configuration;
-    }
-
-    public function addFilter(FilterInterface $filter)
-    {
-        if ($this->repository instanceof BaseRepository) {
-            $this->repository->addFilter($filter);
-        }
     }
 
     public function add($data, $strategies = null)
@@ -131,9 +125,8 @@ abstract class BaseService
         $entity = $this->repository->find($id);
         if (!empty($entity) && $entity instanceof $this->entityName) {
             return $entity;
-        } 
+        }
         throw new Exception($this->entityName . " Entity not found", 404);
-        
     }
 
     public function update($id, $data)

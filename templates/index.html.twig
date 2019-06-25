@@ -6,86 +6,82 @@
     <div class="container">
         <div class="col-md-12 col-sm-8 col-xs-8">
             <nav aria-label="breadcrumb">
-                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">Inicio  </li>
-
-                  </ol>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Inicio </li>
+                </ol>
             </nav>
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     {% if message is not empty %}
-                        <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">x</button>
-                            {{ message }} 
-                        </div>
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        {{ message }}
+                    </div>
                     {% endif %}
-
-                    Listado Sesiones 
+                    Listado Sesiones
                 </div>
                 <div class="card-body">
-                    <section class="container row"  style="width: auto; margin: auto auto;">
+                    <section class="container row" style="width: auto; margin: auto auto;">
                         <article class="col-md-12 col-sm-12 col-xs-12">
-                        <table class="table table-bordered table-hover text-center">
-                            <thead class="text-center bg-dark text-white">
-                                <th> Id </th>
-                                <th> Fecha </th>
-                                <th> Dia </th>
-                                <th> Descrip. </th>
-                                <th> inicio </th>
-                                <th> Jugando/Total </th>
-                                <th> Asientos L </th>                               
-                                <th> fin </th>
-                                <th> Acciones</th>
-                            </thead>
-                            <tbody>
-                                {% for session in sessions %}
+                            <table class="table table-bordered table-hover text-center">
+                                <thead class="text-center bg-dark text-white">
+                                    <th> Id </th>
+                                    <th> Fecha </th>
+                                    <th> Dia </th>
+                                    <th> Descrip. </th>
+                                    <th> inicio </th>
+                                    <th> Jugando/Total </th>
+                                    <th> Asientos L </th>
+                                    <th> fin </th>
+                                    <th> Acciones</th>
+                                </thead>
+                                <tbody>
+                                    {% for session in sessions %}
                                     <tr class="{{ session.endTime ? '' : 'active'}}">
-                                            <td>{{ session.id }}</td>
-                                            <td>{{ session.created_at|date("d/m/Y") }}</td>
-                                            <td>{{ session.created_at|date('l')  }}</td>
-                                            <td>{{ session.description|default("-") }}</td>
-                                            <td>{{ session.startTime ? session.startTime|date('H:i') : "-" }}</td>
-                                            <td>{{ session.activePlayers }} / {{ session.distinctPlayers }}</td>
-                                            <td>{{ session.seats }}</td> 
-                                            <td>{{ session.endTime ? session.endTime|date('H:i') : "-" }}</td>
-                                            <td> 
-                                                <a href="/sessions/{{ session.id }}/usersSession/" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
-                                                <a href="/sessions/{{ session.id }}/buyins/" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
-                                                <a href="/sessions/{{ session.id }}/tips/" class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a> 
-                                                <a href="/sessions/{{ session.id }}/comissions/" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
-                                                <a href="/sessions/{{ session.id }}"> <i class="fas fa-pencil-alt"> </i> </a>
-                                                <a href="/sessions/{{ session.id }}/remove"> <i class="fas fa-trash-alt"></i> </a>
-                                                <a href="actions/revisionsession_twig.php?id={{ session.id }}"> <i class="far fa-eye"></i></a>
-                                            </td>
-                                    {% endfor %}
+                                        <td>{{ session.id }}</td>
+                                        <td>{{ session.created_at|date("d/m/Y") }}</td>
+                                        <td>{{ session.created_at|date('l') }}</td>
+                                        <td>{{ session.description|default("-") }}</td>
+                                        <td>{{ session.startTime ? session.startTime|date('H:i') : "-" }}</td>
+                                        <td>{{ session.countActivePlayers }} / {{ session.distinctPlayers }}</td>
+                                        <td>{{ session.seats }}</td>
+                                        <td>{{ session.endTime ? session.endTime|date('H:i') : "-" }}</td>
+                                        <td>
+                                            <a href="/sessions/{{ session.id }}/usersSession/" class="btn btn-sm btn-info"> <i class="fas fa-users"></i></a>
+                                            <a href="/sessions/{{ session.id }}/buyins/" class="btn btn-sm btn-secondary"> <i class="fas fa-money-bill"></i></a>
+                                            <a href="/sessions/{{ session.id }}/tips/" class="btn btn-sm btn-danger"> <i class="fas fa-hand-holding-usd"></i></a>
+                                            <a href="/sessions/{{ session.id }}/comissions/" class="btn btn-sm btn-success"> <i class="fas fa-dollar-sign"></i></a>
+                                            <a href="/sessions/{{ session.id }}"> <i class="fas fa-pencil-alt"> </i> </a>
+                                            <a href="/sessions/{{ session.id }}/remove"> <i class="fas fa-trash-alt"></i> </a>
+                                            <a href="actions/revisionsession_twig.php?id={{ session.id }}"> <i class="far fa-eye"></i></a>
+                                            <a href="/sessions/{{ session.id }}/expenses"> <i class="fas fa-clipboard"></i></a>
+                                        </td>
+                                        {% endfor %}
                                     </tr>
                                     <tr>
                                         <td colspan="9">
-                                        <a href="/sessions/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
+                                            <a href="/sessions/form" class="btn btn-lg btn-block btn-danger"> <i class="fas fa-plus"></i></a>
                                         </td>
                                     </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
                         </article>
                     </section>
                 </div>
             </div>
-        <br>
-        <br>
-        <br>
-
- <br>
- <br>
-                                <a href="/users/" class="btn btn-sm btn-info"> <i class="fas fa-user-circle"></i></a>                                       
-                                          
-                        </article>
-                    </section>
-                </div>
-            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <a href="/users/" class="btn btn-sm btn-info"> <i class="fas fa-user-circle"></i></a>
+            </article>
+            </section>
         </div>
+    </div>
+    </div>
     </div>
     <br><br><br><br><br>
 </body>
-
 
 </html>

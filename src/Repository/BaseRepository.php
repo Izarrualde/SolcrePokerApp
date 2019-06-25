@@ -5,7 +5,6 @@ namespace Solcre\lmsuy\Repository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 
 class BaseRepository extends EntityRepository
 {
@@ -22,9 +21,8 @@ class BaseRepository extends EntityRepository
         //Pre find by
         $filtersOptions = $this->preFindBy($params, $orderBy, $limit, $offset);
         //Legacy
-        if (empty($filtersOptions['fields'])) { 
+        if (empty($filtersOptions['fields'])) {
             $result = parent::findBy($params, $orderBy, $limit, $offset);
-
         } else {
             //Execute
 
@@ -63,7 +61,7 @@ class BaseRepository extends EntityRepository
             if ($this->_em->getFilters()->isEnabled('search')) {
                 //Disable filter
                 $this->_em->getFilters()->disable('search');
-//        }
+                //        }
             }
         }
         return $filtersOptions;
@@ -165,8 +163,7 @@ class BaseRepository extends EntityRepository
                 //is null?
                 if (is_null($fieldValue)) {
                     $criteria->andWhere(Criteria::expr()->isNull($fieldName));
-                } //Select in?
-                else {
+                } else {
                     if (is_array($fieldValue)) {
                         $criteria->andWhere(Criteria::expr()->in($fieldName, $fieldValue));
                     } else {
@@ -208,16 +205,16 @@ class BaseRepository extends EntityRepository
                 //Is filter interface?
                 //if ($filter instanceof FilterInterface) {
                     //Can filter?
-                    if ($filter->canFilter($options)) {
-                        //Load options
-                        $filter->prepareOptions($options);
-                        //Filter
-                        $filter->filter($entity);
-                    } else {
-                        //remove filter
-                        $filter->removeFilter($entity);
-                    }
-               // }
+                if ($filter->canFilter($options)) {
+                    //Load options
+                    $filter->prepareOptions($options);
+                    //Filter
+                    $filter->filter($entity);
+                } else {
+                    //remove filter
+                    $filter->removeFilter($entity);
+                }
+                // }
             }
         }
     }
@@ -236,28 +233,5 @@ class BaseRepository extends EntityRepository
         //Execute  filters
         $this->filter($filtersOptions);
         return $entity;
-    }
-
-    public function findByPaginated(array $params, array $orderBy = null, $limit = null, $offset = null)
-    {
-        //Pre find by
-        $filtersOptions = $this->preFindBy($params, $orderBy, $limit, $offset);
-
-        //Execute
-        $query = $this->getFindByQuery($params, $orderBy, $filtersOptions['fields']);
-
-        //Create doctrine paginator
-        $doctrinePaginator = $this->getDoctrinePaginator($query);
-
-        //Post find by
-        $this->postFindBy($filtersOptions, true);
-
-        return $doctrinePaginator;
-    }
-
-    protected function getDoctrinePaginator($query, $fetchJoinCollection = true)
-    {
-        $ormPaginator = new OrmPaginator($query, $fetchJoinCollection);
-        return new DoctrinePaginator($ormPaginator);
     }
 }

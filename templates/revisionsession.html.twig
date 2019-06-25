@@ -3,37 +3,28 @@
 {% include 'header.html.twig' %}
 
 <body>
-	
-	<div class="container">
-		<div class="col-md-8">
-		{% include 'breadcrumb.html.twig' %}
-		{% include 'blockSession.html.twig' %}
-
-			<div class="card">
-				<div class="card-header bg-primary text-white">
-
-					Revision de la sesión
-				</div>
-				<div class="card-body">
-					<section class="container row">
-						<article class="col-md-4">
-							<p> Validación de sesión: {# {{session.validateSession ? "sesión valida":"sesión no valida" }};
-								{% if session.validateSession == false %} 
-							Por una diferencia de: {{ session.TotalPlayed - session.TotalCashout + session.ComissionTotal + session-.DealerTipTotal + session.ServiceTipTotal }} 
-							    {% endif %} #}
-						   </p>
-							<p> Total Jugado: USD {{ session.TotalPlayed }} </p>
-
-						
-						</article>	
-					</section>
-				</div>
-			</div>
-		</div>
-	</div>
-		<script src="../../js/functions.js"></script>
-		<script src=”/../../js/jquery.js”> </script>
-		<script src=”/../../js/bootstrap.min.js”> </script>
-		
-</body>
-</html>
+    <div class="container">
+        <div class="col-md-8">
+            {% include 'breadcrumb.html.twig' %}
+            {% include 'blockSession.html.twig' %}
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Revision de la sesión
+                </div>
+                <div class="card-body">
+                    <section class="container row">
+                        <article class="col-md-4">
+                            <p> Validación de sesión: {# {{session.validateSession ? "sesión valida":"sesión no valida" }};
+                                {% if session.validateSession == false %}
+                                Por una diferencia de: {{ session.TotalPlayed - session.TotalCashout + session.ComissionTotal + session-.DealerTipTotal + session.ServiceTipTotal }}
+                                {% endif %} #}
+                            </p>
+                            <p> Total Jugado: USD {{ session.TotalPlayed }} </p>
+                        </article>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/functions.js"></script>
+    <script src=”/../../js/jquery.js”> </script> <script src=”/../../js/bootstrap.min.js”> </script> </body> </html>

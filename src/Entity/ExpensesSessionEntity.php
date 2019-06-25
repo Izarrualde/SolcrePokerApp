@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
- * @ORM\Table(name="session_comissions")
+ * @ORM\Table(name="session_expenses")
  */
-class ComissionSessionEntity
+class ExpensesSessionEntity
 {
 
     /**
@@ -20,37 +20,34 @@ class ComissionSessionEntity
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionComissions")
+     * @ORM\ManyToOne(targetEntity="Solcre\lmsuy\Entity\SessionEntity", inversedBy="sessionExpenses")
      * @ORM\JoinColumn(name="session_id",                               referencedColumnName="id")
      */
     protected $session;
 
-    protected $idSession;
 
     /**
-     * @ORM\Column(type="datetime", name="created_at")
+     * @ORM\Column(type="string")
      */
-    protected $hour;
+    protected $description;
 
 
     /**
      * @ORM\Column(type="integer")
      */
-    protected $comission;
+    protected $amount;
 
 
     public function __construct(
         $id = null,
-        $idSession = null,
-        $hour = null,
-        $comission = null,
-        $session = null
+        $session = null,
+        $description = null,
+        $amount = null
     ) {
         $this->setId($id);
-        $this->setIdSession($idSession);
         $this->setSession($session);
-        $this->setHour($hour);
-        $this->setComission($comission);
+        $this->setDescription($description);
+        $this->setAmount($amount);
     }
 
     public function getId()
@@ -61,17 +58,6 @@ class ComissionSessionEntity
     public function setId($id)
     {
         $this->id = $id;
-        return $this;
-    }
-
-    public function getIdSession()
-    {
-        return $this->idSession;
-    }
-
-    public function setIdSession($idSession)
-    {
-        $this->idSession = $idSession;
         return $this;
     }
 
@@ -86,35 +72,35 @@ class ComissionSessionEntity
         return $this;
     }
 
-    public function getHour()
+    public function getDescription()
     {
-        return $this->hour;
+        return $this->description;
     }
 
-    public function setHour($hour)
+    public function setDescription($description)
     {
-        $this->hour = $hour;
+        $this->description = $description;
         return $this;
     }
 
-    public function getComission()
+    public function getAmount()
     {
-        return $this->comission;
+        return $this->amount;
     }
 
-    public function setComission($comission)
+    public function setAmount($amount)
     {
-        $this->comission = $comission;
+        $this->amount = $amount;
         return $this;
     }
 
     public function toArray()
     {
         return  [
-        'id'        => $this->getId(),
-        'idSession' => $this->getSession()->getId(),
-        'hour'      => $this->getHour(),
-        'comission' => $this->getComission()
+        'id'          => $this->getId(),
+        'idSession'   => $this->getSession()->getId(),
+        'description' => $this->getDescription(),
+        'amount'      => $this->getAmount()
         ];
     }
 }
