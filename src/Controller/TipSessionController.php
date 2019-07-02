@@ -100,8 +100,8 @@ class TipSessionController
             'serviceTip' => $post['serviceTip']
         ];
 
-        $datosUI = array();
-        $message = array();
+        $datosUI = [];
+        $message = [];
 
         if (is_array($post)) {
             try {
@@ -120,30 +120,37 @@ class TipSessionController
 
             $template = 'tips.html.twig';
 
-            //extraigo datos de la bdd
-            $idSession        = $post['idSession'];
-            $session          = $this->sessionService->fetchOne(array('id' => $idSession));
-            $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
-            $datosServiceTips = $this->serviceTipService->fetchAll(array('session' => $idSession));
-
-            $dealerTips = array();
-            $serviceTips = array();
-
-            foreach ($datosDealerTips as $dealerTip) {
-                $dealerTips[] = $dealerTip->toArray();
-            }
-
-            foreach ($datosServiceTips as $serviceTip) {
-                $serviceTips[] = $serviceTip->toArray();
-            }
-
-            $datosUI['session']                = $session->toArray();
-            $datosUI['session']['dealerTips']  = $dealerTips;
-            $datosUI['session']['serviceTips'] = $serviceTips;
+            $datosUI = $this->loadSessionAndTips($post['idSession']);
             $datosUI['breadcrumb']             = 'Tips';
             $datosUI['message']                = $message;
         }
         return $this->view->render($response, $template, $datosUI);
+    }
+
+    private function loadSessionAndTips($idSession)
+    {
+        $data = [];
+
+        $session          = $this->sessionService->fetchOne(array('id' => $idSession));
+        $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
+        $datosServiceTips = $this->serviceTipService->fetchAll(array('session' => $idSession));
+
+        $dealerTips = [];
+        $serviceTips = [];
+
+        foreach ($datosDealerTips as $dealerTip) {
+            $dealerTips[] = $dealerTip->toArray();
+        }
+
+        foreach ($datosServiceTips as $serviceTip) {
+            $serviceTips[] = $serviceTip->toArray();
+        }
+
+        $data['session']                = $session->toArray();
+        $data['session']['dealerTips']  = $dealerTips;
+        $data['session']['serviceTips'] = $serviceTips;
+
+        return $data;
     }
 
     public function form($request, $response, $args)
@@ -177,26 +184,7 @@ class TipSessionController
             $template  = 'tips.html.twig';
         }
 
-        //extraigo datos de la DB
-        $idSession        = $post['idSession'];
-        $session          = $this->sessionService->fetchOne(array('id' => $idSession));
-        $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
-        $datosServiceTips = $this->serviceTipService->fetchAll(array('session' => $idSession));
-
-        $dealerTips  = array();
-        $serviceTips = array();
-
-        foreach ($datosDealerTips as $dealerTip) {
-            $dealerTips[] = $dealerTip->toArray();
-        }
-
-        foreach ($datosServiceTips as $serviceTip) {
-            $serviceTips[] = $serviceTip->toArray();
-        }
-
-        $datosUI['session']                = $session->toArray();
-        $datosUI['session']['dealerTips']  = $dealerTips;
-        $datosUI['session']['serviceTips'] = $serviceTips;
+        $datosUI = $this->loadSessionAndTips($post['idSession']);
         $datosUI['breadcrumb']             = 'Tips';
         $datosUI['message']                = $message;
 
@@ -228,26 +216,11 @@ class TipSessionController
             $message[] = 'El serviceTip se eliminó exitosamente';
             $template  = 'tips.html.twig';
         }
-
-        //DATOS PARA LA UI
-        $session          = $this->sessionService->fetchOne(array('id' => $idSession));
-        $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
-        $datosServiceTips = $this->serviceTipService->fetchAll(array('session' => $idSession));
-
-        $dealerTips  = array();
-        $serviceTips = array();
-
-        foreach ($datosDealerTips as $dealerTip) {
-            $dealerTips[] = $dealerTip->toArray();
+        
+        if (!empty($idSession)) {
+            $datosUI = $this->loadSessionAndTips($idSession);
         }
 
-        foreach ($datosServiceTips as $serviceTip) {
-            $serviceTips[] = $serviceTip->toArray();
-        }
-
-        $datosUI['session']                = $session->toArray();
-        $datosUI['session']['dealerTips']  = $dealerTips;
-        $datosUI['session']['serviceTips'] = $serviceTips;
         $datosUI['breadcrumb']             = 'Tips';
         $datosUI['message']                = $message;
         

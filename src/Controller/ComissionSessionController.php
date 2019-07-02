@@ -6,6 +6,7 @@ use \Solcre\lmsuy\Service\SessionService;
 use \Solcre\lmsuy\Entity\ComissionSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
+// use \Solcre\lmsuy\Twig\Func;
 use \Solcre\lmsuy\Exception\ComissionInvalidException;
 
 class ComissionSessionController

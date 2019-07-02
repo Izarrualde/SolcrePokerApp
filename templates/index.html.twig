@@ -37,13 +37,13 @@
                                 </thead>
                                 <tbody>
                                     {% for session in sessions %}
-                                    <tr class="{{ session.endTime ? '' : 'active'}}">
+                                    <tr class="{{ session.endTime ? '' : 'active' }}">
                                         <td>{{ session.id }}</td>
                                         <td>{{ session.created_at|date("d/m/Y") }}</td>
                                         <td>{{ session.created_at|date('l') }}</td>
                                         <td>{{ session.description|default("-") }}</td>
                                         <td>{{ session.startTime ? session.startTime|date('H:i') : "-" }}</td>
-                                        <td>{{ session.countActivePlayers }} / {{ session.distinctPlayers }}</td>
+                                        <td>{{ session.ActivePlayers|length }}/{{ session.distinctPlayers|length }}</td>
                                         <td>{{ session.seats }}</td>
                                         <td>{{ session.endTime ? session.endTime|date('H:i') : "-" }}</td>
                                         <td>

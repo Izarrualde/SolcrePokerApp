@@ -1,2 +1,4 @@
 /vendor/
 /data/
+/test/reports
+.phpunit.result.cache

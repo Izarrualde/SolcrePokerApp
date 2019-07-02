@@ -4,18 +4,18 @@ parameters:
     tasks:
         phpcs:
           standard: PSR2
-          ignore_patterns: [./tests/*, ./resources/*, ./database/*, ./bootstrap/*]
+          ignore_patterns: [./test/*, ./resources/*, ./database/*, ./bootstrap/*]
         phpmd:
           whitelist_patterns: []
-          exclude: ['src\Repository\BaseRepository.php', 'src/Repository/BaseRepository.php', 'src/Service/BaseService.php', 'src\Service\BaseService.php']
-          ruleset: ['cleancode', 'codesize', '/phpmd_custom_naming.xml']
+          exclude: ['test','src\Repository\BaseRepository.php', 'src/Repository/BaseRepository.php', 'src/Service/BaseService.php', 'src\Service\BaseService.php']
+          ruleset: ['cleancode', 'codesize', 'controversial', 'design', '/phpmd_custom_naming.xml']
           triggered_by: ['php']
         phpstan:
             autoload_file: ~
             configuration: ~
             level: 0
             force_patterns: []
-            ignore_patterns: []
+            ignore_patterns: ['test']
             triggered_by: ['php']
             memory_limit: '-1'
         git_blacklist:
@@ -23,3 +23,69 @@ parameters:
                 - "die("
                 - "var_dump("
                 - "exit;"
+        phpcpd:
+            directory: '.'
+            exclude: ['vendor', 'test']
+            names_exclude: []
+            regexps_exclude: []
+            fuzzy: false
+            min_lines: 5
+            min_tokens: 70
+            triggered_by: ['php']
+        composer_normalize:
+            indent_size: ~
+            indent_style: ~
+            no_update_lock: true
+            verbose: false
+        file_size:
+            max_size: 10M
+            ignore_patterns: []
+        git_commit_message:
+            allow_empty_message: false
+            enforce_capitalized_subject: true
+            enforce_no_subject_punctuations: false
+            enforce_no_subject_trailing_period: true
+            enforce_single_lined_subject: true
+            type_scope_conventions: []
+            max_body_width: 72
+            max_subject_width: 60
+            case_insensitive: true
+            multiline: true
+            additional_modifiers: ''
+        phpmnd:
+            directory: .
+            whitelist_patterns: []
+            exclude: []
+            exclude_name: []
+            exclude_path: ['test']
+            extensions: []
+            hint: false
+            ignore_numbers: []
+            ignore_strings: []
+            strings: false
+            triggered_by: ['php']
+        phpversion:
+            project: '7.3'
+        phpunit:
+            config_file: ~
+            testsuite: ~
+            group: []
+            always_execute: false
+        securitychecker:
+            lockfile: ./composer.lock
+            format: ~
+            end_point: ~
+            timeout: ~
+            run_always: false
+        twigcs:
+            path: 'templates'
+            severity: 'warning'
+            ruleset: 'Allocine\Twigcs\Ruleset\Official'
+            triggered_by: ['twig']
+        yamllint:
+            whitelist_patterns: []
+            ignore_patterns: []
+            object_support: false
+            exception_on_invalid_type: false
+            parse_constant: false
+            parse_custom_tags: false

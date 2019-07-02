@@ -8,6 +8,7 @@ use \Solcre\lmsuy\Entity\UserSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
+use Solcre\lmsuy\Exception\TableIsFullException;
 
 class UserSessionController
 {
@@ -72,20 +73,22 @@ class UserSessionController
         $message = array();
         
         if (is_array($post)) {
-            foreach ($post['user_id'] as $user_id) {
+            foreach ($post['user_id'] as $userId) {
                 $data = [
                     'start'      => $post['start'],
                     'end'        => $post['end'],
                     'isApproved' => $post['approved'],
                     'points'     => $post['accumulatedPoints'],
                     'idSession'  => $post['idSession'],
-                    'idUser'     => $user_id
+                    'idUser'     => $userId
                 ];
 
                 try {
                     $this->userSessionService->add($data);
                     $message[] = 'Se agregó exitosamente.';
                 } catch (UserSessionAlreadyAddedException $e) {
+                    $message[] = $e->getMessage();
+                } catch (TableIsFullException $e) {
                     $message[] = $e->getMessage();
                 }
             }

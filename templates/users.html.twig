@@ -33,7 +33,7 @@
                                         </td>
                                         <td> {{ user.startTime|date('H:i') }}
                                         </td>
-                                        <td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
+                                        <td> {{ user.cashin|number_format }} ({{ user.totalCredit|number_format }}) </td>
                                         <td> {{ user.cashout|default("-") }} </td>
                                         <td> <a href="/userssession/{{ user.id }}/formclose"> <i class="fas fa-sign-out-alt"></i> </a> <a href="/sessions/{{ user.idSession }}/usersSession/{{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/{{ user.idSession }}/usersSession/{{ user.id }}/remove"> <i class="fas fa-trash-alt"></i> </a> </td>
                                     </tr>
@@ -74,10 +74,10 @@
                                         <td>
                                             {{ user.user.name }} {{ user.user.lastname }}
                                         </td>
-                                        <td> {{ user.startTime | date('H:i')}} </td>
-                                        <td> {{ user.cashin }} ({{ user.totalCredit }}) </td>
-                                        <td> {{ user.cashout }} </td>
-                                        <td> {{ user.endTime |date('H:i') }}
+                                        <td> {{ user.startTime|date('H:i') }} </td>
+                                        <td> {{ user.cashin|number_format }} ({{ user.totalCredit }}) </td>
+                                        <td> {{ user.cashout|number_format }} </td>
+                                        <td> {{ user.endTime|date('H:i') }}
                                         </td>
                                         <td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"></i> </a></td>
                                     </tr>

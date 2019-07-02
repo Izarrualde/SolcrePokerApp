@@ -18,8 +18,8 @@ class ComissionSessionService extends BaseService
         if (!is_numeric($data['comission'])) {
             throw new ComissionInvalidException();
         }
-
         $data['hour'] = new \DateTime($data['hour']);
+
         $comission    = new ComissionSessionEntity();
         $comission->setHour($data['hour']);
         $comission->setComission($data['comission']);

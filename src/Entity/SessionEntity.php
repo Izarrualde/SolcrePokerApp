@@ -120,6 +120,7 @@ class SessionEntity
         $this->sessionServiceTips = new ArrayCollection();
     }
 
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -237,9 +238,9 @@ class SessionEntity
         return $this->sessionServiceTips;
     }
 
-    public function setSessionServiceTips($ServiceTips)
+    public function setSessionServiceTips($serviceTips)
     {
-        $this->sessionServiceTips=$ServiceTips;
+        $this->sessionServiceTips=$serviceTips;
         return $this;
     }
 
@@ -264,14 +265,6 @@ class SessionEntity
         $this->sessionComissions=$sessionComissions;
         return $this;
     }
-    
-    public function getSessionBuyins()
-    {
-        $buyins = [];
-        // Recorrer todos los userSession y devolver los buyins.
-        // Usar array_map para resolverlo.
-        return $buyins;
-    }
 
     public function getSessionExpenses()
     {
@@ -283,8 +276,22 @@ class SessionEntity
         $this->sessionExpenses=$sessionExpenses;
         return $this;
     }
+    // @codeCoverageIgnoreEnd
 
-    protected function getTotalCashout()
+    public function getBuyins()
+    {
+        return array_reduce(
+            $this->sessionUsers->toArray(),
+            function ($buyins, $userSession) {
+                if (!is_array($buyins)) {
+                    $buyins = [];
+                }
+                return array_merge($buyins, $userSession->getBuyins()->toArray());
+            }
+        );
+    }
+
+    public function getTotalCashout()
     {
         return array_reduce(
             $this->sessionUsers->toArray(),
@@ -337,7 +344,7 @@ class SessionEntity
     public function getTotalPlayed()
     {
         return array_reduce(
-            $this->getSessionBuyins(),
+            $this->getBuyins(),
             function ($amountTotal, $buyin) {
                 return $amountTotal +
                 $buyin->getAmountCash() +
@@ -368,7 +375,7 @@ class SessionEntity
         return $activePlayers;
     }
 
-    public function getTotalDistinctPlayers()
+    public function getDistinctPlayers()
     {
         $distinctPlayers = array();
         foreach ($this->sessionUsers as $user) {
@@ -376,12 +383,12 @@ class SessionEntity
                 $distinctPlayers[]= $user->getUser()->getId();
             }
         }
-        return count($distinctPlayers);
+        return $distinctPlayers;
     }
 
     public function toArray()
     {
-        return  [
+        $ret = [
         'id'                 => $this->getId(),
         'created_at'         => $this->getDate(),
         'title'              => $this->getTitle(),
@@ -390,7 +397,7 @@ class SessionEntity
         'startTimeReal'      => $this->getStartTimeReal(),
         'countActivePlayers' => count($this->getActivePlayers()),
         'activePlayers'      => $this->getActivePlayers(),
-        'distinctPlayers'    => $this->getTotalDistinctPlayers(),
+        'distinctPlayers'    => $this->getDistinctPlayers(),
         'seats'              => $this->getSeats(),
         'endTime'            => $this->getEndTime(),
         'comissionTotal'     => $this->getComissionTotal(),
@@ -398,5 +405,13 @@ class SessionEntity
         'dealerTipTotal'     => $this->getDealerTipTotal(),
         'serviceTipTotal'    => $this->getServiceTipTotal()
         ];
+
+       /* foreach ($this->sessionUsers as $userSession) {
+            if ($userSession instanceof UserSessionEntity) {
+                $ret['usersSession'][] = $userSession->toArray();
+            }
+        };  */
+
+        return $ret;
     }
 }

@@ -99,6 +99,7 @@ class UserSessionEntity
         $this->buyins = new ArrayCollection();
     }
     
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -177,10 +178,6 @@ class UserSessionEntity
     
     public function getEnd()
     {
-        /*If ($this->end != null)
-        {
-        return $this->end->format('d-m-Y');
-        }*/
         return $this->end;
     }
     
@@ -211,6 +208,7 @@ class UserSessionEntity
         $this->buyins = $buyins;
         return $this;
     }
+    // @codeCoverageIgnoreEnd
 
     public function getCashin()
     {
@@ -239,14 +237,19 @@ class UserSessionEntity
     {
         return $this->getCashout() - $this->getCashin();
     }
-    
-    public function getHourPlayed()
-    {
-        $date1 =date_create($this->getEnd());
-        $date2 =date_create($this->getStart());
-        $diff  =date_diff($date1, $date2);
 
-        return $diff;
+    public function getDuration()
+    {
+        $date1          = $this->getStart();
+        $date2          = $this->getEnd();
+        $minutes        = date_diff($date1, $date2)->format('%i');
+        $roundedMinutes = floor((($minutes/60)/.25))*.25;
+        $hours          = date_diff($date1, $date2)->format('%h') + $roundedMinutes;
+        $days = date_diff($date1, $date2)->format('%d');
+        if ((int)$days > 0) {
+            $hours += (int)$days * 24;
+        }
+        return $hours;
     }
 
     public function toArray()
@@ -262,18 +265,20 @@ class UserSessionEntity
         'endTime'     => $this->getEnd(),
         'cashin'      => $this->getCashin(),
         'totalCredit' => $this->getTotalCredit()
+
         ];
 
+        
         $user = $this->getUser();
         if ($user instanceof UserEntity) {
             $ret['user'] = $user->toArray();
         }
         $session = $this->getSession();
-
+        
         if ($session instanceof SessionEntity) {
             $ret['session'] = $session->toArray();
         }
-
+        
         return $ret;
     }
 }

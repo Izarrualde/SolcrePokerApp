@@ -23,11 +23,11 @@
                                     <label class="sr-only" for="description"> Description: </label>
                                     <input class="form-control" name="description" id="description" type="text" placeholder="description">
                                 </div>
-                                <!--<textarea rows="4" cols="50" name="description" form="">
-								Descripcion...</textarea> -->
+                                {# <!--<textarea rows="4" cols="50" name="description" form="">
+								Descripcion...</textarea> --> #}
                                 <div class="form-group">
                                     <label class="sr-only" for="date">Fecha: </label>
-                                    <input class="form-control" name="date" id="date" type="date" placeholder="date" required="true" value="{{ date('c') | date('Y-m-d') }}">
+                                    <input class="form-control" name="date" id="date" type="date" placeholder="date" required="true" value="{{ date('c')|date('Y-m-d') }}">
                                     <small id="end" class="form-tet text-muted"> Fecha </small>
                                 </div>
                                 <div class="form-group">

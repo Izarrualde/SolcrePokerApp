@@ -18,11 +18,6 @@ class BuyinSessionEntity
      */
     protected $id;
 
-    protected $idSession;
-
-    protected $sessionUserId;
-
-
     /**
      * @ORM\Column(type="integer", name="amount_of_cash_money")
      */
@@ -61,22 +56,23 @@ class BuyinSessionEntity
 
     public function __construct(
         $id = null,
-        $sessionUserId = null,
         $amountCash = null,
         $amountCredit = null,
-        $currency = null,
+        UserSessionEntity $userSession = null,
         $hour = null,
+        $currency = null,
         $isApproved = null
     ) {
         $this->setId($id);
-        $this->setSessionUserId($sessionUserId);
         $this->setamountCash($amountCash);
         $this->setamountCredit($amountCredit);
-        $this->setCurrency($currency);
+        $this->setUserSession($userSession);
         $this->setHour($hour);
+        $this->setCurrency($currency);
         $this->setIsApproved($isApproved);
     }
 
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -90,25 +86,26 @@ class BuyinSessionEntity
 
     public function getIdSession()
     {
-        return $this->idSession;
-    }
+        $userSession = $this->getUserSession();
 
-    public function setIdSession($idSession)
-    {
-        $this->idSession = $idSession;
-        return $this;
-    }
+        if (!($userSession instanceof UserSessionEntity)) {
+            return null;
+        }
 
+        $session = $userSession->getSession();
+
+        return ($session instanceof SessionEntity) ?
+        $session->getId() :
+        null;
+    }
 
     public function getSessionUserId()
     {
-        return $this->sessionUserId;
-    }
+        $userSession = $this->getUserSession();
 
-    public function setSessionUserId($sessionUserId)
-    {
-        $this->sessionUserId = $sessionUserId;
-        return $this;
+        return ($userSession instanceof UserSessionEntity) ?
+        $userSession->getId() :
+        null;
     }
 
     public function getAmountCash()
@@ -188,7 +185,7 @@ class BuyinSessionEntity
         $this->userSession = $userSession;
         return $this;
     }
-
+    // @codeCoverageIgnoreEnd
     public function toArray()
     {
         $ret = [

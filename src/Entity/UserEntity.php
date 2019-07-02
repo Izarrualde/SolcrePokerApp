@@ -128,6 +128,7 @@ class UserEntity
         $this->setCashin($cashin);
     }
 
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -284,12 +285,14 @@ class UserEntity
         $this->cashin = $cashin;
         return $this;
     }
-
+    
+    // @codeCoverageIgnoreEnd
     public function toArray()
     {
         return [
         'id'         => $this->getId(),
         'password'   => $this->getPassword(),
+        'mobile'     => $this->getMobile(),
         'email'      => $this->getEmail(),
         'name'       => $this->getName(),
         'lastname'   => $this->getLastname(),

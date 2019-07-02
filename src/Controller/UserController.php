@@ -5,6 +5,7 @@ use \Solcre\lmsuy\Service\UserService;
 use \Solcre\lmsuy\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
+use Solcre\lmsuy\Exception\UserHadActionException;
 
 class UserController
 {
@@ -121,8 +122,14 @@ class UserController
     public function delete($request, $response, $args)
     {
         $idUser = $args['iduser'];
-        $this->userService->delete($idUser);
-        $message = 'El usuario se eliminó exitosamente';
+
+        try {
+            $this->userService->delete($idUser);
+            $message[] = 'El usuario se eliminó exitosamente';
+        } catch (UserHadActionException $e) {
+            $message[] = $e->getMessage();
+        }
+
         $template = 'viewUsers.html.twig';
 
         // BUSQUEDA DE DATOS PARA LA UI

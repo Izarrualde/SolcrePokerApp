@@ -7,9 +7,14 @@ use Solcre\lmsuy\Exception\BuyinInvalidException;
 
 class BuyinSessionService extends BaseService
 {
-    public function __construct(EntityManager $em)
-    {
+    protected $userSessionService;
+
+    public function __construct(
+        EntityManager $em,
+        userSessionService $userSessionService
+    ) {
         parent::__construct($em);
+        $this->userSessionService = $userSessionService;
     }
 
     public function fetchAllBuyins($sessionId)
@@ -30,17 +35,9 @@ class BuyinSessionService extends BaseService
         $buyin->setAmountCash($data['amountCash']);
         $buyin->setAmountCredit($data['amountCredit']);
         $buyin->setCurrency(1);
-        $userSession = $this->entityManager->getReference(
-            'Solcre\lmsuy\Entity\UserSessionEntity',
-            $data['idUserSession']
-        );
-        $buyin->setUserSession(
-            $this->entityManager->getReference(
-                'Solcre\lmsuy\Entity\UserSessionEntity',
-                $data['idUserSession']
-            )
-        );
-        $buyin->setSessionUserId($data['idUserSession']);
+        $userSession = $this->userSessionService->fetch($data['idUserSession']);
+
+        $buyin->setUserSession($userSession);
         $buyin->setIsApproved($data['approved']);
 
         if ($userSession->getBuyins()->isEmpty()) {
@@ -48,7 +45,8 @@ class BuyinSessionService extends BaseService
         }
         
         $this->entityManager->persist($buyin);
-        $this->entityManager->flush($buyin);
+        $this->entityManager->persist($userSession);
+        $this->entityManager->flush();
     }
 
     public function update($data, $strategies = null)

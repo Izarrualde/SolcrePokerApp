@@ -25,9 +25,6 @@ class ServiceTipSessionEntity
      */
     protected $session;
 
-    protected $idSession;
-
-
     /**
      * @ORM\Column(type="datetime", name="created_at")
      */
@@ -42,18 +39,17 @@ class ServiceTipSessionEntity
 
     public function __construct(
         $id = null,
-        $idSession = null,
         $hour = "",
         $tip = null,
         $session = null
     ) {
         $this->setId($id);
-        $this->setIdSession($idSession);
         $this->setHour($hour);
         $this->setServiceTip($tip);
         $this->setSession($session);
     }
 
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -67,14 +63,9 @@ class ServiceTipSessionEntity
 
     public function getIdSession()
     {
-        return $this->idSession;
+        return $this->getSession()->getId();
     }
 
-    public function setIdSession($idSession)
-    {
-        $this->idSession = $idSession;
-        return $this;
-    }
 
     public function getSession()
     {
@@ -108,7 +99,8 @@ class ServiceTipSessionEntity
         $this->serviceTip = $tip;
         return $this;
     }
-
+    
+    // @codeCoverageIgnoreEnd
     public function toArray()
     {
         return  [

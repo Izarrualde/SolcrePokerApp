@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
  * @ORM\Table(name="session_dealer_tips")
+
  */
 class DealerTipSessionEntity
 {
@@ -24,11 +25,6 @@ class DealerTipSessionEntity
      */
     protected $session;
 
-
-
-    protected $idSession;
-
-
     /**
      * @ORM\Column(type="datetime", name="created_at")
      */
@@ -43,18 +39,17 @@ class DealerTipSessionEntity
 
     public function __construct(
         $id = null,
-        $idSession = null,
         $hour = null,
         $tip = null,
         $session = null
     ) {
         $this->setId($id);
-        $this->setIdSession($idSession);
         $this->setSession($session);
         $this->setHour($hour);
         $this->setDealerTip($tip);
     }
 
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -68,14 +63,9 @@ class DealerTipSessionEntity
 
     public function getIdSession()
     {
-        return $this->idSession;
+        return $this->getSession()->getId();
     }
 
-    public function setIdSession($idSession)
-    {
-        $this->idSession = $idSession;
-        return $this;
-    }
 
     public function getSession()
     {
@@ -109,6 +99,8 @@ class DealerTipSessionEntity
         $this->dealerTip = $tip;
         return $this;
     }
+
+    // @codeCoverageIgnoreEnd
     public function toArray()
     {
         return  [

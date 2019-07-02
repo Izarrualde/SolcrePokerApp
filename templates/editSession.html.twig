@@ -18,7 +18,7 @@
                                 <input class="form-control" name="idSession" id="idSession" type="hidden" required="true" value="{{ session.id }}">
                                 <div class="form-group">
                                     <label class="sr-only" for="created_at"> Fecha: </label>
-                                    <input class="form-control" name="created_at" id="created_at" type="date" required="true" value="{{ session.created_at | date('Y-m-d') }}">
+                                    <input class="form-control" name="created_at" id="created_at" type="date" required="true" value="{{ session.created_at|date('Y-m-d') }}">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="title"> title: </label>
@@ -30,16 +30,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="horaInicio"> hora inicio: </label>
-                                    <input class="form-control" name="start_at" id="start_at" type="datetime-local" placeholder="hora de inicio" required="true" value="{{ session.startTime | date('Y-m-d') }}T{{ session.startTime| date('H:i') }}">
+                                    <input class="form-control" name="start_at" id="start_at" type="datetime-local" placeholder="hora de inicio" required="true" value="{{ session.startTime|date('Y-m-d') }}T{{ session.startTime|date('H:i') }}">
                                     <small id="end" class="form-tet text-muted"> Fecha y hora de inicio </small>
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="real_start_at"> Hora de Inicio Real: </label>
-                                    <input class="form-control" name="real_start_at" id="real_start_at" type="datetime-local" value="{{ session.startTimeReal | date('Y-m-d') }}T{{ session.startTimeReal| date('H:i') }}">
+                                    <input class="form-control" name="real_start_at" id="real_start_at" type="datetime-local" value="{{ session.startTimeReal|date('Y-m-d') }}T{{ session.startTimeReal|date('H:i') }}">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="end_at"> Hora de Fin: </label>
-                                    <input class="form-control" name="end_at" id="end_at" type="datetime-local" value="{{ session.endTime | date('Y-m-d') }}T{{ session.endTime | date('H:i') }}">
+                                    <input class="form-control" name="end_at" id="end_at" type="datetime-local" value="{{ session.endTime|date('Y-m-d') }}T{{ session.endTime|date('H:i') }}">
                                 </div>
                                 <div class="form-group">
                                     <input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />

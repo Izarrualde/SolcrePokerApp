@@ -82,12 +82,15 @@ $container->set(
 $container->set(
     'view',
     function ($container) {
+        $settings = $container->get('settings');
         $view = new \Slim\Views\Twig('templates');
-
-        // Instantiate and add Slim specific extension
-        //$router = $container->get('router');
-        //$uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-        //$view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+        $environment = $view->getEnvironment();
+        $extension = $environment->getExtension(\Twig\Extension\CoreExtension::class);
+        $extension->setNumberFormat(
+            $settings['number_format']['decimals'],
+            $settings['number_format']['decimal_separator'],
+            $settings['number_format']['thousand_separator']
+        );
         return $view;
     }
 );

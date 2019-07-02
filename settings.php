@@ -5,7 +5,11 @@
 return [
     'displayErrorDetails' => true,
     'determineRouteBeforeAppMiddleware' => false,
-
+    'number_format' => [
+        'decimal_separator' => ',',
+        'thousand_separator' => '.',
+        'decimals' => '2'
+    ],
     'doctrine' => [
         // if true, metadata caching is forcefully disabled
         'dev_mode' => true,
@@ -16,7 +20,6 @@ return [
 
         // you should add any other path containing annotated entity classes
         'metadata_dirs' => [__DIR__ . '/src/Entity'],
-
         'connection' => [
             'driver' => 'pdo_mysql',
             'host' => 'localhost',

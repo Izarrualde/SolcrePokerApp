@@ -25,7 +25,7 @@ class BuyinSessionController
         $this->sessionService      = new SessionService($em);
         $this->userService         = new UserService($em);
         $this->userSessionService  = new UserSessionService($em);
-        $this->buyinSessionService = new BuyinSessionService($em);
+        $this->buyinSessionService = new BuyinSessionService($em, $this->userSessionService);
     }
 
     public function listAll($request, $response, $args)

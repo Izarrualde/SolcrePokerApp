@@ -25,8 +25,6 @@ class ComissionSessionEntity
      */
     protected $session;
 
-    protected $idSession;
-
     /**
      * @ORM\Column(type="datetime", name="created_at")
      */
@@ -41,17 +39,17 @@ class ComissionSessionEntity
 
     public function __construct(
         $id = null,
-        $idSession = null,
         $hour = null,
         $comission = null,
         $session = null
     ) {
         $this->setId($id);
-        $this->setIdSession($idSession);
         $this->setSession($session);
         $this->setHour($hour);
         $this->setComission($comission);
     }
+ 
+    // @codeCoverageIgnoreStart
 
     public function getId()
     {
@@ -64,15 +62,14 @@ class ComissionSessionEntity
         return $this;
     }
 
+
     public function getIdSession()
     {
-        return $this->idSession;
-    }
+        $session = $this->getSession();
 
-    public function setIdSession($idSession)
-    {
-        $this->idSession = $idSession;
-        return $this;
+        return ($session instanceof SessionEntity) ?
+        $session->getId() :
+        null;
     }
 
     public function getSession()
@@ -108,6 +105,7 @@ class ComissionSessionEntity
         return $this;
     }
 
+    // @codeCoverageIgnoreEnd
     public function toArray()
     {
         return  [

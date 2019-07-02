@@ -5,10 +5,10 @@ use \Solcre\lmsuy\Entity\UserSessionEntity;
 use \Solcre\lmsuy\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
+use Solcre\lmsuy\Exception\TableIsFullException;
 
 class UserSessionService extends BaseService
 {
-
     protected $userService;
 
     public function __construct(EntityManager $em, $userService = null)
@@ -20,15 +20,17 @@ class UserSessionService extends BaseService
 
     public function add($data, $strategies = null)
     {
-
-
         $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
         $user    = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserEntity', $data['idUser']);
 
         if (in_array($data['idUser'], $session->getActivePlayers())) {
             throw new UserSessionAlreadyAddedException();
         }
-
+/*
+        if (!$session->hasSeatAvailable()) {
+            throw new TableIsFullException();
+        }
+*/
         $data['start'] = new \DateTime($data['start']);
         $userSession   = new UserSessionEntity();
 
@@ -69,7 +71,7 @@ class UserSessionService extends BaseService
     }
 
 
-    public function close($data, $strategies = null)
+    public function close($data)
     {
 
         $userSession = parent::fetch($data['id']);
@@ -79,14 +81,8 @@ class UserSessionService extends BaseService
         $userSession->setCashout($data['cashout']);
 
         if ($this->userService instanceof UserService) {
-            $date1          = $userSession->getEnd();
-            $date2          = $userSession->getStart();
-            $minutes        = date_diff($date1, $date2)->format('%i');
-            $roundedMinutes = floor((($minutes/60)/.25))*.25;
-            $hours          = date_diff($date1, $date2)->format('%h') + $roundedMinutes;
             $user           = $this->userService->fetch($data['idUser']);
-            $user->setHours($user->getHours()+$hours);
-
+            $user->setHours($user->getHours()+$userSession->getDuration());
 
             $this->entityManager->persist($user);
         }

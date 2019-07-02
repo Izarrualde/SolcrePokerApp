@@ -3,6 +3,8 @@ namespace Solcre\lmsuy\Service;
 
 use \Solcre\lmsuy\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
+use Solcre\lmsuy\Exception\UserHadActionException;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class UserService extends BaseService
 {
@@ -46,9 +48,14 @@ class UserService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
+
         $user = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserEntity', $id);
 
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+        } catch (ForeignKeyConstraintViolationException $e) {
+             throw new UserHadActionException();
+        }
     }
 }

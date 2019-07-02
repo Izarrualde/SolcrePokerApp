@@ -8,12 +8,7 @@
             {% include 'breadcrumb.html.twig' %}
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    {% if message is not empty %}
-                    <div class="alert alert-success">
-                        <button type="button" class="close" data-dismiss="alert">x</button>
-                        {{ message }}
-                    </div>
-                    {% endif %}
+                    {% include 'message.html.twig' %}
                     Usuarios
                 </div>
                 <div class="card-body">
@@ -34,12 +29,12 @@
                                     {% endif %}
                                     {% for user in users %}
                                     <tr>
-                                        <th> {% set counter = ( counter | default(0) ) + 1 %}
+                                        <th> {% set counter = (counter|default(0)) + 1 %}
                                             <p>{{ counter }}</p>
                                         </th>
                                         <td> {{ user.name }} {{ user.lastname }} </td>
                                         <td> {{ user.username }} </td>
-                                        <td> {{ user.hours }} </td>
+                                        <td> {{ user.hours|number_format }} </td>
                                         <td> <a href="/users/{{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a><a href="/users/{{ user.id }}/remove"> <i class="fas fa-trash-alt"></i> </a> </td>
                                     </tr>
                                     {% endfor %}

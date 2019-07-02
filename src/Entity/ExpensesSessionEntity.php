@@ -50,6 +50,7 @@ class ExpensesSessionEntity
         $this->setAmount($amount);
     }
 
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -93,7 +94,8 @@ class ExpensesSessionEntity
         $this->amount = $amount;
         return $this;
     }
-
+    
+    // @codeCoverageIgnoreEnd
     public function toArray()
     {
         return  [
