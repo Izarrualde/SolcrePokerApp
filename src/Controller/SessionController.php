@@ -21,6 +21,7 @@ class SessionController
 
     public function listAll($request, $response, $args)
     {
+
         $datosSessions = $this->sessionService->fetchAll();
 
         $sessions = array();
@@ -31,6 +32,7 @@ class SessionController
         }
 
         $datosUI['sessions'] = $sessions;
+
 
         return $this->view->render($response, 'index.html.twig', $datosUI);
     }
@@ -54,13 +56,12 @@ class SessionController
         $post = $request->getParsedBody();
 
         $datosUI = array();
-
+        $template = 'index.html.twig';
         if (is_array($post)) {
             $this->sessionService->add($post);
             
-            $message = 'La sesión se agregó exitosamente';
-            $template = 'index.html.twig';
-
+            $message[] = 'La sesión se agregó exitosamente';
+            
             $datosSessions = $this->sessionService->fetchAll();
 
             $sessions = array();
@@ -79,7 +80,7 @@ class SessionController
 
     public function form($request, $response, $args)
     {
-        $datosUI  = array();
+        $datosUI  = [];
         $template = 'newsession.html.twig';
 
         return $this->view->render($response, $template, $datosUI);
@@ -90,7 +91,7 @@ class SessionController
         $post = $request->getParsedBody();
 
         $this->sessionService->update($post);
-        $message       = 'La Sesión se actualizó exitosamente';
+        $message[]       = 'La Sesión se actualizó exitosamente';
         $datosSessions = $this->sessionService->fetchAll();
 
         $sessions = array();
@@ -110,7 +111,7 @@ class SessionController
     {
         $idSession     = $args['idSession'];
         $this->sessionService->delete($idSession);
-        $message       = 'La Sesión se eliminó exitosamente';
+        $message[]       = 'La Sesión se eliminó exitosamente';
         $datosSessions = $this->sessionService->fetchAll();
 
         $datosUI  = array();

@@ -114,8 +114,10 @@ class TipSessionController
             try {
                 $this->serviceTipService->add($postServiceTip);
                 $message[] = 'El Service Tip se ingresó exitosamente.';
+              // @CodeCoverageIgnoreStart  
             } catch (ServiceTipInvalidException $e) {
                 $message[] = $e->getMessage();
+              // @CodeCoverageIgnoreEnd
             }
 
             $template = 'tips.html.twig';
@@ -160,7 +162,7 @@ class TipSessionController
 
         $template = 'newTips.html.twig';
 
-        $datosUI = array();
+        $datosUI = [];
    
         $datosUI['session']    = $session->toArray();
         $datosUI['breadcrumb'] = 'Nuevo Tip';
@@ -172,16 +174,16 @@ class TipSessionController
     public function update($request, $response, $args)
     {
         $post = $request->getParsedBody();
-        $message = array();
+        $message = [];
+        $template  = 'tips.html.twig';
 
         if (isset($args['idDealerTip'])) {
             $this->dealerTipService->update($post);
             $message[] = 'El dealerTip se actualizó exitosamente.';
-            $template  = 'tips.html.twig';
+            
         } elseif (isset($args['idServiceTip'])) {
             $this->serviceTipService->update($post);
             $message[] = 'El serviceTip se actualizó exitosamente.';
-            $template  = 'tips.html.twig';
         }
 
         $datosUI = $this->loadSessionAndTips($post['idSession']);
@@ -195,6 +197,7 @@ class TipSessionController
     {
         $message = array();
         $datosUI = array();
+        $template    = 'tips.html.twig';
 
         if (isset($args['idDealerTip'])) {
             $idTip =  $args['idDealerTip'];
@@ -203,7 +206,7 @@ class TipSessionController
             
             $idSession   = $dealerTip->getSession()->getId();
             $message[]   = 'El dealerTip se eliminó exitosamente';
-            $template    = 'tips.html.twig';
+            
         } elseif (isset($args['idServiceTip'])) {
                 $idServiceTip =  $args['idServiceTip'];
                 $serviceTip = $this->entityManager->getReference(
@@ -214,7 +217,6 @@ class TipSessionController
             
             $idSession = $serviceTip->getSession()->getId();
             $message[] = 'El serviceTip se eliminó exitosamente';
-            $template  = 'tips.html.twig';
         }
         
         if (!empty($idSession)) {

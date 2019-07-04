@@ -37,35 +37,35 @@ class BuyinSessionEntityTest extends TestCase
     $this->assertEquals($isApproved, $buyin->getIsApproved());
     $this->assertSame($userSession, $buyin->getUserSession());
   }
-/*
+
   public function testToArray()
   {
 
     $session = new SessionEntity();
     $session->setId(2);
 
+    $userSession = new UserSessionEntity(3);
+    $userSession->setSession($session);
+
     $buyin = new BuyinSessionEntity();
+    $buyin->setUserSession($userSession);
     $buyin->setId(1);
     $buyin->setAmountCash(300);
     $buyin->setAmountCredit(200);
-    $buyin->setUserSession($user);
+    //$buyin->setUserSession($user);
     $buyin->setHour(date_create('2019-06-26 19:00:00'));
-    $buyin->setCurrency(1);
-    $buyin->setIsApproved()
-    $buyin->setSession($session);
-    $buyin->setHour(date_create('2019-06-26 19:00:00'));
-    $buyin->setDealerTip(100);
-
+    //$buyin->setCurrency(1);
+    //$buyin->setIsApproved(1);
 
     $expectedArray = [
-      'id'        => 1,
-      'idSession' => 2,
-      'hour'      => date_create('2019-06-26 19:00:00'),
-      'dealerTip' => 100
-    ];  
+      'id'           => 1,
+      'idSession'    => 2,
+      'amountCash'   => 300,
+      'amountCredit' => 200,
+      'hour'         => date_create('2019-06-26 19:00:00'),
+      'user_session' => $userSession->toArray()
+    ]; 
 
-    $this->assertEquals($expectedArray, $dealerTip->toArray());
+    $this->assertEquals($expectedArray, $buyin->toArray());
   }
-*/
-  
 }

@@ -28,7 +28,6 @@ class UserSessionController
     public function listAll($request, $response, $args)
     {
 
-        
         $idSession         = $args['idSession'];
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
         $session           = $this->sessionService->fetchOne(array('id' => $idSession));
@@ -45,7 +44,7 @@ class UserSessionController
 
         $datosUI['session']                 = $session->toArray();
         $datosUI['session']['usersSession'] = $usersSession;
-        $datosUI['breadcrumb']              = 'Usuarios de Sesión';
+        $datosUI['breadcrumb']              = 'Usuarios de Sesion';
 
            return $this->view->render($response, $template, $datosUI);
     }
@@ -86,11 +85,14 @@ class UserSessionController
                 try {
                     $this->userSessionService->add($data);
                     $message[] = 'Se agregó exitosamente.';
+                // @codeCoverageIgnoreStart 
                 } catch (UserSessionAlreadyAddedException $e) {
                     $message[] = $e->getMessage();
                 } catch (TableIsFullException $e) {
                     $message[] = $e->getMessage();
+                // @codeCoverageIgnoreEnd
                 }
+                
             }
 
             $template = 'users.html.twig';

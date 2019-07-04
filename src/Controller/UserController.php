@@ -67,7 +67,7 @@ class UserController
         if (is_array($post)) {
             $this->userService->add($post);
             $template = 'viewUsers.html.twig';
-            $message  = 'El usuario se agregó exitosamente.';
+            $message[]  = 'El usuario se agregó exitosamente.';
 
             // BUSQUEDA DE DATOS PARA LA UI
 
@@ -99,7 +99,7 @@ class UserController
         $post = $request->getParsedBody();
 
         $this->userService->update($post);
-        $message  = 'El usuario se actualizó exitosamente';
+        $message[]  = 'El usuario se actualizó exitosamente';
         $template = 'viewUsers.html.twig';
 
         // BUSQUEDA DE DATOS PARA LA UI
@@ -126,8 +126,10 @@ class UserController
         try {
             $this->userService->delete($idUser);
             $message[] = 'El usuario se eliminó exitosamente';
+        // @codeCoverageIgnoreStart
         } catch (UserHadActionException $e) {
             $message[] = $e->getMessage();
+        // @codeCoverageIgnoreEnd
         }
 
         $template = 'viewUsers.html.twig';

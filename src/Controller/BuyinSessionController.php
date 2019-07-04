@@ -41,8 +41,8 @@ class BuyinSessionController
             $buyins[] = $buyinObject->toArray();
         }
 
-        $datosUI['session']           = $session->toArray();
-        $datosUI['session']['buyins'] = $buyins;
+        $datosUI['sessions']           = $session->toArray();
+        $datosUI['sessions']['buyins'] = $buyins;
         $datosUI['breadcrumb']        = 'Buyins';
 
         return $this->view->render($response, $template, $datosUI);
@@ -71,10 +71,11 @@ class BuyinSessionController
             try {
                 $this->buyinSessionService->add($post);
                 $message[] = 'El buyin se agregó exitosamente';
+            // @codeCoverageIgnoreStart    
             } catch (BuyinInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-            
+            // @codeCoverageIgnoreEnd
             $template = 'buyins.html.twig';
 
             //extraigo datos de la bdd
@@ -102,6 +103,7 @@ class BuyinSessionController
         $session           = $this->sessionService->fetchOne(array('id' => $idSession));
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
 
+        
         $datosUI      = array();
         $usersSession = array();
 
@@ -126,8 +128,10 @@ class BuyinSessionController
             try {
                 $this->buyinSessionService->update($post);
                 $message[] = 'El buyin se actualizó exitosamente';
+            // @codeCoverageIgnoreStart
             } catch (BuyinInvalidException $e) {
                 $message[] = $e->getMessage();
+            // @codeCoverageIgnoreEnd
             }
         }
 
@@ -148,6 +152,7 @@ class BuyinSessionController
             $datosUI['session'] = $session->toArray();
         }
         
+        $datosUI['session']           = $session->toArray();
         $datosUI['session']['buyins'] = $buyins;
         $datosUI['breadcrumb']        = 'Buyins';
         $datosUI['message']           = $message;
@@ -162,7 +167,7 @@ class BuyinSessionController
         $id        = $args['idbuyin'];
 
         $this->buyinSessionService->delete($id);
-        $message  = 'El buyin se eliminó exitosamente';
+        $message[]  = 'El buyin se eliminó exitosamente';
         $template = 'buyins.html.twig';
 
         //extraigo datos de la DB

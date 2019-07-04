@@ -50,4 +50,4 @@ class ServiceTipSessionEntityTest extends TestCase
 
     $this->assertEquals($expectedArray, $serviceTip->toArray());
   }
-}
+} 

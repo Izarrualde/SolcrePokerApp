@@ -24,11 +24,15 @@ class ComissionSessionController
 
     public function listAll($request, $response, $args)
     {
+
         $idSession = $args['idSession'];
+
         $template = 'comissions.html.twig';
 
         $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
+
         $session         = $this->sessionService->fetchOne(array('id' => $idSession));
+
 
         $comissions = array();
         $datosUI    = array();
@@ -39,7 +43,7 @@ class ComissionSessionController
 
         $datosUI['session']               = $session->toArray();
         $datosUI['session']['comissions'] = $comissions;
-        $datosUI['breadcrumb']            = 'Comissions';
+        $datosUI['breadcrumb']            = 'Comisiones';
 
         return $this->view->render($response, $template, $datosUI);
     }
@@ -59,7 +63,7 @@ class ComissionSessionController
         
         $datosUI['session']              = $session->toArray();
         $datosUI['session']['comission'] = $comission->toArray();
-        $datosUI['breadcrumb']           = 'Comisiones';
+        $datosUI['breadcrumb']           = 'Editar Comision';
 
         return $this->view->render($response, $template, $datosUI);
     }
@@ -69,30 +73,31 @@ class ComissionSessionController
         $post      = $request->getParsedBody();
         $idSession = $args['idSession'];
 
-        $datosUI = array();
-        $message = array();
-        
+        $template = 'comissions.html.twig';
+        $datosUI = [];
+        $message = [];
+
         if (is_array($post)) {
             try {
                 $this->comissionService->add($post);
-                $message[] = 'la comission se ingresó exitosamente.';
+                $message[] = 'la comission se ingreso exitosamente.'; 
             } catch (ComissionInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-            
-            $template = 'comissions.html.twig';
 
             //extraigo datos de la bdd
             $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
             $session         = $this->sessionService->fetchOne(array('id' => $idSession));
 
             $comissions = array();
-            
-            foreach ($datosComissions as $comission) {
-                $comissions[] = $comission->toArray();
+
+            if (is_array($datosComissions)) {
+                foreach ($datosComissions as $comission) {
+                    $comissions[] = $comission->toArray();
+                }
             }
 
-            $datosUI['session']               = $session->toArray();
+            $datosUI['session']               = is_null($session) ? [] : $session->toArray();
             $datosUI['session']['comissions'] = $comissions;
             $datosUI['breadcrumb']            = 'Comisiones';
             $datosUI['message']               = $message;
@@ -125,8 +130,10 @@ class ComissionSessionController
             try {
                 $this->comissionService->update($post);
                 $message[] = 'la comission se actualizó exitosamente.';
+            // @codeCoverageIgnoreStart
             } catch (ComissionInvalidException $e) {
                 $message[] = $e->getMessage();
+            // @codeCoverageIgnoreEnd
             }
         }
 

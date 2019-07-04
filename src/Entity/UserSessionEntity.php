@@ -267,7 +267,6 @@ class UserSessionEntity
         'totalCredit' => $this->getTotalCredit()
 
         ];
-
         
         $user = $this->getUser();
         if ($user instanceof UserEntity) {

@@ -74,10 +74,11 @@ class ExpensesSessionController
             try {
                 $this->expensesService->add($post);
                 $message[]  = 'el item se ingresó exitosamente.';
+            // @codeCoverageIgnoreStart    
             } catch (ExpensesInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-
+            // @codeCoverageIgnoreEnd
             $template = 'expenses.html.twig';
             
 

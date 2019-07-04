@@ -180,7 +180,7 @@ class BuyinSessionEntity
         return $this->userSession;
     }
 
-    public function setUserSession(UserSessionEntity $userSession)
+    public function setUserSession(UserSessionEntity $userSession = null)
     {
         $this->userSession = $userSession;
         return $this;
@@ -193,21 +193,15 @@ class BuyinSessionEntity
         'idSession'    => $this->getIdSession(),
         'amountCash'   => $this->getAmountCash(),
         'amountCredit' => $this->getAmountCredit(),
-        'hour'         => $this->getHour(),
+        'hour'         => $this->getHour()
         ];
-
-        /*$session = $this->getSession();
-
-        if ($session instanceof SessionEntity) {
-        $ret['session'] = $session->toArray();
-        }*/
-
+  
         $userSession = $this->getUserSession();
 
         if ($userSession instanceof UserSessionEntity) {
             $ret['user_session'] = $userSession->toArray();
         }
-
+        
         return $ret;
     }
 }
