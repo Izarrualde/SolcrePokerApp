@@ -33,7 +33,7 @@
                                     <tr class="text-center">
                                         <td> {{ dealerTip.hour|date('H:i') }} </td>
                                         <td> {{ dealerTip.dealerTip|number_format }} </td>
-                                        <td> <a href="/sessions/{{ dealerTip.idSession }}/tips/dealerTip/{{ dealerTip.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/tips/dealertip/{{ dealerTip.id }}/remove"> <i class="fas fa-trash-alt"></i> </a></td>
+                                        <td> <a href="/sessions/{{ dealerTip.idSession }}/tips/dealerTip/{{ dealerTip.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/tips/dealertip/{{ dealerTip.id }}/remove?idSession={{ session.id }}"> <i class="fas fa-trash-alt"></i> </a></td>
                                     </tr>
                                     {% endfor %}
                                     <tr class="text-center bg-dark text-white">
@@ -63,7 +63,7 @@
                                     <tr>
                                         <td> {{ serviceTip.hour|date('H:i') }} </td>
                                         <td> {{ serviceTip.serviceTip|number_format }} </td>
-                                        <td> <a href="/sessions/{{ serviceTip.idSession }}/tips/serviceTip/{{ serviceTip.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/tips/servicetip/{{ serviceTip.id }}/remove"> <i class="fas fa-trash-alt"></i> </a></td>
+                                        <td> <a href="/sessions/{{ serviceTip.idSession }}/tips/serviceTip/{{ serviceTip.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/tips/servicetip/{{ serviceTip.id }}/remove?idSession={{ session.id }}"> <i class="fas fa-trash-alt"></i> </a></td>
                                     </tr>
                                     {% endfor %}
                                     <tr class="text-center bg-dark text-white">

@@ -460,7 +460,7 @@ class TipSessionControllerTest extends TestCase
 
     $controller->update($request, $response, $args);
   }
-/*
+
   public function testDeleteDealerTip() // WhenIsAdded
   {
 
@@ -501,6 +501,11 @@ class TipSessionControllerTest extends TestCase
         'serviceTip' => 60
       ]
     );
+    $request->method('getQueryParams')->willReturn(
+      [
+        'idSession' => 2
+      ]
+    );
 
     $response = $this->createMock(Slim\Psr7\Response::class);
 
@@ -538,5 +543,5 @@ class TipSessionControllerTest extends TestCase
 
     $controller->delete($request, $response, $args);
   }
-*/
+
 }

@@ -107,17 +107,18 @@ class TipSessionController
             try {
                 $this->dealerTipService->add($postDealerTip);
                 $message[] = 'El Dealer Tip se ingresó exitosamente.';
+            // @codeCoverageIgnoreStart
             } catch (DealerTipInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-
+            // @codeCoverageIgnoreEnd
             try {
                 $this->serviceTipService->add($postServiceTip);
                 $message[] = 'El Service Tip se ingresó exitosamente.';
-              // @CodeCoverageIgnoreStart  
+            // @codeCoverageIgnoreStart
             } catch (ServiceTipInvalidException $e) {
                 $message[] = $e->getMessage();
-              // @CodeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
             }
 
             $template = 'tips.html.twig';
@@ -195,30 +196,32 @@ class TipSessionController
 
     public function delete($request, $response, $args)
     {
+        $get = $request->getQueryParams();
         $message = array();
         $datosUI = array();
         $template    = 'tips.html.twig';
 
         if (isset($args['idDealerTip'])) {
             $idTip =  $args['idDealerTip'];
-            $dealerTip   = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $idTip);
+            //$dealerTip   = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $idTip);
             $this->dealerTipService->delete($idTip);
             
-            $idSession   = $dealerTip->getSession()->getId();
+            //$idSession   = $dealerTip->getSession()->getId();
             $message[]   = 'El dealerTip se eliminó exitosamente';
             
         } elseif (isset($args['idServiceTip'])) {
                 $idServiceTip =  $args['idServiceTip'];
-                $serviceTip = $this->entityManager->getReference(
+                /*$serviceTip = $this->entityManager->getReference(
                     'Solcre\lmsuy\Entity\ServiceTipSessionEntity',
                     $idServiceTip
-                );
+                );*/
             $this->serviceTipService->delete($idServiceTip);
             
-            $idSession = $serviceTip->getSession()->getId();
+            //$idSession = $serviceTip->getSession()->getId();
             $message[] = 'El serviceTip se eliminó exitosamente';
         }
         
+        $idSession = $get['idSession'];
         if (!empty($idSession)) {
             $datosUI = $this->loadSessionAndTips($idSession);
         }
