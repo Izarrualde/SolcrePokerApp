@@ -71,23 +71,22 @@ class BuyinSessionController
             try {
                 $this->buyinSessionService->add($post);
                 $message[] = 'El buyin se agregó exitosamente';
-            // @codeCoverageIgnoreStart    
             } catch (BuyinInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-            // @codeCoverageIgnoreEnd
             $template = 'buyins.html.twig';
 
             //extraigo datos de la bdd
             $buyins      = array();
             $session     = $this->sessionService->fetchOne(array('id' => $post['idSession']));
             $datosBuyins = $this->buyinSessionService->fetchAllBuyins($post['idSession']);
-
-            foreach ($datosBuyins as $buyin) {
-                $buyins[] = $buyin->toArray();
+            if (is_array($datosBuyins)) {
+                foreach ($datosBuyins as $buyin) {
+                    $buyins[] = $buyin->toArray();
+                }                
             }
 
-            $datosUI['session']           = $session->toArray();
+            $datosUI['session']           = is_null($session) ? [] : $session->toArray();
             $datosUI['session']['buyins'] = $buyins;
             $datosUI['breadcrumb']        = 'Buyins';
             $datosUI['message']           = $message;

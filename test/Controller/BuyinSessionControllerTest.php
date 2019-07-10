@@ -325,6 +325,46 @@ class BuyinSessionControllerTest extends TestCase
     $controller->add($request, $response, $args);
   }
 
+  public function testAddWithInvalidBuyin()
+  {
+    $view = $this->createMock(Slim\Views\Twig::class);
+    $buyinSessionService = $this->createMock(BuyinSessionService::class);
+    $userSessionService = $this->createMock(UserSessionService::class);
+    $userService = $this->createMock(UserService::class);
+    $sessionService = $this->createMock(SessionService::class);
+
+    $sessionService->method('fetchOne')->willReturn(null);
+    $buyinSessionService->method('fetchAllBuyins')->willReturn(null);
+    $exception = new BuyinInvalidException();
+    $buyinSessionService->method('add')->will($this->throwException($exception));
+
+    $controller = $this->createController($view, $buyinSessionService, $userSessionService, $userService, $sessionService);
+    $request = $this->createMock(Slim\Psr7\Request::class);
+    $request->method('getParsedBody')->willReturn(
+      [
+        'buyin to add',
+        'idSession' => 2
+      ]
+    );
+    $response = $this->createMock(Slim\Psr7\Response::class);
+
+    $args = [
+      'idSession' => 2
+    ];
+
+    $template    = 'buyins.html.twig';
+
+    $view->expects($this->once())
+    ->method('render')
+    ->with(
+        $this->equalTo($response),
+        $this->equalTo($template),
+        $this->contains([$exception->getMessage()]),
+    );
+
+    $controller->add($request, $response, $args);
+  }
+
   public function testForm()
   {
     $view = $this->createMock(Slim\Views\Twig::class);

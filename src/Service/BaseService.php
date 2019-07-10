@@ -122,7 +122,7 @@ abstract class BaseService
 
     public function fetch($id)
     {
-        $entity = $this->repository->find($id);
+       $entity = $this->repository->find($id);
         if (!empty($entity) && $entity instanceof $this->entityName) {
             return $entity;
         }

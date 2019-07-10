@@ -69,7 +69,8 @@ class UserSessionController
 
         $post      = $request->getParsedBody();
         $idSession = $post['idSession'];
-        $message = array();
+        $message = [];
+        $template = 'users.html.twig';
         
         if (is_array($post)) {
             foreach ($post['user_id'] as $userId) {
@@ -85,34 +86,36 @@ class UserSessionController
                 try {
                     $this->userSessionService->add($data);
                     $message[] = 'Se agregó exitosamente.';
-                // @codeCoverageIgnoreStart 
                 } catch (UserSessionAlreadyAddedException $e) {
                     $message[] = $e->getMessage();
                 } catch (TableIsFullException $e) {
                     $message[] = $e->getMessage();
-                // @codeCoverageIgnoreEnd
                 }
                 
             }
 
-            $template = 'users.html.twig';
+            
 
             // BUSQUEDA DE DATOS PARA LA UI
             $session           = $this->sessionService->fetchOne(array('session' => $idSession));
             $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
 
-            $datosUI = array();
-            $usersSession = array();
+            $datosUI = [];
+            $usersSession = [];
 
-            foreach ($datosUsersSession as $userSessionObject) {
-                $usersSession[] = $userSessionObject->toArray();
+            if (is_array($datosUsersSession)) {
+                foreach ($datosUsersSession as $userSessionObject) {
+                    $usersSession[] = $userSessionObject->toArray();
+                }                
             }
 
-            $datosUI['session']                 = $session->toArray();
-            $datosUI['session']['usersSession'] = $usersSession;
+
+            $datosUI['session']                 = is_null($session) ? [] : $session->toArray();
+            $datosUI['session']['usersSession'] = is_null($usersSession) ? [] : $usersSession;
             $datosUI['breadcrumb']              = 'Usuarios de Sesión';
             $datosUI['message']                 = $message;
         }
+
             return $this->view->render($response, $template, $datosUI);
     }
 

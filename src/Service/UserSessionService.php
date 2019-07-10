@@ -48,14 +48,13 @@ class UserSessionService extends BaseService
     public function update($data, $strategies = null)
     {
         $userSession = parent::fetch($data['id']);
-        $userSession->setAccumulatedPoints($data['accumulatedPoints']);
+        $userSession->setAccumulatedPoints($data['points']);
         $userSession->setCashout($data['cashout']);
-        $userSession->setStart($data['start']);
+        $userSession->setStart(new \DateTime ($data['start']));
         $userSession->setEnd($data['end']);
         $userSession->setIsApproved($data['isApproved']);
         $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
         $userSession->setSession($session);
-        $userSession->setIdSession($data['idSession']);
         $userSession->setIdUser($data['idUser']);
 
         $this->entityManager->persist($userSession);

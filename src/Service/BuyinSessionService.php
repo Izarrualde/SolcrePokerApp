@@ -35,17 +35,18 @@ class BuyinSessionService extends BaseService
         $buyin->setAmountCash($data['amountCash']);
         $buyin->setAmountCredit($data['amountCredit']);
         $buyin->setCurrency(1);
+        $buyin->setIsApproved($data['approved']);
         $userSession = $this->userSessionService->fetch($data['idUserSession']);
 
         $buyin->setUserSession($userSession);
-        $buyin->setIsApproved($data['approved']);
+        
 
         if ($userSession->getBuyins()->isEmpty()) {
             $userSession->setStart($data['hour']);
+            $this->entityManager->persist($userSession);
         }
         
         $this->entityManager->persist($buyin);
-        $this->entityManager->persist($userSession);
         $this->entityManager->flush();
     }
 

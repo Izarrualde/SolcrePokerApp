@@ -32,9 +32,9 @@ class DealerTipSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-        $data['hour'] = new \DateTime($data['hour']);
+       
         $dealerTip    = parent::fetch($data['id']);
-        $dealerTip->setHour($data['hour']);
+        $dealerTip->setHour(new \DateTime($data['hour']));
         $dealerTip->setDealerTip($data['dealerTip']);
 
         $this->entityManager->persist($dealerTip);

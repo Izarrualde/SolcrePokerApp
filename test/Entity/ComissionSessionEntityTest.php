@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 // use ReflectionMethod;
 use Solcre\lmsuy\Entity\ComissionSessionEntity;
 use Solcre\lmsuy\Entity\SessionEntity;
+use Solcre\lmsuy\Service\BaseService;
 
 class ComisisonSessionEntityTest extends TestCase
 {

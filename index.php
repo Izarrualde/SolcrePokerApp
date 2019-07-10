@@ -166,6 +166,8 @@ $app->post('/sessions', 'SessionController:add');
 $app->get('/sessions/form', 'SessionController:form');
 $app->get('/sessions/{idSession}/remove', 'SessionController:delete');
 $app->post('/sessions/{idSession}/update', 'SessionController:update');
+$app->get('/sessions/{idSession}/calculate', 'SessionController:CalculatePoints');
+
 
 $app->get('/sessions/{idSession}/expenses', 'ExpensesSessionController:listAll');
 $app->get('/sessions/{idSession}/expenses/{idExpenditure}/update', 'ExpensesSessionController:list');

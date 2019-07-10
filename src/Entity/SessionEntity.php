@@ -10,6 +10,7 @@ use Solcre\lmsuy\Exception\DealerTipAlreadyAddedException;
 use Solcre\lmsuy\Exception\ServiceTipAlreadyAddedException;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Solcre\lmsuy\Rakeback\RakebackAlgorithm;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
@@ -93,6 +94,11 @@ class SessionEntity
      */
     protected $sessionExpenses;
 
+    /**
+     * @ORM\Column(type="string", name="rakeback_class")
+     */
+    protected $rakebackClass;
+
     public function __construct(
         $id = null,
         \DateTime $date = null,
@@ -102,7 +108,8 @@ class SessionEntity
         $seats = null,
         $startTime = null,
         $startTimeReal = null,
-        $endTime = null
+        $endTime = null,
+        $rakebackClass = null
     ) {
         $this->setId($id);
         $this->setDate($date);
@@ -113,6 +120,7 @@ class SessionEntity
         $this->setStartTime($startTime);
         $this->setStartTimeReal($startTimeReal);
         $this->setEndTime($endTime);
+        $this->setRakebackClass($rakebackClass);
         $this->sessionExpenses    = new ArrayCollection();
         $this->sessionComissions  = new ArrayCollection();
         $this->sessionUsers       = new ArrayCollection();
@@ -276,6 +284,19 @@ class SessionEntity
         $this->sessionExpenses=$sessionExpenses;
         return $this;
     }
+
+    public function getRakebackClass()
+    {
+        return $this->rakebackClass;
+    }
+    
+    public function setRakebackClass($rakebackClass = null)
+    {
+        $this->rakebackClass=$rakebackClass;
+        return $this;
+    }
+
+
     // @codeCoverageIgnoreEnd
 
     public function getBuyins()
@@ -385,7 +406,14 @@ class SessionEntity
         }
         return $distinctPlayers;
     }
-
+/*
+    public function calculatePoints()
+    {
+        foreach ($this->sessionUsers as $userSession) {
+            $userSession->setAccumulatedPoints($this->rakebackAlgorithm->calculate($userSession));
+        }
+    }   
+*/
     public function toArray()
     {
         $ret = [

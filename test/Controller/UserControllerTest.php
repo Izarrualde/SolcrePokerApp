@@ -298,7 +298,7 @@ class UserControllerTest extends TestCase
 
   }
 
-  public function testDelete() //WhenIsAdded
+  public function testDelete()
   {
 
     $view = $this->createMock(Slim\Views\Twig::class);
@@ -356,7 +356,42 @@ class UserControllerTest extends TestCase
     );
 
     $controller->delete($request, $response, $args);
+  }
 
+  public function testDeleteWithException()
+  {
+
+    $view = $this->createMock(Slim\Views\Twig::class);
+    $userService = $this->createMock(UserService::class);
+
+    $userService->method('fetchAll')->willReturn(null);
+
+    $exception = new UserHadActionException();
+    $userService->method('delete')->will($this->throwException($exception));    
+    
+
+    $controller = $this->createController($view, $userService);
+    $request = $this->createMock(Slim\Psr7\Request::class);
+    $request->method('getParsedBody')->willReturn(null);
+
+    $response = $this->createMock(Slim\Psr7\Response::class);
+    $args = [
+      'iduser' => 1
+    ];
+
+    $expectedDatosUI = [];
+
+    $template    = 'viewUsers.html.twig';
+
+    $view->expects($this->once())
+    ->method('render')
+    ->with(
+        $this->equalTo($response),
+        $this->equalTo($template),
+        $this->contains([$exception->getMessage()]),
+    );
+
+    $controller->delete($request, $response, $args);
   }
 
 }

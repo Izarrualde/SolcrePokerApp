@@ -22,7 +22,6 @@ class ComissionSessionControllerTest extends TestCase
       // Get EntityManager from container
       $entityManager = $container->get(EntityManager::class);
 
-      $viewMock = 
       $controller = new ComissionSessionController($view, $entityManager);
 
       // Inject the mocked comissionService by reflection
@@ -271,6 +270,7 @@ class ComissionSessionControllerTest extends TestCase
 
     $controller->add($request, $response, $args);
   }
+  
   public function testAddWithoutPostData() 
   {
     $view = $this->createMock(Slim\Views\Twig::class);

@@ -12,12 +12,7 @@
             </nav>
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    {% if message is not empty %}
-                    <div class="alert alert-success">
-                        <button type="button" class="close" data-dismiss="alert">x</button>
-                        {{ message }}
-                    </div>
-                    {% endif %}
+                    {% include 'message.html.twig' %}
                     Listado Sesiones
                 </div>
                 <div class="card-body">
@@ -54,7 +49,7 @@
                                             <a href="/sessions/{{ session.id }}"> <i class="fas fa-pencil-alt"> </i> </a>
                                             <a href="/sessions/{{ session.id }}/remove"> <i class="fas fa-trash-alt"></i> </a>
                                             <a href="actions/revisionsession_twig.php?id={{ session.id }}"> <i class="far fa-eye"></i></a>
-                                            <a href="/sessions/{{ session.id }}/expenses"> <i class="fas fa-clipboard"></i></a>
+                                            <a href="/sessions/{{ session.id }}/expenses"> <i class="fas fa-clipboard"></i></a><a href="/sessions/{{ session.id }}/calculate"><i class="fab fa-product-hunt"></i></a>
                                         </td>
                                         {% endfor %}
                                     </tr>

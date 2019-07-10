@@ -74,11 +74,11 @@ class ExpensesSessionController
             try {
                 $this->expensesService->add($post);
                 $message[]  = 'el item se ingresó exitosamente.';
-            // @codeCoverageIgnoreStart    
+               
             } catch (ExpensesInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-            // @codeCoverageIgnoreEnd
+            
             $template = 'expenses.html.twig';
             
 
@@ -88,12 +88,14 @@ class ExpensesSessionController
 
             $datosExpenses = $this->expensesService->fetchAll(array('session' => $idSession));
             $session       = $this->sessionService->fetchOne(array('id' => $idSession));
-
-            foreach ($datosExpenses as $expensesObject) {
-                $expenses[] = $expensesObject->toArray();
+            if (is_array($datosExpenses)) {
+                foreach ($datosExpenses as $expensesObject) {
+                    $expenses[] = $expensesObject->toArray();
+                }
             }
 
-            $datosUI['session']             = $session->toArray();
+
+            $datosUI['session']             = is_null($session) ? [] : $session->toArray();
             $datosUI['session']['expenses'] = $expenses;
             $datosUI['breadcrumb']          = 'Gastos de Sesión';
             $datosUI['message']             = $message;

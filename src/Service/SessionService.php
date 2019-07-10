@@ -3,6 +3,7 @@ namespace Solcre\lmsuy\Service;
 
 use \Solcre\lmsuy\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
+use Solcre\lmsuy\Rakeback\SimpleRakeback;
 
 class SessionService extends BaseService
 {
@@ -14,19 +15,15 @@ class SessionService extends BaseService
 
     public function add($data, $strategies = null)
     {
-        $data['date']          = new \DateTime($data['date']);
-        $data['startTime']     = new \DateTime($data['startTime']);
-        $data['startTimeReal'] = new \DateTime($data['startTimeReal']);
-        $data['endTime']       = new \DateTime($data['endTime']);
-
         $session = new SessionEntity();
-        $session->setDate($data['date']);
+        $session->setDate(new \DateTime($data['date']));
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
         $session->setSeats($data['seats']);
-        $session->setStartTime($data['startTime']);
-        $session->setStartTimeReal($data['startTimeReal']);
-        $session->setEndTime($data['endTime']);
+        $session->setStartTime(new \DateTime($data['startTime']));
+        $session->setStartTimeReal(new \DateTime($data['startTimeReal']));
+        $session->setEndTime(new \DateTime($data['endTime']));
+        $session->setRakebackClass($data['rakebackClass']);
 
         $this->entityManager->persist($session);
         $this->entityManager->flush($session);
@@ -35,19 +32,14 @@ class SessionService extends BaseService
     public function update($data, $strategies = null)
     {
 
-        $data['created_at']    = new \DateTime($data['created_at']);
-        $data['start_at']      = new \DateTime($data['start_at']);
-        $data['real_start_at'] = new \DateTime($data['real_start_at']);
-        $data['end_at']        = new \DateTime($data['end_at']);
-
         $session = parent::fetch($data['idSession']);
-        $session->setDate($data['created_at']);
+        $session->setDate(new \DateTime($data['date']));
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
-        $session->setSeats($data['count_of_seats']);
-        $session->setStartTime($data['start_at']);
-        $session->setStartTimeReal($data['real_start_at']);
-        $session->setEndTime($data['end_at']);
+        $session->setSeats($data['seats']);
+        $session->setStartTime(new \DateTime($data['startTime']));
+        $session->setStartTimeReal(new \DateTime($data['startTimeReal']));
+        $session->setEndTime(new \DateTime($data['endTime']));
 
         $this->entityManager->persist($session);
         $this->entityManager->flush($session);
@@ -60,4 +52,21 @@ class SessionService extends BaseService
         $this->entityManager->remove($session);
         $this->entityManager->flush();
     }
+
+    public function calculateRakeback($idSession)
+    {
+        $session = parent::fetch($idSession);
+
+        $class = $session->getRakebackClass();
+
+        $rakebackAlgorithm = new $class();
+        ;
+        foreach ($session->getSessionUsers() as $userSession) {
+            $userSession->setAccumulatedPoints($rakebackAlgorithm->calculate($userSession));
+            
+            $this->entityManager->persist($userSession);   
+        }
+
+        $this->entityManager->flush(); 
+    }    
 }

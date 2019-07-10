@@ -162,7 +162,7 @@ class ExpensesSessionControllerTest extends TestCase
 
   }
 
-  public function testAddWhenIsAdded()
+  public function testAdd()
   {
 
     $view = $this->createMock(Slim\Views\Twig::class);
@@ -185,7 +185,7 @@ class ExpensesSessionControllerTest extends TestCase
 
     $sessionService->method('fetchOne')->willReturn($expectedSession);
     $expensesService->method('fetchAll')->willReturn($expectedExpenses);
-    $expensesService->method('update')->willReturn(true);
+    $expensesService->method('add')->willReturn(true);
 
     $controller = $this->createController($view, $expensesService, $sessionService);
     $request = $this->createMock(Slim\Psr7\Request::class);
@@ -214,6 +214,42 @@ class ExpensesSessionControllerTest extends TestCase
         $this->equalTo($response),
         $this->equalTo($template),
         $this->equalTo($expectedDatosUI),
+    );
+
+    $controller->add($request, $response, $args);
+  }
+
+  public function testAddWithInvalidAmount()
+  {
+
+    $view = $this->createMock(Slim\Views\Twig::class);
+    $expensesService = $this->createMock(ExpensesSessionService::class);
+    $sessionService = $this->createMock(SessionService::class);
+
+    $sessionService->method('fetchOne')->willReturn(null);
+    $expensesService->method('fetchAll')->willReturn(null);
+    
+    $exception = new ExpensesInvalidException();
+    $expensesService->method('add')->will($this->throwException($exception));
+
+    $controller = $this->createController($view, $expensesService, $sessionService);
+    $request = $this->createMock(Slim\Psr7\Request::class);
+    $request->method('getParsedBody')->willReturn(['expenditure to add']);
+    $response = $this->createMock(Slim\Psr7\Response::class);
+    $args = [
+      'idSession' => 2
+    ];
+
+    $expectedDatosUI = [];
+
+    $template = 'expenses.html.twig';
+
+    $view->expects($this->once())
+    ->method('render')
+    ->with(
+        $this->equalTo($response),
+        $this->equalTo($template),
+        $this->contains([$exception->getMessage()]),
     );
 
     $controller->add($request, $response, $args);

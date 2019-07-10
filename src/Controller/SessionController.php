@@ -54,7 +54,6 @@ class SessionController
     public function add($request, $response, $args)
     {
         $post = $request->getParsedBody();
-
         $datosUI = array();
         $template = 'index.html.twig';
         if (is_array($post)) {
@@ -126,4 +125,25 @@ class SessionController
 
         return $this->view->render($response, 'index.html.twig', $datosUI);
     }
+
+    public function calculatePoints($request, $response, $args)
+    {
+        $idSession = $args['idSession'];
+        $this->sessionService->calculateRakeback($idSession);
+
+        $message[]       = 'Puntos agregados exitosamente';
+        $datosSessions = $this->sessionService->fetchAll();
+
+        $datosUI  = array();
+        $sessions = array();
+
+        foreach ($datosSessions as $sessionObject) {
+             $sessions[] = $sessionObject->toArray();
+        }
+        
+        $datosUI['sessions'] = $sessions;
+        $datosUI['message']  = $message;
+
+        return $this->view->render($response, 'index.html.twig', $datosUI);
+    } 
 }

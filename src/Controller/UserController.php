@@ -108,11 +108,13 @@ class UserController
 
         $datosUsers = $this->userService->fetchAll();
 
-        foreach ($datosUsers as $userObject) {
-            $users[] = $userObject->toArray();
+        if (is_array($datosUsers)) {
+            foreach ($datosUsers as $userObject) {
+                $users[] = $userObject->toArray();
+            }            
         }
-    
-        $datosUI['users']      = $users;
+
+        $datosUI['users']      = is_null($users) ? [] : $users;
         $datosUI['breadcrumb'] = 'Usuarios';
         $datosUI['message']    = $message;
         
@@ -126,10 +128,8 @@ class UserController
         try {
             $this->userService->delete($idUser);
             $message[] = 'El usuario se eliminó exitosamente';
-        // @codeCoverageIgnoreStart
         } catch (UserHadActionException $e) {
             $message[] = $e->getMessage();
-        // @codeCoverageIgnoreEnd
         }
 
         $template = 'viewUsers.html.twig';
@@ -139,11 +139,13 @@ class UserController
         $users   = array();
         $datosUsers = $this->userService->fetchAll();
 
-        foreach ($datosUsers as $userObject) {
-            $users[] = $userObject->toArray();
+        if (is_array($datosUsers)) {
+            foreach ($datosUsers as $userObject) {
+                $users[] = $userObject->toArray();
+            }            
         }
-    
-        $datosUI['users']      = $users;
+
+        $datosUI['users']      = is_null($users) ? [] : $users;
         $datosUI['breadcrumb'] = 'Usuarios';
         $datosUI['message']    = $message;
 

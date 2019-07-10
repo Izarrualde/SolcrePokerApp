@@ -9,9 +9,10 @@ use \Solcre\lmsuy\Entity\SessionEntity;
 use \Solcre\lmsuy\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
-use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
 use Solcre\lmsuy\Controller\UserSessionController;
 use Test\AppWrapper;
+use Solcre\lmsuy\Exception\TableIsFullException;
+use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
 
 class UserSessionControllerTest extends TestCase
 {
@@ -231,7 +232,7 @@ class UserSessionControllerTest extends TestCase
 
   }
 
-  public function testAddWhenOneUserSessionIsAdded() // WhenIsAdded
+  public function testAdd() 
   {
     $view = $this->createMock(Slim\Views\Twig::class);
     $userSessionService = $this->createMock(UserSessionService::class);
@@ -258,18 +259,18 @@ class UserSessionControllerTest extends TestCase
 
     $controller = $this->createController($view, $userSessionService, $userService, $sessionService);
     $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'userSession to add',
-            'idSession'         => 2,
-            'user_id'           => [1],
-            'start'             => date_create('2019-06-27 19:00:00'),
-            'end'               => date_create('2019-06-27 23:00:00'),
-            'approved'          => 1,
-            'accumulatedPoints' => 0,
-            'idSession'         => 2
-          ]
-        );
+    $request->method('getParsedBody')->willReturn(
+      [
+        'userSession to add',
+        'idSession'         => 2,
+        'user_id'           => [1],
+        'start'             => date_create('2019-06-27 19:00:00'),
+        'end'               => date_create('2019-06-27 23:00:00'),
+        'approved'          => 1,
+        'accumulatedPoints' => 0,
+        'idSession'         => 2
+      ]
+    );
 
     $response = $this->createMock(Slim\Psr7\Response::class);
 
@@ -301,6 +302,99 @@ class UserSessionControllerTest extends TestCase
     $controller->add($request, $response, $args);
   }
 
+  public function testAddWhenTableIsFull() 
+  {
+    $view = $this->createMock(Slim\Views\Twig::class);
+    $userSessionService = $this->createMock(UserSessionService::class);
+    $userService = $this->createMock(UserService::class);
+    $sessionService = $this->createMock(SessionService::class);
+
+
+    $sessionService->method('fetchOne')->willReturn(null);
+    $userSessionService->method('fetchAll')->willReturn(null);
+    $exception = new TableIsFullException();
+    $userSessionService->method('add')->will($this->throwException($exception));
+
+    $controller = $this->createController($view, $userSessionService, $userService, $sessionService);
+    $request = $this->createMock(Slim\Psr7\Request::class);
+    $request->method('getParsedBody')->willReturn(
+      [
+        'userSession to add',
+        'idSession'         => 2,
+        'user_id'           => [1],
+        'start'             => date_create('2019-06-27 19:00:00'),
+        'end'               => date_create('2019-06-27 23:00:00'),
+        'approved'          => 1,
+        'accumulatedPoints' => 0,
+        'idSession'         => 2
+      ]
+    );
+
+    $response = $this->createMock(Slim\Psr7\Response::class);
+
+    $args = [
+      'idSession' => 2
+    ];
+
+    $template    = 'users.html.twig';
+
+    $view->expects($this->once())
+    ->method('render')
+    ->with(
+        $this->equalTo($response),
+        $this->equalTo($template),
+        $this->contains([$exception->getMessage()]),
+    );
+
+    $controller->add($request, $response, $args);
+  }
+
+  public function testAddAlreadedAdded() 
+  {
+    $view = $this->createMock(Slim\Views\Twig::class);
+    $userSessionService = $this->createMock(UserSessionService::class);
+    $userService = $this->createMock(UserService::class);
+    $sessionService = $this->createMock(SessionService::class);
+
+
+    $sessionService->method('fetchOne')->willReturn(null);
+    $userSessionService->method('fetchAll')->willReturn(null);
+    $exception = new UserSessionAlreadyAddedException();
+    $userSessionService->method('add')->will($this->throwException($exception));
+
+    $controller = $this->createController($view, $userSessionService, $userService, $sessionService);
+    $request = $this->createMock(Slim\Psr7\Request::class);
+    $request->method('getParsedBody')->willReturn(
+      [
+        'userSession to add',
+        'idSession'         => 2,
+        'user_id'           => [1],
+        'start'             => date_create('2019-06-27 19:00:00'),
+        'end'               => date_create('2019-06-27 23:00:00'),
+        'approved'          => 1,
+        'accumulatedPoints' => 0,
+        'idSession'         => 2
+      ]
+    );
+
+    $response = $this->createMock(Slim\Psr7\Response::class);
+
+    $args = [
+      'idSession' => 2
+    ];
+
+    $template    = 'users.html.twig';
+
+    $view->expects($this->once())
+    ->method('render')
+    ->with(
+        $this->equalTo($response),
+        $this->equalTo($template),
+        $this->contains([$exception->getMessage()]),
+    );
+
+    $controller->add($request, $response, $args);
+  }
   public function testForm()
   {
     $view = $this->createMock(Slim\Views\Twig::class);
