@@ -19,7 +19,9 @@
         "slim/psr7": "^0.3.0",
         "slim/slim": "^4.0@beta",
         "slim/twig-view": "^2.5",
-        "twig/twig": "^2.10"
+        "twig/twig": "^2.10",
+        "izarrualde/pokerclub": "dev-master",
+        "middlewares/negotiation": "dev-master"
     },
     "require-dev": {
         "friendsoftwig/twigcs": "^3.1",
@@ -38,5 +40,5 @@
             "Solcre\\lmsuy\\": "./src"
         }
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "dev"
 }

@@ -22,7 +22,7 @@ class TipSessionController
     protected $entityManager;
 
 
-    public function __construct(Twig $view, EntityManager $em)
+    public function __construct($view, EntityManager $em)
     {
         $this->view                     = $view;
         $this->dealerTipService  = new DealerTipSessionService($em);

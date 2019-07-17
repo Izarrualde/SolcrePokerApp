@@ -14,7 +14,7 @@ class ExpensesSessionController
     protected $expensesService;
     protected $sessionService;
 
-    public function __construct(Twig $view, EntityManager$em)
+    public function __construct($view, EntityManager$em)
     {
         $this->view                   = $view;
         $this->expensesService = new ExpensesSessionService($em);

@@ -17,7 +17,7 @@ class UserSessionController
     protected $userService;
     protected $sessionService;
 
-    public function __construct(Twig $view, EntityManager $em)
+    public function __construct($view, EntityManager $em)
     {
         $this->view               = $view;
         $this->userService        = new UserService($em);

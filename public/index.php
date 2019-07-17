@@ -3,6 +3,8 @@
 use DI\Container;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Solcre\lmsuy\Middleware\ViewSelectorMiddleware;
+use Solcre\lmsuy\Middleware\CheckAuthenticationMiddleware;
 use Slim\Factory\AppFactory;
 use Slim\Middleware\ErrorMiddleware;
 use Solcre\lmsuy\Controller\SessionController;
@@ -17,9 +19,12 @@ use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Setup;
-use Solcre\lmsuy\Entity\UserEntity;
-use Solcre\lmsuy\MySQL\ConnectLmsuy_db;
-use Solcre\lmsuy\Service\UserService;
+use Middlewares\ContentType;
+use Middlewares\Utils\Factory;
+use Middlewares\Utils\Factory\SlimFactory;
+use Solcre\lmsuy\View\TwigWrapperView;
+use Solcre\lmsuy\View\JsonView;
+
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -27,22 +32,6 @@ date_default_timezone_set('America/Montevideo');
 
 // Create Container using PHP-DI
 $container = new Container();
-
-// Set container to create App with on AppFactory
-AppFactory::setContainer($container);
-
-// Instantiate App
-$app = AppFactory::create();
-
-// Add error middleware
-
-$responseFactory = $app->getResponseFactory();
-$errorMiddleware = new ErrorMiddleware($app->getCallableResolver(), $responseFactory, true, true, true);
-$app->add($errorMiddleware);
-
-// Get container
-$container = $app->getContainer();
-
 $container->set(
     'settings',
     function ($container): Array {
@@ -50,6 +39,53 @@ $container->set(
         return $set;
     }
 );
+
+// Set container to create App with on AppFactory
+AppFactory::setContainer($container);
+
+// Instantiate App
+$app = AppFactory::create();
+
+$responseFactory = $app->getResponseFactory();
+
+$settings = $container->get('settings');
+// $twigView = new \Slim\Views\Twig('templates');
+$twigView = new TwigWrapperView('templates');
+$environment = $twigView->getEnvironment();
+$extension = $environment->getExtension(\Twig\Extension\CoreExtension::class);
+$extension->setNumberFormat(
+    $settings['number_format']['decimals'],
+    $settings['number_format']['decimal_separator'],
+    $settings['number_format']['thousand_separator']
+);
+
+//add CheckAuthenticationMiddleware
+$checkAuthenticationMiddleware = new CheckAuthenticationMiddleware($container);
+$app->add($checkAuthenticationMiddleware);
+
+$viewMap = [
+    'text/html'        => $twigView,
+    'application/json' => new JsonView()// JsonView
+];
+
+//add ViewSelectorMiddleware
+$viewSelectorMiddleware = new ViewSelectorMiddleware($container, $viewMap);
+$app->add($viewSelectorMiddleware);
+
+// Add content middleware
+$negotiationMiddleware = new ContentType(null, $responseFactory);
+$app->add($negotiationMiddleware);
+
+
+// Add error middleware
+$errorMiddleware = new ErrorMiddleware(
+    $app->getCallableResolver(), 
+    $responseFactory, 
+    true, 
+    true, 
+    true
+);
+$app->add($errorMiddleware);
 
 $container->set(
     EntityManager::class,
@@ -75,23 +111,6 @@ $container->set(
             $container->get('settings')['doctrine']['connection'],
             $config
         );
-    }
-);
-
-// Register component on container
-$container->set(
-    'view',
-    function ($container) {
-        $settings = $container->get('settings');
-        $view = new \Slim\Views\Twig('templates');
-        $environment = $view->getEnvironment();
-        $extension = $environment->getExtension(\Twig\Extension\CoreExtension::class);
-        $extension->setNumberFormat(
-            $settings['number_format']['decimals'],
-            $settings['number_format']['decimal_separator'],
-            $settings['number_format']['thousand_separator']
-        );
-        return $view;
     }
 );
 
@@ -158,7 +177,6 @@ $container->set(
     }
 );
 
-// Add route
 $app->get('/', 'SessionController:listAll');
 $app->get('/sessions/{idSession:[0-9]+}', 'SessionController:list');
 $app->get('/sessions', 'SessionController:listAll');

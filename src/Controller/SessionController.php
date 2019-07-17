@@ -13,7 +13,7 @@ class SessionController
     protected $view;
     protected $sessionService;
 
-    public function __construct(Twig $view, EntityManager $em)
+    public function __construct($view, EntityManager $em)
     {
         $this->view           = $view;
         $this->sessionService = new SessionService($em);
@@ -33,7 +33,7 @@ class SessionController
 
         $datosUI['sessions'] = $sessions;
 
-
+        
         return $this->view->render($response, 'index.html.twig', $datosUI);
     }
 
@@ -128,6 +128,7 @@ class SessionController
 
     public function calculatePoints($request, $response, $args)
     {
+        
         $idSession = $args['idSession'];
         $this->sessionService->calculateRakeback($idSession);
 
