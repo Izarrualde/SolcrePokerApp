@@ -2,12 +2,13 @@
 namespace Solcre\lmsuy\View;
 
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
+use Psr\Http\Message\RequestInterface as RequestInterface;
 /**
  * 
  */
 class JsonView implements View
 {
-  public function render(ResponseInterface $response, $template, $data = [])
+  public function render(RequestInterface $request, ResponseInterface $response, $data = [])
   {
     // copiar funcion render de twig,
     $response->getBody()->write(json_encode($data));

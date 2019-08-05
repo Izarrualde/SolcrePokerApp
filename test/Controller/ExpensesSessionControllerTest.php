@@ -20,7 +20,6 @@ class ExpensesSessionControllerTest extends TestCase
       // Get EntityManager from container
       $entityManager = $container->get(EntityManager::class);
 
-      $viewMock = 
       $controller = new ExpensesSessionController($view, $entityManager);
 
       // Inject the mocked expensesService by reflection

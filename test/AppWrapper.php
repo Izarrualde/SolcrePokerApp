@@ -24,7 +24,7 @@ class AppWrapper
         $container->set(
             'settings',
             function ($container): Array {
-                $set = include __DIR__ . '/../settings.php';
+                $set = include __DIR__ . '/../app/settings.php';
                 return $set;
             }
         );

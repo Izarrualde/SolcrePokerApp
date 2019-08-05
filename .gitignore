@@ -2,3 +2,4 @@
 /data/
 /test/reports
 .phpunit.result.cache
+.env

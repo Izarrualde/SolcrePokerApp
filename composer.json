@@ -21,7 +21,8 @@
         "slim/twig-view": "^2.5",
         "twig/twig": "^2.10",
         "izarrualde/pokerclub": "dev-master",
-        "middlewares/negotiation": "dev-master"
+        "middlewares/negotiation": "dev-master",
+        "vlucas/phpdotenv": "^3.4@dev"
     },
     "require-dev": {
         "friendsoftwig/twigcs": "^3.1",

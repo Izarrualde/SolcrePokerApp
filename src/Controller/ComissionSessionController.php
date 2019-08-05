@@ -1,13 +1,16 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-use \Solcre\lmsuy\Service\ComissionSessionService;
-use \Solcre\lmsuy\Service\SessionService;
-use \Solcre\lmsuy\Entity\ComissionSessionEntity;
+//use \Solcre\lmsuy\Service\ComissionSessionService;
+//use \Solcre\lmsuy\Service\SessionService;
+//use \Solcre\lmsuy\Entity\ComissionSessionEntity;
 use Doctrine\ORM\EntityManager;
+use \Solcre\lmsuy\View\TwigWrapperView;
+use \Solcre\lmsuy\View\JsonView;
 use Slim\Views\Twig;
+use Psr\Container\ContainerInterface;
 // use \Solcre\lmsuy\Twig\Func;
-use \Solcre\lmsuy\Exception\ComissionInvalidException;
+//use \Solcre\lmsuy\Exception\ComissionInvalidException;
 
 class ComissionSessionController
 {
@@ -26,75 +29,201 @@ class ComissionSessionController
     {
 
         $idSession = $args['idSession'];
-
-        $template = 'comissions.html.twig';
+        $comissions = [];
+        $datosUI    = [];
 
         $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
 
-        $session         = $this->sessionService->fetchOne(array('id' => $idSession));
-
-
-        $comissions = array();
-        $datosUI    = array();
-
-        foreach ($datosComissions as $comissionObject) {
-            $comissions[] = $comissionObject->toArray();
+        if (is_array($datosComissions)) {
+            foreach ($datosComissions as $comissionObject) {
+                $comissions[] = $comissionObject->toArray();
+            }            
         }
 
-        $datosUI['session']               = $session->toArray();
-        $datosUI['session']['comissions'] = $comissions;
-        $datosUI['breadcrumb']            = 'Comisiones';
+        // TwigWrapperView
+        if ($this->view instanceof TwigWrapperView) {
+            $session = $this->sessionService->fetchOne(array('id' => $idSession));
+            $datosUI['session']               = is_null($session) ? [] : $session->toArray();
+            $datosUI['session']['comissions'] = $comissions;
+            $datosUI['breadcrumb']            = 'Comisiones';
+        }
 
-        return $this->view->render($response, $template, $datosUI);
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $datosUI  = $comissions;
+        }
+
+        return $this->view->render($request, $response, $datosUI);
     }
-
  
     public function list($request, $response, $args)
     {
         $id        = $args['idcomission'];
         $idSession = $args['idSession'];
-
-        $template = 'editComission.html.twig';
+        $datosUI = [];
 
         $comission = $this->comissionService->fetchOne(array('id' => $id));
-        $session   = $this->sessionService->fetchOne(array('id' => $idSession));
 
-        $datosUI = array();
-        
-        $datosUI['session']              = $session->toArray();
-        $datosUI['session']['comission'] = $comission->toArray();
-        $datosUI['breadcrumb']           = 'Editar Comision';
+        // TwigWrapperView
+        if ($this->view instanceof TwigWrapperView) {
+            $session   = $this->sessionService->fetchOne(array('id' => $idSession));
+            $datosUI['session']              = is_null($session) ? [] : $session->toArray();
+            $datosUI['session']['comission'] = is_null($comission) ? [] : $comission->toArray();
+            $datosUI['breadcrumb']           = 'Editar Comision';
+        }
 
-        return $this->view->render($response, $template, $datosUI);
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $datosUI  = is_null($comission) ? [] : $comission->toArray();
+        }
+
+        return $this->view->render($request, $response, $datosUI);
     }
 
     public function add($request, $response, $args)
     {
         $post      = $request->getParsedBody();
         $idSession = $args['idSession'];
-
-        $template = 'comissions.html.twig';
         $datosUI = [];
         $message = [];
 
         if (is_array($post)) {
             try {
-                $this->comissionService->add($post);
-                $message[] = 'la comission se ingreso exitosamente.'; 
+                $comission = $this->comissionService->add($post);
+                $message[] = 'la comission se ingreso exitosamente.';
             } catch (ComissionInvalidException $e) {
                 $message[] = $e->getMessage();
             }
 
-            //extraigo datos de la bdd
-            $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
+
+            // TwigWrapperView 
+            if ($this->view instanceof TwigWrapperView) {
+                $template = 'comissionSession/listAll.html.twig';
+                $this->view->setTemplate($template);
+
+                $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
+                $session         = $this->sessionService->fetchOne(array('id' => $idSession));
+
+                $comissions = [];
+
+                if (is_array($datosComissions)) {
+                    foreach ($datosComissions as $comission) {
+                        $comissions[] = $comission->toArray();
+                    }
+                }
+
+                $datosUI['session']               = is_null($session) ? [] : $session->toArray();
+                $datosUI['session']['comissions'] = $comissions;
+                $datosUI['breadcrumb']            = 'Comisiones';
+                $datosUI['message']               = $message;
+            }
+
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI = is_null($comission) ? [] : $comission->toArray();
+                $response = $response->withStatus(201); //magic number
+            }
+        }     
+        
+        return $this->view->render($request, $response, $datosUI);
+    }
+
+    public function form($request, $response, $args)
+    {
+        $idSession = $args['idSession'];
+        $session   = $this->sessionService->fetchOne(array('id' => $idSession));
+        $datosUI  = [];
+
+        // TwigWrapperView
+        if ($this->view instanceof TwigWrapperView) {
+            $template = 'comissionSession/form.html.twig';
+            $this->view->setTemplate($template);
+            
+            $datosUI['session']    = is_null($session) ? [] : $session->toArray();
+            $datosUI['breadcrumb'] = 'Nueva Comision';
+        }
+
+        return $this->view->render($request, $response, $datosUI);
+    }
+
+    public function update($request, $response, $args)
+    {
+        $post      = $request->getParsedBody();
+        $id        = $args['idcomission'];
+        $idSession = $post['idSession'];
+        $datosUI = [];
+        $message = [];
+
+        if (is_array($post)) {
+            try {
+                $comission = $this->comissionService->update($post);
+                $message[] = 'la comission se actualizó exitosamente.';
+            // @codeCoverageIgnoreStart
+            } catch (ComissionInvalidException $e) {
+                $message[] = $e->getMessage();
+            // @codeCoverageIgnoreEnd
+            }
+
+            // TwigWrapperView
+            if ($this->view instanceof TwigWrapperView) {
+                $template = 'comissionSession/listAll.html.twig';
+                $this->view->setTemplate($template); 
+
+                $session         = $this->sessionService->fetchOne(array('id' => $idSession));
+                $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
+
+                $comissions = [];
+                if (isset($datosComissions)) {
+                    foreach ($datosComissions as $comission) {
+                        $comissions[] = $comission->toArray();
+                    }        
+                }
+
+                $datosUI['session']               = is_null($session) ? [] : $session->toArray();
+                $datosUI['session']['comissions'] = $comissions;
+                $datosUI['breadcrumb']            = 'Comisiones';
+                $datosUI['message']               = $message;
+            }
+
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI = is_null($comission) ? [] : $comission->toArray();
+            }
+        }
+
+        return $this->view->render($request, $response, $datosUI);
+    }
+
+    public function delete($request, $response, $args)
+    {
+        $id        = $args['idcomission'];
+        $idSession = $args['idSession'];
+        $datosUI = [];
+        $message = [];
+
+        try {
+            $delete = $this->comissionService->delete($id);
+            $message[]  = 'La comisión se eliminó exitosamente';
+        // @codeCoverageIgnoreStart
+        } catch (ComissionInvalidException $e) { //excepcion de comission no existente.
+            $message[] = $e->getMessage();
+        // @codeCoverageIgnoreEnd
+        }
+        
+        // TwigWrapperView
+        if ($this->view instanceof TwigWrapperView) {
+            $template = 'comissionSession/listAll.html.twig';
+            $this->view->setTemplate($template); 
+
+            // Busqueda de datos para UI
+            $comissions = [];
             $session         = $this->sessionService->fetchOne(array('id' => $idSession));
+            $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
 
-            $comissions = array();
-
-            if (is_array($datosComissions)) {
+            if (isset($datosComissions)) {
                 foreach ($datosComissions as $comission) {
                     $comissions[] = $comission->toArray();
-                }
+                }            
             }
 
             $datosUI['session']               = is_null($session) ? [] : $session->toArray();
@@ -103,90 +232,11 @@ class ComissionSessionController
             $datosUI['message']               = $message;
         }
 
-        return $this->view->render($response, $template, $datosUI);
-    }
-
-    public function form($request, $response, $args)
-    {
-        $idSession = $args['idSession'];
-        $session   = $this->sessionService->fetchOne(array('id' => $idSession));
-        
-        $template = 'newcomissions.html.twig';
-        $datosUI  = array();
-
-        $datosUI['session']    = $session->toArray();
-        $datosUI['breadcrumb'] = 'Nueva Comision';
-
-        return $this->view->render($response, $template, $datosUI);
-    }
-
-    public function update($request, $response, $args)
-    {
-        $post      = $request->getParsedBody();
-        $id        = $args['idcomission'];
-        $idSession = $post['idSession'];
-
-        if (is_array($post)) {
-            try {
-                $this->comissionService->update($post);
-                $message[] = 'la comission se actualizó exitosamente.';
-            // @codeCoverageIgnoreStart
-            } catch (ComissionInvalidException $e) {
-                $message[] = $e->getMessage();
-            // @codeCoverageIgnoreEnd
-            }
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(204); //magic number
         }
-
-        $template = 'comissions.html.twig';
-
-        //BUSQUEDA DE DATOS PARA LA UI
-        $idSession = $post['idSession'];
-
-        $session         = $this->sessionService->fetchOne(array('id' => $idSession));
-        $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
-
-        $comissions = array();
-        $datosUI    = array();
-
-        foreach ($datosComissions as $comission) {
-            $comissions[] = $comission->toArray();
-        }
-
-        $datosUI['session']               = $session->toArray();
-        $datosUI['session']['comissions'] = $comissions;
-        $datosUI['breadcrumb']            = 'Comisiones';
-        $datosUI['message']               = $message;
-
-        return $this->view->render($response, $template, $datosUI);
-    }
-
-    public function delete($request, $response, $args)
-    {
-
-        $id        = $args['idcomission'];
-        $idSession = $args['idSession'];
-
-        $this->comissionService->delete($id);
-
-        $message[]  = 'La comisión se eliminó exitosamente';
-        $template = 'comissions.html.twig';
-
-        //extraigo datos para DB
-        $datosUI    = array();
-        $comissions = array();
-
-        $session         = $this->sessionService->fetchOne(array('id' => $idSession));
-        $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
-
-        foreach ($datosComissions as $comission) {
-            $comissions[] = $comission->toArray();
-        }
-
-        $datosUI['session']               = $session->toArray();
-        $datosUI['session']['comissions'] = $comissions;
-        $datosUI['breadcrumb']            = 'Comisiones';
-        $datosUI['message']               = $message;
-
-        return $this->view->render($response, $template, $datosUI);
+         
+        return $this->view->render($request, $response, $datosUI);
     }
 }

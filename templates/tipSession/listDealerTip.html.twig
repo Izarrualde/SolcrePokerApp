@@ -8,22 +8,22 @@
             {% include 'breadcrumb.html.twig' %}
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    Editar serviceTip
+                    Editar DealerTip
                 </div>
                 <div class="card-body">
                     <section class="container row justify-content-center">
                         <article>
-                            <form class="was-validated" action="/tips/servicetip/{{ serviceTip.id }}/update" method="post">
-                                <input name="id" type="hidden" value="{{ serviceTip.id }}">
-                                <input name="idSession" type="hidden" id="idSession" type="text" required="true" value="{{ serviceTip.idSession }}">
+                            <form class="was-validated" action="/tips/dealertip/{{ session.dealerTip.id }}/update" method="post">
+                                <input name="id" type="hidden" value="{{ session.dealerTip.id }}">
+                                <input name="idSession" type="hidden" id="idSession" type="text" required="true" value="{{ session.id }}">
                                 <div class="form-group">
                                     <label class="sr-only" for="hour"> hora: </label>
-                                    <input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ serviceTip.hour|date('Y-m-d') }}T{{ serviceTip.hour|date('H:i') }}">
+                                    <input class="form-control" name="hour" id="hour" type="datetime-local" required="true" value="{{ session.dealerTip.hour|date('Y-m-d') }}T{{ session.dealerTip.hour|date('H:i') }}">
                                     <small id="hour" class="form-tet text-muted"> Fecha y hora </small>
                                 </div>
                                 <div class="form-group">
-                                    <label class="sr-only" for="servicetip"> serviceTip: </label>
-                                    <input class="form-control" name="serviceTip" id="serviceTip" type="text" placeholder="serviceTip" required="true" value="{{ serviceTip.serviceTip }}">
+                                    <label class="sr-only" for="dealerTip"> dealerTip: </label>
+                                    <input class="form-control" name="dealerTip" id="dealerTip" type="number" placeholder="dealerTip" required="true" value="{{ session.dealerTip.dealerTip }}">
                                 </div>
                                 <div class="form-group">
                                     <input class="btn btn-lg btn-block btn-primary" type="submit" value="Editar" />

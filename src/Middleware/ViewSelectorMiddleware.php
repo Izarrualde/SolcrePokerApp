@@ -35,6 +35,7 @@ class ViewSelectorMiddleware
         if (isset($type)){
             $this->container->set('view', $this->viewMap[$type]);
         }
+        
         return $handler->handle($request);;
     }
 

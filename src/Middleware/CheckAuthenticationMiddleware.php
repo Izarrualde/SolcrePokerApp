@@ -10,7 +10,7 @@ class CheckAuthenticationMiddleware
 // la idea es que solo pueda acceder a las rutas que hay autenticacion
 {
   const HEADER = 'Authentication';
-  const PASSWORD = 'clavesecreta';
+
 /*
 	if (existe header con valor clave secreta) {
 		hay respuesta, que siga viaje
@@ -25,9 +25,9 @@ class CheckAuthenticationMiddleware
         throw new UserHasNoPermissionException();
       } 
 
-      $authentication = $request->getHeaderLine(self::HEADER);
+      $authentication = $request->getHeaderLine(self::HEADER); 
 
-      if ($authentication != self::PASSWORD) {
+      if ($authentication != getenv('PASS')) { 
          throw new UserHasNoPermissionException(); 
       }
       
