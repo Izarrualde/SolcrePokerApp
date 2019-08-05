@@ -1,14 +1,14 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-//use \Solcre\lmsuy\Service\UserSessionService;
-//use \Solcre\lmsuy\Service\SessionService;
-//use \Solcre\lmsuy\Service\UserService;
-//use \Solcre\lmsuy\Entity\UserSessionEntity;
+use \Solcre\Pokerclub\Service\UserSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Service\UserService;
+use \Solcre\Pokerclub\Entity\UserSessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\lmsuy\View\TwigWrapperView;
-//use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
-//use Solcre\lmsuy\Exception\TableIsFullException;
+use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
+use Solcre\Pokerclub\Exception\TableIsFullException;
 
 class UserSessionController
 {

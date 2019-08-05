@@ -1,7 +1,7 @@
 <?php
 namespace Solcre\lmsuy\Rakeback;
 
-use Solcre\lmsuy\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
 
 class SimpleRakeback implements RakebackAlgorithm
 {

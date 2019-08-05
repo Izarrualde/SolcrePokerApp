@@ -5,7 +5,8 @@ use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
-use Solcre\pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Service\SessionService;
 
 
 class SessionController

@@ -1,16 +1,16 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-//use \Solcre\lmsuy\Service\ComissionSessionService;
-//use \Solcre\lmsuy\Service\SessionService;
-//use \Solcre\lmsuy\Entity\ComissionSessionEntity;
+use \Solcre\Pokerclub\Service\ComissionSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Entity\ComissionSessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\lmsuy\View\TwigWrapperView;
 use \Solcre\lmsuy\View\JsonView;
 use Slim\Views\Twig;
 use Psr\Container\ContainerInterface;
 // use \Solcre\lmsuy\Twig\Func;
-//use \Solcre\lmsuy\Exception\ComissionInvalidException;
+use \Solcre\Pokerclub\Exception\ComissionInvalidException;
 
 class ComissionSessionController
 {

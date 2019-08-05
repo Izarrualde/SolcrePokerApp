@@ -1,12 +1,12 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-//use \Solcre\lmsuy\Service\BuyinSessionService;
-//use \Solcre\lmsuy\Service\SessionService;
-//use \Solcre\lmsuy\Service\UserSessionService;
-//use \Solcre\lmsuy\Service\UserService;
-//use \Solcre\lmsuy\Entity\BuyinSessionEntity;
-//use \Solcre\lmsuy\Entity\SessionEntity;
+use \Solcre\Pokerclub\Service\BuyinSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Service\UserSessionService;
+use \Solcre\Pokerclub\Service\UserService;
+use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use \Solcre\lmsuy\View\TwigWrapperView;

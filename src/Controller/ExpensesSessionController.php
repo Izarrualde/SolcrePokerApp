@@ -1,14 +1,14 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-//use \Solcre\lmsuy\Service\ExpensesSessionService;
-//use \Solcre\lmsuy\Service\SessionService;
-//use \Solcre\lmsuy\Entity\ExpensesSessionEntity;
+use \Solcre\Pokerclub\Service\ExpensesSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Entity\ExpensesSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use Solcre\lmsuy\View\JsonView;
 use \Solcre\lmsuy\View\TwigWrapperView;
-//use \Solcre\lmsuy\Exception\ExpensesInvalidException;
+use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
 
 class ExpensesSessionController
 {

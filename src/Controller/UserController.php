@@ -1,12 +1,12 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-//use \Solcre\lmsuy\Service\UserService;
-//use \Solcre\lmsuy\Entity\UserEntity;
+use \Solcre\Pokerclub\Service\UserService;
+use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use \Solcre\lmsuy\View\TwigWrapperView;
-//use Solcre\lmsuy\Exception\UserHadActionException;
+use Solcre\Pokerclub\Exception\UserHadActionException;
 
 class UserController
 {

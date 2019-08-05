@@ -1,17 +1,17 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-//use \Solcre\lmsuy\Service\DealerTipSessionService;
-//use \Solcre\lmsuy\Service\ServiceTipSessionService;
-//use \Solcre\lmsuy\Service\SessionService;
-//use \Solcre\lmsuy\Entity\DealerTipSessionEntity;
-//use \Solcre\lmsuy\Entity\ServiceTipSessionEntity;
-//use \Solcre\lmsuy\Entity\SessionEntity;
+use \Solcre\Pokerclub\Service\DealerTipSessionService;
+use \Solcre\Pokerclub\Service\ServiceTipSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Entity\DealerTipSessionEntity;
+use \Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use \Solcre\lmsuy\View\TwigWrapperView;
-//use \Solcre\lmsuy\Exception\DealerTipInvalidException;
-//use \Solcre\lmsuy\Exception\ServiceTipInvalidException;
+use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
+use \Solcre\Pokerclub\Exception\ServiceTipInvalidException;
 
 class TipSessionController
 {
