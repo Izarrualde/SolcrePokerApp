@@ -7,8 +7,11 @@ use \Solcre\Pokerclub\Service\UserService;
 use \Solcre\Pokerclub\Entity\UserSessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\lmsuy\View\TwigWrapperView;
+use \Solcre\lmsuy\View\JsonView;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
+use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
+use Exception;
 
 class UserSessionController
 {
@@ -51,7 +54,7 @@ class UserSessionController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI  = $userSession;
+            $datosUI  = $usersSession;
             $response = $response->withStatus(200); //magic number
         }
 
@@ -85,7 +88,7 @@ class UserSessionController
         $post       = $request->getParsedBody();
         $idSession  = $post['idSession'];
         $usersAdded = [];
-        $datosUI    = [];
+        $datosUI    = null;
         $message    = [];
         
         if (is_array($post)) {
@@ -102,12 +105,14 @@ class UserSessionController
                 try {
                     $usersAdded[] = $this->userSessionService->add($data);
                     $message[] = 'Se agregó exitosamente.';
+                    $response = $response->withStatus(201); //magic number
                 } catch (UserSessionAlreadyAddedException $e) {
                     $message[] = $e->getMessage();
+                    $response = $response->withStatus(400); //magic number
                 } catch (TableIsFullException $e) {
                     $message[] = $e->getMessage();
+                    $response = $response->withStatus(400); //magic number
                 }
-                
             }
 
             // TwigWrapperView 
@@ -134,8 +139,15 @@ class UserSessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = $usersAdded;
-                $response = $response->withStatus(201); //magic number
+                if (!empty($usersAdded)) {
+                    $usersAddedToArray = [];
+                    foreach ($usersAdded as $userSession) {
+                        $usersAddedToArray[] = $userSession->toArray();
+                    }  
+                    $datosUI = $usersAddedToArray;              
+                }
+                
+                
             }
         }
 
@@ -183,7 +195,7 @@ class UserSessionController
                 $userSession = $this->userSessionService->update($post);
                 $message[]  = 'El usuario se actualizó exitosamente';
             // @codeCoverageIgnoreStart
-            } catch (UserSessionAlreadyAddedException $e) {
+            } catch (\Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException $e) {
                 $message[] = $e->getMessage();
             // @codeCoverageIgnoreEnd
             }   
@@ -214,7 +226,6 @@ class UserSessionController
             // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI = is_null($userSession) ? [] : $userSession->toArray();
-                $response = $response->withStatus(200); //magic number
             }         
         }
         
@@ -227,15 +238,26 @@ class UserSessionController
         $id        = $args['idusersession'];
         $datosUI   = [];
         $message   = [];
+        
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(204); //magic number
+        }
 
+        $datosUI  = null;
+        
         try {
             $delete = $this->userSessionService->delete($id);
             $message[]  = 'El usuario se eliminó exitosamente de la sesión';
         // @codeCoverageIgnoreStart
-        }  catch (UserSessionAlreadyAddedException $e) { //excepcion apropiada
+        }  catch (UserSessionNotFoundException $e) {
+            $response = $response->withStatus(404);
             $message[] = $e->getMessage();
-        // @codeCoverageIgnoreEnd
+        }  catch (\Exception $e) {
+            $response = $response->withStatus(500);
+            $message[] = $e->getMessage();
         } 
+        // @codeCoverageIgnoreEnd
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {

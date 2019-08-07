@@ -11,7 +11,10 @@ class JsonView implements View
   public function render(RequestInterface $request, ResponseInterface $response, $data = [])
   {
     // copiar funcion render de twig,
-    $response->getBody()->write(json_encode($data));
+    if (!is_null($data)) {
+      $response->getBody()->write(json_encode($data));  
+    }
+    
     return $response; 
   }
 }

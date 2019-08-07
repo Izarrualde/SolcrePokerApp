@@ -9,6 +9,9 @@ use Slim\Views\Twig;
 use Solcre\lmsuy\View\JsonView;
 use \Solcre\lmsuy\View\TwigWrapperView;
 use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
+use \Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
+use Exception;
+
 
 class ExpensesSessionController
 {
@@ -59,7 +62,7 @@ class ExpensesSessionController
     {
         $id        = $args['idExpenditure'];
         $idSession = $args['idSession'];
-        $datosUI = [];
+        $datosUI = null;
 
         $expenditure = $this->expensesService->fetchOne(array('id' => $id));
 
@@ -68,14 +71,13 @@ class ExpensesSessionController
         if ($this->view instanceof TwigWrapperView) {
             $session     = $this->sessionService->fetchOne(array('id' => $idSession));
             $datosUI['session']                = is_null($session) ? [] : $session->toArray();
-            $datosUI['session']['expenditure'] = is_null($expenditure) ? [] : $expenditure->toArray();
+            $datosUI['session']['expenditure'] = isset($expenditure) ? $expenditure->toArray() : [];
             $datosUI['breadcrumb']             = 'Editar item';
         }
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI = is_null($expenditure) ? [] : $expenditure->toArray();
-            $response = $response->withStatus(200); //magic number
+            isset($expenditure) ? $datosUI  = $expenditure->toArray() : $response = $response->withStatus(404);               
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -93,7 +95,7 @@ class ExpensesSessionController
                 $expenditure = $this->expensesService->add($post);
                 $message[]  = 'el item se ingresó exitosamente.';
                
-            } catch (ExpensesInvalidException $e) {
+            } catch (\Solcre\Pokerclub\Exception\ExpensesInvalidException $e) {
                 $message[] = $e->getMessage();
             }
             
@@ -160,7 +162,9 @@ class ExpensesSessionController
             try {
                 $expenditure = $this->expensesService->update($post);
                 $message[]  = 'El item se actualizó exitosamente';                
-            } catch (ExpensesInvalidException $e) {
+            } catch (\Solcre\Pokerclub\Exception\ExpensesInvalidException $e) {
+                $message[] = $e->getMessage();
+            } catch (\Exception $e) { 
                 $message[] = $e->getMessage();
             }
 
@@ -203,12 +207,23 @@ class ExpensesSessionController
         $datosUI  = [];
         $message = [];
 
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(204); //magic number
+        }
+
         try {
             $this->expensesService->delete($id);
             $message[]  = 'El item se eliminó exitosamente';            
-        } catch (ExpensesInvalidException $e) {
+        } catch (\Solcre\Pokerclub\Exception\ExpenditureNotFoundException $e) { 
+            $response = $response->withStatus(404);
+            $message[] = $e->getMessage();
+        } catch (\Exception $e) { 
+            $response = $response->withStatus(500);
             $message[] = $e->getMessage();
         }
+
+        $datosUI  = null;
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
@@ -231,11 +246,6 @@ class ExpensesSessionController
             $datosUI['session']['expenses'] = $expenses;
             $datosUI['breadcrumb']          = 'Gastos de Sesión';
             $datosUI['message']             = $message;
-        }
-
-        // JsonView
-        if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);

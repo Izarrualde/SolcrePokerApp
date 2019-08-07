@@ -6,7 +6,10 @@ use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use \Solcre\lmsuy\View\TwigWrapperView;
+use \Solcre\lmsuy\View\JsonView;
 use Solcre\Pokerclub\Exception\UserHadActionException;
+use Solcre\Pokerclub\Exception\UserNotFoundException;
+use Exception;
 
 class UserController
 {
@@ -48,7 +51,6 @@ class UserController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI = $users;
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -57,20 +59,23 @@ class UserController
     public function list($request, $response, $args)
     {
         $idUser  = $args['iduser'];
-        $datosUI = [];
+        $datosUI = null;
 
-        $user   = $this->userService->fetchOne(array('id' => $idUser));
+        $user = $this->userService->fetchOne(array('id' => $idUser));
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI['user']       = is_null($user) ? [] : $user->toArray();
+            $datosUI['user']       = isset($user) ? $user->toArray() :  [];
             $datosUI['breadcrumb'] = 'Editar Usuario';
         }
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI = is_null($user) ? [] : $user->toArray();
-            $response = $response->withStatus(200); //magic number
+            if (isset($user)) {
+                $datosUI  = $user->toArray();
+            } else {
+                $response = $response->withStatus(404); 
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -111,7 +116,7 @@ class UserController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = is_null($user) ? [] : $user->toArray();
+                $datosUI = isset($user) ? $user->toArray() : [];
                 $response = $response->withStatus(201); //magic number
             }
 
@@ -137,9 +142,10 @@ class UserController
     public function update($request, $response, $args)
     {
         $post = $request->getParsedBody();
-        $datosUI = [];
+        $datosUI = null;
         $users   = [];
         $message = [];
+
 
         if (is_array($post)) {
             try {
@@ -172,8 +178,11 @@ class UserController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = is_null($users) ? [] : $users->toArray();
-                $response = $response->withStatus(200); //magic number
+                if (isset($user)) {
+                    $datosUI  = $user->toArray();
+                } else {
+                    $response = $response->withStatus(404); 
+                }
             }
         }
         
@@ -183,18 +192,30 @@ class UserController
     public function delete($request, $response, $args)
     {
         $idUser = $args['iduser'];
-        $datosUI = [];
+        $datosUI = null;
         $users   = [];
 
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(204); //magic number
+        }
+        
         try {
             $delete = $this->userService->delete($idUser); 
             $message[] = 'El usuario se eliminó exitosamente';   
         } catch (UserHadActionException $e) {
+            $response = $response->withStatus(500);
+            $message[] = $e->getMessage();
+        } catch (UserNotFoundException $e) {
+            $response = $response->withStatus(404);
+            $message[] = $e->getMessage();
+        } catch (\Exception $e) {
+            $response = $response->withStatus(500);
             $message[] = $e->getMessage();
         }
+
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            
             $template = 'user/listAll.html.twig';
             $this->view->setTemplate($template);
 
@@ -210,11 +231,6 @@ class UserController
             $datosUI['users']      = $users;
             $datosUI['breadcrumb'] = 'Usuarios';
             $datosUI['message']    = $message;
-        }
-
-        // JsonView
-        if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);

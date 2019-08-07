@@ -25,32 +25,28 @@ return function (App $app) {
     $app->post('/sessions/{idSession}/update', 'SessionController:update');
     $app->get('/sessions/{idSession}/calculate', 'SessionController:CalculatePoints');
 
-
     $app->get('/sessions/{idSession}/expenses', 'ExpensesSessionController:listAll');
-    $app->get('/sessions/{idSession}/expenses/{idExpenditure}/update', 'ExpensesSessionController:list');
+    $app->get('/sessions/{idSession}/expenses/{idExpenditure}', 'ExpensesSessionController:list');
     $app->get('/sessions/{idSession}/expenses/form', 'ExpensesSessionController:form');
     $app->post('/sessions/{idSession}/expenses/{idExpenditure}/update', 'ExpensesSessionController:update');
     $app->post('/sessions/{idSession}/expenses', 'ExpensesSessionController:add');
-
     $app->get('/sessions/{idSession}/expenses/{idExpenditure}/remove', 'ExpensesSessionController:delete');
 
-    $app->get('/sessions/{idSession}/buyins/', 'BuyinSessionController:listAll');
+    $app->get('/sessions/{idSession}/buyins', 'BuyinSessionController:listAll');
     $app->get('/sessions/{idSession}/buyins/{idbuyin}', 'BuyinSessionController:list');
     $app->post('/sessions/{idSession}/buyins', 'BuyinSessionController:add');
     $app->get('/{idSession}/buyins/form', 'BuyinSessionController:form');
     $app->get('/{idSession}/buyins/{idbuyin}/remove', 'BuyinSessionController:delete');
     $app->post('/buyins/{idBuyin}/update', 'BuyinSessionController:update');
 
-
-
-    $app->get('/sessions/{idSession}/comissions/', 'ComissionSessionController:listAll'); //comi
+    $app->get('/sessions/{idSession}/comissions', 'ComissionSessionController:listAll'); //comi
     $app->get('/sessions/{idSession}/comissions/{idcomission}', 'ComissionSessionController:list');
     $app->post('/sessions/{idSession}/comissions', 'ComissionSessionController:add');
     $app->get('/{idSession}/comissions/form', 'ComissionSessionController:form');
     $app->get('/{idSession}/comissions/{idcomission}/remove', 'ComissionSessionController:delete');
     $app->post('/comissions/{idcomission}/update', 'ComissionSessionController:update');
 
-    $app->get('/sessions/{idSession}/tips/', 'TipSessionController:listAll');
+    $app->get('/sessions/{idSession}/tips', 'TipSessionController:listAll');
     $app->get('/sessions/{idSession}/tips/dealerTip/{idDealerTip}', 'TipSessionController:list');
 
     $app->get('/sessions/{idSession}/tips/serviceTip/{idServiceTip}', 'TipSessionController:list');
@@ -61,7 +57,7 @@ return function (App $app) {
     $app->post('/tips/dealertip/{idDealerTip}/update', 'TipSessionController:update');
     $app->post('/tips/servicetip/{idServiceTip}/update', 'TipSessionController:update');
 
-    $app->get('/sessions/{idSession}/usersSession/', 'UserSessionController:listAll');
+    $app->get('/sessions/{idSession}/usersSession', 'UserSessionController:listAll');
     $app->get('/sessions/{idSession}/usersSession/{idusersession}', 'UserSessionController:list');
     $app->post('/sessions/{idSession}/usersSession', 'UserSessionController:add');
     $app->get('/{idSession}/usersSession/form', 'UserSessionController:form');
@@ -70,11 +66,10 @@ return function (App $app) {
     $app->get('/userssession/{idusersession}/formclose', 'UserSessionController:formClose');
     $app->post('/userssession/{idusersession}/close', 'UserSessionController:close');
 
-    $app->get('/users/', 'UserController:listAll');
+    $app->get('/users', 'UserController:listAll');
     $app->get('/users/{iduser}', 'UserController:list');
-    $app->post('/users/', 'UserController:add');
+    $app->post('/users', 'UserController:add');
     $app->get('/form', 'UserController:form');
     $app->get('/users/{iduser}/remove', 'UserController:delete');
     $app->post('/users/{iduser}/update', 'UserController:update');
-
 };

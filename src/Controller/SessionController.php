@@ -6,8 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\Pokerclub\Service\SessionService;
-use Solcre\Pokerclub\Service\SessionService;
-
+use \Solcre\Pokerclub\Exception\SessionNotFoundException;
+use Exception;
 
 class SessionController
 {
@@ -50,20 +50,21 @@ class SessionController
     public function list($request, $response, $args)
     {
         $idSession = $args['idSession'];
-        $session = $this->sessionService->fetchOne(array('id' => $idSession));
+        $message = [];
+        $datosUI = null;
 
-        $datosUI = [];
-
+        $session = $this->sessionService->fetchOne(array('id' => $idSession)); 
+ 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI['session']    = is_null($session) ? [] : $session->toArray();
+            $datosUI['session']    = isset($session) ? $session->toArray() : [];
             $datosUI['breadcrumb'] = 'Editar Sesión';
+            $datosUI['message'] = $message;
         }
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI = is_null($session) ? [] : $session->toArray();
-            $response = $response->withStatus(200); //magic number
+            isset($session) ? $datosUI  = $session->toArray() : $response = $response->withStatus(404);               
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -76,13 +77,13 @@ class SessionController
 
         if (is_array($post)) {
             $session = $this->sessionService->add($post);
-            
+
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
                 $template = 'session/listAll.html.twig';
                 $this->view->setTemplate($template);
 
-                if ($session instanceof SessionEntity) {
+                if ($session instanceof \Solcre\Pokerclub\Entity\SessionEntity) {
                     $message[] = 'La sesión se agregó exitosamente';
                     $datosSessions = $this->sessionService->fetchAll();
                     $sessions = [];
@@ -100,7 +101,7 @@ class SessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                if ($session instanceof SessionEntity) {
+                if ($session instanceof \Solcre\Pokerclub\Entity\SessionEntity) {
                     $datosUI = $session->toArray();
                     $response = $response->withStatus(201); //magic number
                 }
@@ -160,12 +161,30 @@ class SessionController
     public function delete($request, $response, $args)
     {
         $idSession     = $args['idSession'];
-        $delete = $this->sessionService->delete($idSession);
-        $datosUI  = [];
-var_dump($delete); die();
+
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(204); //magic number
+        }
+
+        try {
+            $delete = $this->sessionService->delete($idSession);  
+            $message[]       = 'La Sesión se eliminó exitosamente'; 
+        } catch (SessionNotFoundException $e) {
+            $response = $response->withStatus(404);
+            $message[] = $e->getMessage();
+
+        } catch (\Exception $e) {
+            $response = $response->withStatus(500);
+            $message[] = $e->getMessage();
+        }
+        
+        $datosUI  = null;
+
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $message[]       = 'La Sesión se eliminó exitosamente';
+            $datosUI = [];
+            
             $datosSessions = $this->sessionService->fetchAll();
             $template = 'session/listAll.html.twig';
             $this->view->setTemplate($template);
@@ -180,11 +199,6 @@ var_dump($delete); die();
             
             $datosUI['sessions'] = $sessions;
             $datosUI['message']  = $message;
-        }
-
-        // JsonView
-        if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);

@@ -11,6 +11,8 @@ use Slim\Views\Twig;
 use Psr\Container\ContainerInterface;
 // use \Solcre\lmsuy\Twig\Func;
 use \Solcre\Pokerclub\Exception\ComissionInvalidException;
+use \Solcre\Pokerclub\Exception\ComissionNotFoundException;
+use Exception;
 
 class ComissionSessionController
 {
@@ -60,7 +62,7 @@ class ComissionSessionController
     {
         $id        = $args['idcomission'];
         $idSession = $args['idSession'];
-        $datosUI = [];
+        $datosUI = null;
 
         $comission = $this->comissionService->fetchOne(array('id' => $id));
 
@@ -68,13 +70,13 @@ class ComissionSessionController
         if ($this->view instanceof TwigWrapperView) {
             $session   = $this->sessionService->fetchOne(array('id' => $idSession));
             $datosUI['session']              = is_null($session) ? [] : $session->toArray();
-            $datosUI['session']['comission'] = is_null($comission) ? [] : $comission->toArray();
+            $datosUI['session']['comission'] = isset($comission) ? $comission->toArray() : [];
             $datosUI['breadcrumb']           = 'Editar Comision';
         }
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI  = is_null($comission) ? [] : $comission->toArray();
+            isset($comission) ? $datosUI  = $comission->toArray() : $response = $response->withStatus(404);               
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -91,10 +93,9 @@ class ComissionSessionController
             try {
                 $comission = $this->comissionService->add($post);
                 $message[] = 'la comission se ingreso exitosamente.';
-            } catch (ComissionInvalidException $e) {
+            } catch (\Solcre\Pokerclub\Exception\ComissionInvalidException $e) {
                 $message[] = $e->getMessage();
             }
-
 
             // TwigWrapperView 
             if ($this->view instanceof TwigWrapperView) {
@@ -159,7 +160,7 @@ class ComissionSessionController
                 $comission = $this->comissionService->update($post);
                 $message[] = 'la comission se actualizó exitosamente.';
             // @codeCoverageIgnoreStart
-            } catch (ComissionInvalidException $e) {
+            } catch (\Solcre\Pokerclub\Exception\ComissionInvalidException $e) {
                 $message[] = $e->getMessage();
             // @codeCoverageIgnoreEnd
             }
@@ -187,7 +188,7 @@ class ComissionSessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = is_null($comission) ? [] : $comission->toArray();
+                isset($comission) ? $datosUI  = $comission->toArray() : $response = $response->withStatus(404);               
             }
         }
 
@@ -201,15 +202,26 @@ class ComissionSessionController
         $datosUI = [];
         $message = [];
 
+        // set status code 204 when JsonView
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(204); //magic number
+        }
+        
         try {
             $delete = $this->comissionService->delete($id);
             $message[]  = 'La comisión se eliminó exitosamente';
         // @codeCoverageIgnoreStart
-        } catch (ComissionInvalidException $e) { //excepcion de comission no existente.
+        } catch (ComissionNotFoundException $e) { //excepcion de comission no existente.
+            $response = $response->withStatus(404);
             $message[] = $e->getMessage();
-        // @codeCoverageIgnoreEnd
+        } catch (\Exception $e) { 
+            $response = $response->withStatus(500);
+            $message[] = $e->getMessage();
         }
-        
+        // @codeCoverageIgnoreEnd
+
+        $datosUI  = null;
+
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
             $template = 'comissionSession/listAll.html.twig';
@@ -230,11 +242,6 @@ class ComissionSessionController
             $datosUI['session']['comissions'] = $comissions;
             $datosUI['breadcrumb']            = 'Comisiones';
             $datosUI['message']               = $message;
-        }
-
-        // JsonView
-        if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
         }
          
         return $this->view->render($request, $response, $datosUI);
