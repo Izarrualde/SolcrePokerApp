@@ -1,13 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Service\ExpensesSessionService;
-use \Solcre\lmsuy\Service\SessionService;
-use \Solcre\lmsuy\Entity\ExpensesSessionEntity;
-use \Solcre\lmsuy\Entity\SessionEntity;
+use \Solcre\Pokerclub\Service\ExpensesSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Entity\ExpensesSessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
-use \Solcre\lmsuy\Exception\ExpensesInvalidException;
+use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
 use Test\AppWrapper;
 use Solcre\lmsuy\Controller\ExpensesSessionController;
 

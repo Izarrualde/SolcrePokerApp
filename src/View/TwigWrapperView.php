@@ -5,49 +5,46 @@ use Slim\Views\Twig;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\RequestInterface as RequestInterface;
 
-class TwigWrapperView implements View 
+class TwigWrapperView implements View
 {
-  protected $template;
-  protected $twigView;
+    protected $template;
+    protected $twigView;
 
-  public function __construct(Twig $twigView)
-  {
-    $this->twigView = $twigView;
+    public function __construct(Twig $twigView)
+    {
+        $this->twigView = $twigView;
+    }
 
-  }
+    public function getTemplate()
+    {
+        return $this->template;
+    }
 
-  public function getTemplate()
-  {
-    return $this->template;
-  } 
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
+    }
 
-  public function setTemplate($template)
-  {
+    public function render(RequestInterface $request, ResponseInterface $response, $data = [])
+    {
+        $template = isset($this->template) ? $this->template : $this->getTemplateFromRequest($request);
 
-    $this->template = $template;
-    return $this;
-  } 
+        // setear template cuando construyo esta clase
+        return $this->twigView->render($response, $template, $data);
+    }
 
-  public function render(RequestInterface $request, ResponseInterface $response, $data = [])
-  {
+    protected function getTemplateFromRequest(RequestInterface $request)
+    {
+        $route = $request->getAttribute("route");
 
-    $template = isset($this->template) ? $this->template : $this->getTemplateFromRequest($request);
+        $string = $route->getCallable();
+        $folder = lcfirst(explode('Controller', $string)[0]);
 
-    // setear template cuando construyo esta clase
-    return $this->twigView->render($response, $template, $data);
-  }
+        $file = explode(':', $string)[1];
 
-  protected function getTemplateFromRequest(RequestInterface $request)
-  {
-      $route = $request->getAttribute("route");
+        $template = $folder.'/'.$file.'.html.twig';
 
-      $string = $route->getCallable();
-      $folder = lcfirst(explode('Controller', $string)[0]); 
-
-      $file = explode(':', $string)[1];
-
-      $template = $folder.'/'.$file.'.html.twig';
-
-      return $template;
-  }
+        return $template;
+    }
 }

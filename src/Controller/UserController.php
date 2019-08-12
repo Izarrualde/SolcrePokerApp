@@ -1,18 +1,26 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-use \Solcre\Pokerclub\Service\UserService;
-use \Solcre\Pokerclub\Entity\UserEntity;
+use Solcre\Pokerclub\Service\UserService;
+use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
-use \Solcre\lmsuy\View\TwigWrapperView;
-use \Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\TwigWrapperView;
+use Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Solcre\Pokerclub\Exception\UserNotFoundException;
+use Solcre\Pokerclub\Exception\UserInvalidException;
 use Exception;
 
 class UserController
 {
+    const STATUS_CODE_201 = 201;
+    const STATUS_CODE_204 = 204;
+    const STATUS_CODE_400 = 400;
+    const STATUS_CODE_404 = 404;
+    const STATUS_CODE_500 = 500;
+    
     protected $view;
     protected $userService;
 
@@ -74,7 +82,7 @@ class UserController
             if (isset($user)) {
                 $datosUI  = $user->toArray();
             } else {
-                $response = $response->withStatus(404); 
+                $response = $response->withStatus(self::STATUS_CODE_404);
             }
         }
 
@@ -95,7 +103,7 @@ class UserController
                 $message[] = $e->getMessage();
             }
 
-            // TwigWrapperView 
+            // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
                 $template = 'user/listAll.html.twig';
                 $this->view->setTemplate($template);
@@ -106,20 +114,19 @@ class UserController
                 if (isset($datosUsers)) {
                     foreach ($datosUsers as $userObject) {
                         $users[] = $userObject->toArray();
-                    }                    
+                    }
                 }
         
                 $datosUI['users']      = $users;
                 $datosUI['breadcrumb'] = 'Usuarios';
                 $datosUI['message']    = $message;
-            }    
+            }
 
             // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI = isset($user) ? $user->toArray() : [];
-                $response = $response->withStatus(201); //magic number
+                $response = $response->withStatus(self::STATUS_CODE_201);
             }
-
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -131,8 +138,6 @@ class UserController
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $template = 'user/form.html.twig';
-            $this->view->setTemplate($template); 
             $datosUI['breadcrumb'] = 'Nuevo Usuario';
         }
 
@@ -160,7 +165,7 @@ class UserController
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
                 $template = 'user/listAll.html.twig';
-                $this->view->setTemplate($template); 
+                $this->view->setTemplate($template);
 
                 // BUSQUEDA DE DATOS PARA LA UI
                 $datosUsers = $this->userService->fetchAll();
@@ -168,7 +173,7 @@ class UserController
                 if (isset($datosUsers)) {
                     foreach ($datosUsers as $userObject) {
                         $users[] = $userObject->toArray();
-                    }            
+                    }
                 }
 
                 $datosUI['users']      = $users;
@@ -181,7 +186,7 @@ class UserController
                 if (isset($user)) {
                     $datosUI  = $user->toArray();
                 } else {
-                    $response = $response->withStatus(404); 
+                    $response = $response->withStatus(self::STATUS_CODE_404);
                 }
             }
         }
@@ -197,20 +202,20 @@ class UserController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
+            $response = $response->withStatus(self::STATUS_CODE_204); //magic number
         }
         
         try {
-            $delete = $this->userService->delete($idUser); 
-            $message[] = 'El usuario se eliminó exitosamente';   
+            $delete = $this->userService->delete($idUser);
+            $message[] = 'El usuario se eliminó exitosamente';
         } catch (UserHadActionException $e) {
-            $response = $response->withStatus(500);
+            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
         } catch (UserNotFoundException $e) {
-            $response = $response->withStatus(404);
+            $response = $response->withStatus(self::STATUS_CODE_404);
             $message[] = $e->getMessage();
         } catch (\Exception $e) {
-            $response = $response->withStatus(500);
+            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
         }
 
@@ -225,7 +230,7 @@ class UserController
             if (isset($datosUsers)) {
                 foreach ($datosUsers as $userObject) {
                     $users[] = $userObject->toArray();
-                }            
+                }
             }
 
             $datosUI['users']      = $users;

@@ -19,7 +19,7 @@ $container = new Container();
 // Instantiate the app
 AppFactory::setContainer($container);
 $app = AppFactory::create();
-$callableResolver = $app->getCallableResolver();
+$callableResolver = $app->getCallableResolver(); //@TODO: Se usa para algo esto?
 
 // Set up settings
 $settings = require __DIR__ . getenv('SETTINGS');

@@ -1,13 +1,14 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-use \Solcre\Pokerclub\Service\UserSessionService;
-use \Solcre\Pokerclub\Service\SessionService;
-use \Solcre\Pokerclub\Service\UserService;
-use \Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Service\UserSessionService;
+use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Service\UserService;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\lmsuy\View\TwigWrapperView;
-use \Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\TwigWrapperView;
+use Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
@@ -15,12 +16,18 @@ use Exception;
 
 class UserSessionController
 {
+    const STATUS_CODE_201 = 201;
+    const STATUS_CODE_204 = 204;
+    const STATUS_CODE_400 = 400;
+    const STATUS_CODE_404 = 404;
+    const STATUS_CODE_500 = 500;
+
     protected $view;
     protected $userSessionService;
     protected $userService;
     protected $sessionService;
 
-    public function __construct($view, EntityManager $em)
+    public function __construct(View $view, EntityManager $em)
     {
         $this->view               = $view;
         $this->userService        = new UserService($em);
@@ -40,7 +47,7 @@ class UserSessionController
         if (isset($datosUsersSession)) {
             foreach ($datosUsersSession as $userSessionObject) {
                 $usersSession[] = $userSessionObject->toArray();
-            } 
+            }
         }
 
         // TwigWrapperView
@@ -55,7 +62,6 @@ class UserSessionController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = $usersSession;
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -77,7 +83,6 @@ class UserSessionController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = is_null($userSession) ? [] : $userSession->toArray();
-            $response = $response->withStatus(200); //magic number
         }
         
         return $this->view->render($request, $response, $datosUI);
@@ -105,17 +110,17 @@ class UserSessionController
                 try {
                     $usersAdded[] = $this->userSessionService->add($data);
                     $message[] = 'Se agregó exitosamente.';
-                    $response = $response->withStatus(201); //magic number
+                    $response = $response->withStatus(self::STATUS_CODE_201); //magic number
                 } catch (UserSessionAlreadyAddedException $e) {
                     $message[] = $e->getMessage();
-                    $response = $response->withStatus(400); //magic number
+                    $response = $response->withStatus(self::STATUS_CODE_400);
                 } catch (TableIsFullException $e) {
                     $message[] = $e->getMessage();
-                    $response = $response->withStatus(400); //magic number
+                    $response = $response->withStatus(self::STATUS_CODE_400);
                 }
             }
 
-            // TwigWrapperView 
+            // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
                 $template = 'userSession/listAll.html.twig';
                 $this->view->setTemplate($template);
@@ -128,7 +133,7 @@ class UserSessionController
                 if (isset($datosUsersSession)) {
                     foreach ($datosUsersSession as $userSessionObject) {
                         $usersSession[] = $userSessionObject->toArray();
-                    }                
+                    }
                 }
 
                 $datosUI['session']                 = is_null($session) ? [] : $session->toArray();
@@ -143,11 +148,9 @@ class UserSessionController
                     $usersAddedToArray = [];
                     foreach ($usersAdded as $userSession) {
                         $usersAddedToArray[] = $userSession->toArray();
-                    }  
-                    $datosUI = $usersAddedToArray;              
+                    }
+                    $datosUI = $usersAddedToArray;
                 }
-                
-                
             }
         }
 
@@ -161,21 +164,18 @@ class UserSessionController
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $template = 'userSession/form.html.twig';
-            $this->view->setTemplate($template);
-
             $session    = $this->sessionService->fetchOne(array('session' => $idSession));
             $datosUsers = $this->userService->fetchAll();
 
             $users   = [];
             
-            if (isset($datosUsers)) {
+            if (is_array($datosUsers)) {
                 foreach ($datosUsers as $userObject) {
                     $users[] = $userObject->toArray();
-                }            
+                }
             }
             
-            $datosUI['session']    = is_null($session) ? [] : $session->toArray();
+            $datosUI['session']    = isset($session) ? $session->toArray() : [];
             $datosUI['users']      = $users;
             $datosUI['breadcrumb'] = 'Nuevo UserSession';
         }
@@ -195,10 +195,10 @@ class UserSessionController
                 $userSession = $this->userSessionService->update($post);
                 $message[]  = 'El usuario se actualizó exitosamente';
             // @codeCoverageIgnoreStart
-            } catch (\Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException $e) {
+            } catch (UserSessionAlreadyAddedException $e) {
                 $message[] = $e->getMessage();
             // @codeCoverageIgnoreEnd
-            }   
+            }
 
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
@@ -211,7 +211,7 @@ class UserSessionController
             
                 $usersSession = [];
 
-                if (isset($datosUsersSession)) {
+                if (is_array($datosUsersSession)) {
                     foreach ($datosUsersSession as $userSessionObject) {
                         $usersSession[] = $userSessionObject->toArray();
                     }
@@ -226,7 +226,7 @@ class UserSessionController
             // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI = is_null($userSession) ? [] : $userSession->toArray();
-            }         
+            }
         }
         
         return $this->view->render($request, $response, $datosUI);
@@ -241,7 +241,7 @@ class UserSessionController
         
         // JsonView
         if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
+            $response = $response->withStatus(self::STATUS_CODE_204);
         }
 
         $datosUI  = null;
@@ -250,19 +250,19 @@ class UserSessionController
             $delete = $this->userSessionService->delete($id);
             $message[]  = 'El usuario se eliminó exitosamente de la sesión';
         // @codeCoverageIgnoreStart
-        }  catch (UserSessionNotFoundException $e) {
-            $response = $response->withStatus(404);
+        } catch (UserSessionNotFoundException $e) {
+            $response = $response->withStatus(self::STATUS_CODE_404);
             $message[] = $e->getMessage();
-        }  catch (\Exception $e) {
-            $response = $response->withStatus(500);
+        } catch (\Exception $e) {
+            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
-        } 
+        }
         // @codeCoverageIgnoreEnd
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $template = 'userSession/listAll.html.twig';   
-            $this->view->setTemplate($template); 
+            $template = 'userSession/listAll.html.twig';
+            $this->view->setTemplate($template);
 
             //BUSQUEDA DE DATOS PARA LA UI
             $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
@@ -273,14 +273,14 @@ class UserSessionController
             if (isset($datosUsersSession)) {
                 foreach ($datosUsersSession as $userSessionObject) {
                     $usersSession[] = $userSessionObject->toArray();
-                }              
+                }
             }
 
             $datosUI['session']                 = is_null($session) ? [] : $session->toArray();
             $datosUI['session']['usersSession'] = $usersSession;
             $datosUI['breadcrumb']              = 'Usuarios de Sesión';
             $datosUI['message']                 = $message;
-        }    
+        }
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -290,16 +290,10 @@ class UserSessionController
         $id          = $args['idusersession'];
         $userSession = $this->userSessionService->fetchOne(array('id' => $id));
         
-        $template = 'userSession/close.html.twig';
-        
-        $datosUI = array();
+        $datosUI = [];
 
         $datosUI['userSession'] = $userSession->toArray();
         $datosUI['breadcrumb']  = 'Cerrar Session de Usuario';
-
-        if ($this->view instanceof TwigWrapperView) {      
-            $this->view->setTemplate($template); 
-        } 
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -309,35 +303,42 @@ class UserSessionController
         $id   = $args['idusersession'];
         $post = $request->getParsedBody();
 
-        $userSessionObject = $this->userSessionService->fetchOne(array('id' => $id));
-        $idSession         = $userSessionObject->getSession()->getId();
-        $this->userSessionService->close($post);
+        if (is_array($post)) {
+            try {
+                $userSession = $this->userSessionService->close($post);
+                $message[]  = 'El usuario ha salido de la sesión';
+            } catch (\Exception $e) {
+                $message[] = $e->getMessage();
+            }
 
-        $message = array();
-        $message[]  = 'El usuario ha salido de la sesión';
-        $template = 'userSession/listAll.html.twig';
+            // TwigWrapperView
+            if ($this->view instanceof TwigWrapperView) {
+                $template = 'userSession/listAll.html.twig';
+                $this->view->setTemplate($template);
 
-        //BUSQUEDA DE DATOS PARA LA UI
-        
-        $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
-        $session           = $this->sessionService->fetchOne(array('session' => $idSession));
-        
-        $datosUI      = array();
-        $usersSession = array();
+                //BUSQUEDA DE DATOS PARA LA UI
+                $idSession = $userSession->getSession()->getId();
+                $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
+                $session           = $this->sessionService->fetchOne(array('session' => $idSession));
+                
+                $datosUI      = null;
+                $usersSession = [];
 
-        foreach ($datosUsersSession as $userSession) {
-            $usersSession[] = $userSession->toArray();
+                foreach ($datosUsersSession as $userSessionObject) {
+                    $usersSession[] = $userSessionObject->toArray();
+                }
+
+                $datosUI['session']                 = $session->toArray();
+                $datosUI['session']['usersSession'] = $usersSession;
+                $datosUI['breadcrumb']              = 'Usuarios de Sesión';
+                $datosUI['message']                 = $message;
+            }
+
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI = is_null($userSession) ? [] : $userSession->toArray();
+            }
         }
-
-        $datosUI['session']                 = $session->toArray();
-        $datosUI['session']['usersSession'] = $usersSession;
-        $datosUI['breadcrumb']              = 'Usuarios de Sesión';
-        $datosUI['message']                 = $message;
-
-
-        if ($this->view instanceof TwigWrapperView) {      
-            $this->view->setTemplate($template); 
-        } 
 
         return $this->view->render($request, $response, $datosUI);
     }

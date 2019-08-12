@@ -1,29 +1,36 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-use \Solcre\Pokerclub\Service\BuyinSessionService;
-use \Solcre\Pokerclub\Service\SessionService;
-use \Solcre\Pokerclub\Service\UserSessionService;
-use \Solcre\Pokerclub\Service\UserService;
-use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
-use \Solcre\Pokerclub\Entity\SessionEntity;
-use \Solcre\Pokerclub\Exception\BuyinInvalidException;
-use \Solcre\Pokerclub\Exception\BuyinNotFoundException;
+use Solcre\Pokerclub\Service\BuyinSessionService;
+use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Service\UserSessionService;
+use Solcre\Pokerclub\Service\UserService;
+use Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Exception\BuyinInvalidException;
+use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 use Exception;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
-use \Solcre\lmsuy\View\TwigWrapperView;
-use \Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\TwigWrapperView;
+use Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\View;
 
 class BuyinSessionController
 {
+    const STATUS_CODE_201 = 201;
+    const STATUS_CODE_204 = 204;
+    const STATUS_CODE_400 = 400;
+    const STATUS_CODE_404 = 404;
+    const STATUS_CODE_500 = 500;
+
     protected $view;
     protected $buyinSessionService;
     protected $sessionService;
     protected $userSessionService;
     protected $userService;
 
-    public function __construct($view, EntityManager $em)
+    public function __construct(View $view, EntityManager $em)
     {
         $this->view                = $view;
         $this->sessionService      = new SessionService($em);
@@ -39,7 +46,7 @@ class BuyinSessionController
         $datosUI     = [];
 
         $datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
-        if (isset($datosBuyins)) {
+        if (is_array($datosBuyins)) {
             foreach ($datosBuyins as $buyinObject) {
                 $buyins[] = $buyinObject->toArray();
             }
@@ -56,7 +63,6 @@ class BuyinSessionController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI = $buyins;
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -81,7 +87,6 @@ class BuyinSessionController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = is_null($buyin) ? [] : $buyin->toArray();
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -91,7 +96,8 @@ class BuyinSessionController
     {
         $post = $request->getParsedBody();
         $idSession = $args['idSession'];
-        $datosUI = [];
+        $datosUI = null;
+        $buyin = null;
         $message = [];
 
         if (is_array($post)) {
@@ -100,9 +106,10 @@ class BuyinSessionController
                 $message[] = 'El buyin se agregó exitosamente';
             } catch (BuyinInvalidException $e) {
                 $message[] = $e->getMessage();
+                $response = $response->withStatus(400);
             }
 
-            // TwigWrapperView 
+            // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
                 $template = 'buyinSession/listAll.html.twig';
                 $this->view->setTemplate($template);
@@ -115,7 +122,7 @@ class BuyinSessionController
                 if (isset($datosBuyins)) {
                     foreach ($datosBuyins as $buyin) {
                         $buyins[] = $buyin->toArray();
-                    }                
+                    }
                 }
 
                 $datosUI['session']           = is_null($session) ? [] : $session->toArray();
@@ -126,8 +133,10 @@ class BuyinSessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = is_null($buyin) ? [] : $buyin->toArray();
-                $response = $response->withStatus(201); //magic number
+                $datosUI = isset($buyin) ? $buyin->toArray() : [];
+                if ($response->getStatusCode()==200) {
+                    $response = $response->withStatus(self::STATUS_CODE_201);
+                }
             }
         }
 
@@ -144,13 +153,10 @@ class BuyinSessionController
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $template = 'buyinSession/form.html.twig';
-            $this->view->setTemplate($template);
-
             if (isset($datosUsersSession)) {
                 foreach ($datosUsersSession as $userSessionObject) {
                     $usersSession[] = $userSessionObject->toArray();
-                }                
+                }
             }
 
             $datosUI['session']                 = is_null($session) ? [] : $session->toArray();
@@ -173,7 +179,7 @@ class BuyinSessionController
                 $buyin = $this->buyinSessionService->update($post);
                 $message[] = 'El buyin se actualizó exitosamente';
             // @codeCoverageIgnoreStart
-            } catch (\Solcre\Pokerclub\Exception\BuyinInvalidException $e) {
+            } catch (BuyinInvalidException $e) {
                 $message[] = $e->getMessage();
             // @codeCoverageIgnoreEnd
             }
@@ -191,10 +197,11 @@ class BuyinSessionController
                 if (isset($datosBuyins)) {
                     foreach ($datosBuyins as $buyin) {
                         $buyins[] = $buyin->toArray();
-                    }            
+                    }
                 }
                 
-                $datosUI['session']           = $session instanceof \Solcre\Pokerclub\Entity\SessionEntity ? $session->toArray() : [];
+                $datosUI['session'] = $session instanceof \Solcre\Pokerclub\Entity\SessionEntity ?
+                $session->toArray() : [];
                 $datosUI['session']['buyins'] = $buyins;
                 $datosUI['breadcrumb']        = 'Buyins';
                 $datosUI['message']           = $message;
@@ -202,7 +209,7 @@ class BuyinSessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = isset($buyin) ? $buyin->toArray():  []; 
+                $datosUI = isset($buyin) ? $buyin->toArray():  [];
             }
         }
 
@@ -219,18 +226,18 @@ class BuyinSessionController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
+            $response = $response->withStatus(self::STATUS_CODE_204);
         }
 
         try {
             $delete = $this->buyinSessionService->delete($id);
             $message[]  = 'El buyin se eliminó exitosamente';
         // @codeCoverageIgnoreStart
-        } catch (BuyinNotFoundException $e) { 
-            $response = $response->withStatus(404);
+        } catch (BuyinNotFoundException $e) {
+            $response = $response->withStatus(self::STATUS_CODE_404);
             $message[] = $e->getMessage();
-        } catch (\Exception $e) { 
-            $response = $response->withStatus(500);
+        } catch (\Exception $e) {
+            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
         }
         // @codeCoverageIgnoreEnd
@@ -238,7 +245,7 @@ class BuyinSessionController
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
             $template = 'buyinSession/listAll.html.twig';
-            $this->view->setTemplate($template); 
+            $this->view->setTemplate($template);
             // Busqueda de datos para UI
             $buyins  = [];
             $session     = $this->sessionService->fetchOne(array('id' => $idSession));
@@ -247,7 +254,7 @@ class BuyinSessionController
             if (isset($datosBuyins)) {
                 foreach ($datosBuyins as $buyin) {
                     $buyins[] = $buyin->toArray();
-                }           
+                }
             }
 
             $datosUI['session']           = is_null($session) ? [] : $session->toArray();

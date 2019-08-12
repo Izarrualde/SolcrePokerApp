@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use DI\Container;
@@ -11,7 +12,7 @@ return function (App $app) {
 
     // Global Settings Object
     $container->set(
-        'settings', 
+        'settings',
         [
             'displayErrorDetails' => true,
             'determineRouteBeforeAppMiddleware' => false,

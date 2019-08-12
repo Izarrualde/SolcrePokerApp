@@ -1,18 +1,18 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Service\UserSessionService;
-use \Solcre\lmsuy\Service\SessionService;
-use \Solcre\lmsuy\Service\UserService;
-use \Solcre\lmsuy\Entity\UserSessionEntity;
-use \Solcre\lmsuy\Entity\SessionEntity;
-use \Solcre\lmsuy\Entity\UserEntity;
+use \Solcre\Pokerclub\Service\UserSessionService;
+use \Solcre\Pokerclub\Service\SessionService;
+use \Solcre\Pokerclub\Service\UserService;
+use \Solcre\Pokerclub\Entity\UserSessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
+use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use Solcre\lmsuy\Controller\UserSessionController;
 use Test\AppWrapper;
-use Solcre\lmsuy\Exception\TableIsFullException;
-use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
+use Solcre\Pokerclub\Exception\TableIsFullException;
+use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 
 class UserSessionControllerTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Service\UserService;
-use \Solcre\lmsuy\Entity\UserEntity;
-use Solcre\lmsuy\Exception\UserHadActionException;
+use \Solcre\Pokerclub\Service\UserService;
+use \Solcre\Pokerclub\Entity\UserEntity;
+use Solcre\Pokerclub\Exception\UserHadActionException;
 use Solcre\lmsuy\Controller\UserController;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;

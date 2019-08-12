@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Application\Middleware\SessionMiddleware;
@@ -49,13 +50,12 @@ return function (App $app) {
 /*
     // Add error middleware
     $errorMiddleware = new ErrorMiddleware(
-        $app->getCallableResolver(), 
-        $responseFactory, 
-        getenv('ENVIRONMENT')=='dev', 
-        true, 
+        $app->getCallableResolver(),
+        $responseFactory,
+        getenv('ENVIRONMENT')=='dev',
+        true,
         true
     );
     $app->add($errorMiddleware);
 */
-
 };

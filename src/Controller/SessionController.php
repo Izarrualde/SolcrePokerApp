@@ -5,16 +5,23 @@ use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
+use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Service\SessionService;
-use \Solcre\Pokerclub\Exception\SessionNotFoundException;
+use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Exception;
 
 class SessionController
 {
+    const STATUS_CODE_201 = 201;
+    const STATUS_CODE_204 = 204;
+    const STATUS_CODE_400 = 400;
+    const STATUS_CODE_404 = 404;
+    const STATUS_CODE_500 = 500;
+
     protected $view;
     protected $sessionService;
 
-    public function __construct($view, EntityManager $em)
+    public function __construct(View $view, EntityManager $em)
     {
         $this->view           = $view;
         $this->sessionService = new SessionService($em);
@@ -30,7 +37,7 @@ class SessionController
         if (isset($datosSessions)) {
             foreach ($datosSessions as $sessionObject) {
                 $sessions[] = $sessionObject->toArray();
-            }       
+            }
         }
 
         // TwigWrapperView
@@ -41,7 +48,6 @@ class SessionController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI = $sessions;
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -53,7 +59,7 @@ class SessionController
         $message = [];
         $datosUI = null;
 
-        $session = $this->sessionService->fetchOne(array('id' => $idSession)); 
+        $session = $this->sessionService->fetchOne(array('id' => $idSession));
  
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
@@ -64,7 +70,11 @@ class SessionController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            isset($session) ? $datosUI  = $session->toArray() : $response = $response->withStatus(404);               
+            if (isset($session)) {
+                $datosUI = $session->toArray();
+            } else {
+                $response = $response->withStatus(self::STATUS_CODE_404);
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -91,19 +101,19 @@ class SessionController
                     if (isset($datosSessions)) {
                         foreach ($datosSessions as $sessionObject) {
                             $sessions[] = $sessionObject->toArray();
-                        }          
+                        }
                     }
 
                     $datosUI['sessions'] = $sessions;
                     $datosUI['message']  = $message;
                 }
-            } 
+            }
 
             // JsonView
             if ($this->view instanceof JsonView) {
                 if ($session instanceof \Solcre\Pokerclub\Entity\SessionEntity) {
                     $datosUI = $session->toArray();
-                    $response = $response->withStatus(201); //magic number
+                    $response = $response->withStatus(self::STATUS_CODE_201);
                 }
             }
         }
@@ -114,12 +124,6 @@ class SessionController
     public function form($request, $response, $args)
     {
         $datosUI  = [];
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $template = 'session/form.html.twig';
-            $this->view->setTemplate($template);
-        }
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -142,7 +146,7 @@ class SessionController
             if (isset($datosSessions)) {
                 foreach ($datosSessions as $sessionObject) {
                     $sessions[] = $sessionObject->toArray();
-                }    
+                }
             }
 
             $datosUI['sessions'] = $sessions;
@@ -152,7 +156,6 @@ class SessionController
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI = is_null($session) ? [] : $session->toArray();
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -164,18 +167,17 @@ class SessionController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
+            $response = $response->withStatus(self::STATUS_CODE_204);
         }
 
         try {
-            $delete = $this->sessionService->delete($idSession);  
-            $message[]       = 'La Sesión se eliminó exitosamente'; 
+            $delete = $this->sessionService->delete($idSession);
+            $message[]       = 'La Sesión se eliminó exitosamente';
         } catch (SessionNotFoundException $e) {
-            $response = $response->withStatus(404);
+            $response = $response->withStatus(self::STATUS_CODE_404);
             $message[] = $e->getMessage();
-
         } catch (\Exception $e) {
-            $response = $response->withStatus(500);
+            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
         }
         
@@ -191,7 +193,7 @@ class SessionController
 
             $sessions = [];
 
-            if (isset($datosSessions)) { 
+            if (isset($datosSessions)) {
                 foreach ($datosSessions as $sessionObject) {
                      $sessions[] = $sessionObject->toArray();
                 }
@@ -205,7 +207,7 @@ class SessionController
     }
 
     public function calculatePoints($request, $response, $args)
-    { 
+    {
         $idSession = $args['idSession'];
         $this->sessionService->calculateRakeback($idSession);
 
@@ -218,12 +220,12 @@ class SessionController
         if (isset($datosSessions)) {
             foreach ($datosSessions as $sessionObject) {
                  $sessions[] = $sessionObject->toArray();
-            }            
+            }
         }
         
         $datosUI['sessions'] = $sessions;
         $datosUI['message']  = $message;
 
         return $this->view->render($request, $response, $datosUI);
-    } 
+    }
 }

@@ -1,24 +1,31 @@
 <?php
 namespace Solcre\lmsuy\Controller;
 
-use \Solcre\Pokerclub\Service\DealerTipSessionService;
-use \Solcre\Pokerclub\Service\ServiceTipSessionService;
-use \Solcre\Pokerclub\Service\SessionService;
-use \Solcre\Pokerclub\Entity\DealerTipSessionEntity;
-use \Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
-use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\DealerTipSessionService;
+use Solcre\Pokerclub\Service\ServiceTipSessionService;
+use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
+use Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
 use Solcre\lmsuy\View\JsonView;
-use \Solcre\lmsuy\View\TwigWrapperView;
-use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
-use \Solcre\Pokerclub\Exception\ServiceTipInvalidException;
-use \Solcre\Pokerclub\Exception\DealerTipNotFoundException;
-use \Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
+use Solcre\lmsuy\View\View;
+use Solcre\lmsuy\View\TwigWrapperView;
+use Solcre\Pokerclub\Exception\DealerTipInvalidException;
+use Solcre\Pokerclub\Exception\ServiceTipInvalidException;
+use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
+use Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
 use Exception;
 
 class TipSessionController
 {
+    const STATUS_CODE_201 = 201;
+    const STATUS_CODE_204 = 204;
+    const STATUS_CODE_400 = 400;
+    const STATUS_CODE_404 = 404;
+    const STATUS_CODE_500 = 500;
+
     protected $view;
     protected $dealerTipService;
     protected $serviceTipService;
@@ -26,7 +33,7 @@ class TipSessionController
     protected $entityManager;
 
 
-    public function __construct($view, EntityManager $em)
+    public function __construct(View $view, EntityManager $em)
     {
         $this->view              = $view;
         $this->dealerTipService  = new DealerTipSessionService($em);
@@ -55,7 +62,7 @@ class TipSessionController
             foreach ($datosServiceTips as $serviceTip) {
                 $serviceTips[] = $serviceTip->toArray();
             }
-        }      
+        }
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
@@ -71,8 +78,6 @@ class TipSessionController
         if ($this->view instanceof JsonView) {
             $datosUI['dealerTips']  = $dealerTips;
             $datosUI['serviceTips'] = $serviceTips;
-            
-            $response = $response->withStatus(200); //magic number
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -102,9 +107,12 @@ class TipSessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                isset($dealerTip) ? $datosUI  = $dealerTip->toArray() : $response = $response->withStatus(404);               
+                if (isset($dealerTip)) {
+                    $datosUI = $dealerTip->toArray();
+                } else {
+                    $response = $response->withStatus(self::STATUS_CODE_404);
+                }
             }
-
         } elseif (isset($args['idServiceTip'])) {
             $id         = $args['idServiceTip'];
             $serviceTip = $this->serviceTipService->fetchOne(array('id' => $id));
@@ -124,14 +132,17 @@ class TipSessionController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                isset($serviceTip) ? $datosUI  = $serviceTip->toArray() : $response = $response->withStatus(404);               
+                if (isset($serviceTip)) {
+                    $datosUI = $serviceTip->toArray();
+                } else {
+                    $response = $response->withStatus(self::STATUS_CODE_404);
+                }
             }
-
         }
 
-        if ($this->view instanceof TwigWrapperView) {      
-            $this->view->setTemplate($template); 
-        } 
+        if ($this->view instanceof TwigWrapperView) {
+            $this->view->setTemplate($template);
+        }
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -175,7 +186,7 @@ class TipSessionController
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
                 $template = 'tipSession/listAll.html.twig';
-                $this->view->setTemplate($template); 
+                $this->view->setTemplate($template);
 
                 $datosUI = $this->loadSessionAndTips($post['idSession']);
                 $datosUI['breadcrumb']             = 'Tips';
@@ -189,7 +200,7 @@ class TipSessionController
                     'service_tip' => is_null($serviceTip) ? [] : $serviceTip->toArray()
                 ];
 
-                $response = $response->withStatus(201); //magic number
+                $response = $response->withStatus(self::STATUS_CODE_201);
             }
         }
 
@@ -230,16 +241,12 @@ class TipSessionController
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $template = 'tipSession/form.html.twig';
-            $this->view->setTemplate($template); 
-
             $datosUI['session']    = $session->toArray();
             $datosUI['breadcrumb'] = 'Nuevo Tip';
         }
 
         return $this->view->render($request, $response, $datosUI);
     }
-
 
     public function update($request, $response, $args)
     {
@@ -250,8 +257,8 @@ class TipSessionController
             if (isset($args['idDealerTip'])) {
                 try {
                     $dealerTip = $this->dealerTipService->update($post);
-                    $message[] = 'El dealerTip se actualizó exitosamente.';    
-                } catch (\Solcre\Pokerclub\Exception\DealerTipInvalidException $e) {  //add exception
+                    $message[] = 'El dealerTip se actualizó exitosamente.';
+                } catch (DealerTipInvalidException $e) { //add exception
                     $message[] = $e->getMessage();
                 // @codeCoverageIgnoreEnd
                 }
@@ -260,8 +267,8 @@ class TipSessionController
             if (isset($args['idServiceTip'])) {
                 try {
                     $serviceTip = $this->serviceTipService->update($post);
-                    $message[] = 'El serviceTip se actualizó exitosamente.'; 
-                } catch (\Solcre\Pokerclub\Exception\ServiceTipInvalidException $e) {  //add exception
+                    $message[] = 'El serviceTip se actualizó exitosamente.';
+                } catch (\Solcre\Pokerclub\Exception\ServiceTipInvalidException $e) { //add exception
                     $message[] = $e->getMessage();
                 // @codeCoverageIgnoreEnd
                 }
@@ -286,8 +293,6 @@ class TipSessionController
                 if (isset($serviceTip)) {
                     $datosUI[] = is_null($serviceTip) ? [] : $serviceTip->toArray();
                 }
-
-                $response = $response->withStatus(200); //magic number
             }
         }
 
@@ -304,7 +309,7 @@ class TipSessionController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(204); //magic number
+            $response = $response->withStatus(self::STATUS_CODE_204);
         }
 
         if (isset($args['idDealerTip'])) {
@@ -319,19 +324,18 @@ class TipSessionController
                 $response = $response->withStatus(500);
                 $message[] = $e->getMessage();
             }
-            
         } elseif (isset($args['idServiceTip'])) {
-                $delete = $idServiceTip =  $args['idServiceTip'];
-                try {
-                    $this->serviceTipService->delete($idServiceTip);
-                    $message[] = 'El serviceTip se eliminó exitosamente';
-                } catch (ServiceTipNotFoundException $e) {
-                    $response = $response->withStatus(404);
-                    $message[] = $e->getMessage();
-                } catch (\Exception $e) {
-                    $response = $response->withStatus(500);
-                    $message[] = $e->getMessage();
-                }
+            $delete = $idServiceTip =  $args['idServiceTip'];
+            try {
+                $this->serviceTipService->delete($idServiceTip);
+                $message[] = 'El serviceTip se eliminó exitosamente';
+            } catch (ServiceTipNotFoundException $e) {
+                $response = $response->withStatus(self::STATUS_CODE_404);
+                $message[] = $e->getMessage();
+            } catch (\Exception $e) {
+                $response = $response->withStatus(self::STATUS_CODE_500);
+                $message[] = $e->getMessage();
+            }
         }
 
         $datosUI  = null;
@@ -339,13 +343,13 @@ class TipSessionController
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
             $template = 'tipSession/listAll.html.twig';
-            $this->view->setTemplate($template); 
+            $this->view->setTemplate($template);
             if (isset($get['idSession'])) {
                 $idSession = $get['idSession'];
                 $datosUI = $this->loadSessionAndTips($idSession);
             }
             $datosUI['breadcrumb']             = 'Tips';
-            $datosUI['message']                = $message;      
+            $datosUI['message']                = $message;
         }
 
         return $this->view->render($request, $response, $datosUI);

@@ -19,7 +19,7 @@ class ViewSelectorMiddleware
     public function __get($property)
     {
         if ($this->container->{$property}) {
-          return $this->container->{$property};
+            return $this->container->{$property};
         }
     }
 
@@ -29,14 +29,13 @@ class ViewSelectorMiddleware
      *
      * @return Response
      */
-    public function __invoke(Request $request, RequestHandler $handler): Response
+    public function __invoke(Request $request, RequestHandler $handler) : Response
     {
         $type = $request->getHeaderLine('Accept');
-        if (isset($type)){
+        if (isset($type)) {
             $this->container->set('view', $this->viewMap[$type]);
         }
         
-        return $handler->handle($request);;
+        return $handler->handle($request);
     }
-
 }

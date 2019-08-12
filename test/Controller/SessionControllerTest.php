@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Solcre\lmsuy\Service\SessionService;
-use Solcre\lmsuy\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\lmsuy\Controller\SessionController;
 use Doctrine\ORM\EntityManager;
 use Slim\Views\Twig;
