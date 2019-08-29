@@ -65,7 +65,7 @@ return function (App $app) {
     $app->get('/{idSession}/usersSession/{idusersession}/remove', 'UserSessionController:delete');
     $app->post('/usersSession/{idusersession}/update', 'UserSessionController:update');
     $app->get('/userssession/{idusersession}/formclose', 'UserSessionController:formClose');
-    $app->post('/userssession/{idusersession}/close', 'UserSessionController:close');
+    $app->post('/{idSession}/userssession/{idusersession}/close', 'UserSessionController:close');
 
     $app->get('/users', 'UserController:listAll');
     $app->get('/users/{iduser}', 'UserController:list');

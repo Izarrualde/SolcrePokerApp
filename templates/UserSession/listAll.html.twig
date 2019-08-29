@@ -79,7 +79,7 @@
                                         <td> {{ user.cashout|number_format }} </td>
                                         <td> {{ user.endTime|date('H:i') }}
                                         </td>
-                                        <td> <a href=""> <i class="fas fa-pencil-alt"> </i> </a> <a href=""> <i class="fas fa-trash-alt"></i> </a></td>
+                                        <td> <a href="/sessions/{{ user.idSession }}/usersSession/{{ user.id }}"> <i class="fas fa-pencil-alt"> </i> </a> <a href="/{{ user.idSession }}/usersSession/{{ user.id }}/remove"> <i class="fas fa-trash-alt"></i> </a></td>
                                     </tr>
                                     {% endif %}
                                     {% endfor %}

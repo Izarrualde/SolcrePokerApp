@@ -154,7 +154,7 @@ class BuyinSessionControllerTest extends TestCase
 
         $expectedBuyins = $this->getAListOfBuyins($expectedSession);
 
-        $sessionService->method('fetchOne')->willReturn($expectedSession);
+        $sessionService->method('fetch')->willReturn($expectedSession);
         $buyinSessionService->method('fetchAllBuyins')->willReturn($expectedBuyins);
 
         $controller = $this->createController($view, $buyinSessionService, $userSessionService, $userService, $sessionService);
@@ -181,42 +181,12 @@ class BuyinSessionControllerTest extends TestCase
         ];
     }
 
-    public function testListAllWithJsonView()
-    {
-        // check that invoke controller listAll with parameters $request, $response and $datosUI
-        // response contains the right statusCode 
-
-        $request  = $this->createMock(Slim\Psr7\Request::class);
-        $view     = $this->createMock(Solcre\lmsuy\View\JsonView::class);
-
-        $response = new Slim\Psr7\Response();
-
-        $setup = $this->listAllSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $args = [
-            'idSession' => 2
-        ];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($response),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->listAll($request, $response, $args);
-    }
-
-
     public function testListAll()
     {
-        $request  = $this->createMock(Slim\Psr7\Request::class);
-        $view     = $this->createMock(Solcre\lmsuy\View\TwigWrapperView::class);
-
-        $response = new Slim\Psr7\Response();
+        $view             = $this->createMock(TwigWrapperView::class);
+        $request          = $this->createMock(Slim\Psr7\Request::class);
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $setup           = $this->listAllSetup($view);
         $controller      = $setup['controller'];
@@ -230,7 +200,36 @@ class BuyinSessionControllerTest extends TestCase
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->listAll($request, $response, $args);
+    }
+
+    public function testListAllWithJsonView()
+    {
+        // check that invoke controller listAll with parameters $request, $response and $datosUI
+        // response contains the right statusCode 
+        $view     = $this->createMock(Solcre\lmsuy\View\JsonView::class);
+        $request  = $this->createMock(Slim\Psr7\Request::class);
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response->withStatus(200);
+
+        $setup = $this->listAllSetup($view);
+        $controller      = $setup['controller'];
+        $expectedDatosUI = $setup['expectedDatosUI'];
+
+        $args = [
+            'idSession' => 2
+        ];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -280,8 +279,8 @@ class BuyinSessionControllerTest extends TestCase
             1
         );
 
-        $sessionService->method('fetchOne')->willReturn($expectedSession);
-        $buyinSessionService->method('fetchOne')->willReturn($expectedBuyin);
+        $sessionService->method('fetch')->willReturn($expectedSession);
+        $buyinSessionService->method('fetch')->willReturn($expectedBuyin);
 
         $controller = $this->createController($view, $buyinSessionService, $userSessionService, $userService, $sessionService);
 
@@ -289,9 +288,9 @@ class BuyinSessionControllerTest extends TestCase
 
 
         if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']           = $expectedSession->toArray();
+            $expectedDatosUI['session']          = $expectedSession->toArray();
             $expectedDatosUI['session']['buyin'] = $expectedBuyin->toArray();
-            $expectedDatosUI['breadcrumb']        = 'Editar Buyin';
+            $expectedDatosUI['breadcrumb']       = 'Editar Buyin';
         }
 
         if ($view instanceof JsonView) {
@@ -309,10 +308,11 @@ class BuyinSessionControllerTest extends TestCase
     {
         // check that invoke controller listAll with parameters $request, $response and $datosUI
 
-        $view = $this->createMock(Solcre\lmsuy\View\TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
+        $view = $this->createMock(TwigWrapperView::class);
 
-        $response = new Slim\Psr7\Response();
+        $request          = $this->createMock(Slim\Psr7\Request::class);
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $args = [
             'idSession' => 2,
@@ -323,12 +323,11 @@ class BuyinSessionControllerTest extends TestCase
         $controller      = $setup['controller'];
         $expectedDatosUI = $setup['expectedDatosUI'];
 
-
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -343,7 +342,8 @@ class BuyinSessionControllerTest extends TestCase
         $view = $this->createMock(Solcre\lmsuy\View\JsonView::class);
         $request = $this->createMock(Slim\Psr7\Request::class);
 
-        $response = new Slim\Psr7\Response();
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response->withStatus(200);
 
         $args = [
             'idSession' => 2,
@@ -359,7 +359,7 @@ class BuyinSessionControllerTest extends TestCase
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -372,6 +372,8 @@ class BuyinSessionControllerTest extends TestCase
         $userSessionService = $this->createMock(UserSessionService::class);
         $userService = $this->createMock(UserService::class);
         $sessionService = $this->createMock(SessionService::class);
+        
+        $post = $request->getParsedBody();
 
         $expectedSession = new SessionEntity(
             2,
@@ -417,14 +419,16 @@ class BuyinSessionControllerTest extends TestCase
         $userSessions[] = $userSession2;
         $expectedSession->setSessionUsers($userSessions);
 
+        
+
         $expectedBuyinAdded = new BuyinSessionEntity(
             2,
-            $request->getParsedBody()['amountCash'],
-            $request->getParsedBody()['amountCredit'],
+            $post['amountCash'],
+            $post['amountCredit'],
             $expectedSession->getSessionUsers()[1],
-            $request->getParsedBody()['hour'],
+            date_create($post['hour']),
             1,
-            $request->getParsedBody()['approved'],
+            $post['approved'],
         );
 
         $expectedBuyins = [ 
@@ -437,18 +441,10 @@ class BuyinSessionControllerTest extends TestCase
               1,
               1
           ),
-          new BuyinSessionEntity(
-              $expectedBuyinAdded->getId(),
-              $expectedBuyinAdded->getAmountCash(),
-              $expectedBuyinAdded->getAmountCredit(),
-              $expectedBuyinAdded->getUserSession(),
-              $expectedBuyinAdded->getHour(),
-              $expectedBuyinAdded->getCurrency(),
-              $expectedBuyinAdded->getIsApproved()
-          )
+          $expectedBuyinAdded
         ];
 
-        $sessionService->method('fetchOne')->willReturn($expectedSession);
+        $sessionService->method('fetch')->willReturn($expectedSession);
         $buyinSessionService->method('add')->willReturn($expectedBuyinAdded);
         $buyinSessionService->method('fetchAllBuyins')->willReturn($expectedBuyins);
 
@@ -497,6 +493,7 @@ class BuyinSessionControllerTest extends TestCase
         );
 
         $response = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
@@ -511,7 +508,7 @@ class BuyinSessionControllerTest extends TestCase
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -539,10 +536,9 @@ class BuyinSessionControllerTest extends TestCase
           ]
         );
 
-        // $response = $this->createMock(Slim\Psr7\Response::class);
-        $response = new Slim\Psr7\Response();
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response->withStatus(201);
         
-
         $args = [
           'idSession' => 2
         ];
@@ -558,7 +554,7 @@ class BuyinSessionControllerTest extends TestCase
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -572,7 +568,7 @@ class BuyinSessionControllerTest extends TestCase
         $userService         = $this->createMock(UserService::class);
         $sessionService      = $this->createMock(SessionService::class);
 
-        $sessionService->method('fetchOne')->willReturn(null);
+        $sessionService->method('fetch')->willReturn(null);
         $buyinSessionService->method('fetchAllBuyins')->willReturn(null);
         $exception = new BuyinInvalidException();
         $buyinSessionService->method('add')->will($this->throwException($exception));
@@ -580,7 +576,7 @@ class BuyinSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $buyinSessionService, $userSessionService, $userService, $sessionService); 
 
-        $expectedDatosUI = [];
+        $expectedDatosUI = null;
 
         if ($view instanceof TwigWrapperView) {
             $expectedDatosUI[] = $exception->getMessage();
@@ -605,7 +601,7 @@ class BuyinSessionControllerTest extends TestCase
         $request    = $this->createMock(Slim\Psr7\Request::class);
         $request->method('getParsedBody')->willReturn(
           [
-            'amountCash'    => 200,
+            'amountCash'    => 'a not numeric value',
             'amountCredit'  => 300,
             'approved'      => 1,
             'idUserSession' => 2,
@@ -614,7 +610,8 @@ class BuyinSessionControllerTest extends TestCase
           ]
         );
 
-        $response = new Slim\Psr7\Response();
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
@@ -626,13 +623,11 @@ class BuyinSessionControllerTest extends TestCase
         
         $exception = new BuyinInvalidException();
 
-        $response = $response->withStatus(400);
-
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->contains([$exception->getMessage()]),
         );
 
@@ -661,7 +656,8 @@ class BuyinSessionControllerTest extends TestCase
           ]
         );
 
-        $response = new Slim\Psr7\Response();
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response->withStatus(400);
 
         $args = [
           'idSession' => 2
@@ -671,13 +667,11 @@ class BuyinSessionControllerTest extends TestCase
         $controller      = $setup['controller'];
         $expectedDatosUI = $setup['expectedDatosUI'];
 
-        $response = $response->withStatus(400);
-
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -692,8 +686,12 @@ class BuyinSessionControllerTest extends TestCase
         $userService = $this->createMock(UserService::class);
         $sessionService = $this->createMock(SessionService::class);
         
+        $args = [
+          'idSession'  => 2
+        ];
+
         $expectedSession = new SessionEntity(
-            2,
+            $args['idSession'],
             date_create('2019-06-27 15:00:00'),
             'another test session',
             'another test description',
@@ -706,15 +704,14 @@ class BuyinSessionControllerTest extends TestCase
 
         $expectedUsersSession = $this->getAListOfUsersSession($expectedSession);
         
-        $sessionService->method('fetchOne')->willReturn($expectedSession);
+        $sessionService->method('fetch')->willReturn($expectedSession);
         $userSessionService->method('fetchAll')->willReturn($expectedUsersSession);
 
         $controller = $this->createController($view, $buyinSessionService, $userSessionService, $userService, $sessionService);
         $request    = $this->createMock(Slim\Psr7\Request::class);
-        $response = new Slim\Psr7\Response();
-        $args = [
-          'idSession'  => 2
-        ];
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $expectedDatosUI = [];
 
@@ -730,7 +727,7 @@ class BuyinSessionControllerTest extends TestCase
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -742,7 +739,7 @@ class BuyinSessionControllerTest extends TestCase
         $request = $this->createMock(Slim\Psr7\Request::class);
         $request->method('getParsedBody')->willReturn(
             [
-                'id'           =>2,
+                'id'           => 2,
                 'amountCash'   => 200,
                 'amountCredit' => 300,
                 'hour'         => '2019-06-26 19:25:00',
@@ -752,7 +749,10 @@ class BuyinSessionControllerTest extends TestCase
           ]
         );
 
-        $response = new Slim\Psr7\Response();
+        $post = $request->getParsedBody();
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $buyinSessionService = $this->createMock(BuyinSessionService::class);
         $userSessionService  = $this->createMock(UserSessionService::class);
@@ -773,10 +773,10 @@ class BuyinSessionControllerTest extends TestCase
 
         $expectedBuyins = $this->getAListOfBuyins($expectedSession);
 
-       $expectedBuyinUpdated = new BuyinSessionEntity(
-            $request->getParsedBody()['id'],
-            $request->getParsedBody()['amountCash'],
-            $request->getParsedBody()['amountCredit'],
+        $expectedBuyinUpdated = new BuyinSessionEntity(
+            $post['id'],
+            $post['amountCash'],
+            $post['amountCredit'],
             new UserSessionEntity(
                 2,
                 $expectedSession,
@@ -788,13 +788,12 @@ class BuyinSessionControllerTest extends TestCase
                 null,
                 new UserEntity(2)
             ),
-            $request->getParsedBody()['hour'],
-            $request->getParsedBody()['currency'],
-            $request->getParsedBody()['approved'],
+            $post['hour'],
+            date_create($post['currency']),
+            $post['approved'],
         );
 
-
-        $sessionService->method('fetchOne')->willReturn($expectedSession);
+        $sessionService->method('fetch')->willReturn($expectedSession);
         $buyinSessionService->method('fetchAllBuyins')->willReturn($expectedBuyins);
         $buyinSessionService->method('update')->willReturn($expectedBuyinUpdated);
 
@@ -815,42 +814,46 @@ class BuyinSessionControllerTest extends TestCase
 
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedBuyinUpdated->toArray();
-            // $response = with status correspondiente
+            $expectedResponse = $expectedResponse->withStatus(200);
         }
 
         return [ 
-            'controller'      => $controller, 
-            'expectedDatosUI' => $expectedDatosUI,
-            'request'         => $request,
-            'response'        => $response
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' => $expectedResponse
         ];
         
     }
 
-
-
     public function testUpdate()
     {
         $view = $this->createMock(TwigWrapperView::class);
-
-        $response = new Slim\Psr7\Response();
 
         $args = [
           'idSession' => 2
         ];
 
         $setup           = $this->updateSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-        $request         = $setup['request'];
-        $response        = $setup['response'];
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('buyinSession/listAll.html.twig'),
         );
 
         $controller->update($request, $response, $args);
@@ -860,23 +863,22 @@ class BuyinSessionControllerTest extends TestCase
     {
         $view = $this->createMock(JsonView::class);
 
-        $response = new Slim\Psr7\Response();
-
         $args = [
           'idSession' => 2
         ];
 
-        $setup           = $this->updateSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-        $request         = $setup['request'];
-        $response        = $setup['response'];
+        $setup            = $this->updateSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -884,9 +886,12 @@ class BuyinSessionControllerTest extends TestCase
 
     }
 
-
     public function deleteSetup($view)
     {
+        $request    = $this->createMock(Slim\Psr7\Request::class);
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
 
         $buyinSessionService = $this->createMock(BuyinSessionService::class);
         $userSessionService  = $this->createMock(UserSessionService::class);
@@ -907,14 +912,11 @@ class BuyinSessionControllerTest extends TestCase
 
         $expectedBuyins = $this->getAListOfBuyins($expectedSession);
 
-        $sessionService->method('fetchOne')->willReturn($expectedSession);
+        $sessionService->method('fetch')->willReturn($expectedSession);
         $buyinSessionService->method('fetchAllBuyins')->willReturn($expectedBuyins);
         $buyinSessionService->method('delete')->willReturn(true);
 
         $controller = $this->createController($view, $buyinSessionService, $userSessionService, $userService, $sessionService);
-        
-        $request    = $this->createMock(Slim\Psr7\Request::class);
- 
 
         $expectedDatosUI = null;
 
@@ -929,11 +931,16 @@ class BuyinSessionControllerTest extends TestCase
             $expectedDatosUI['message']           = ['El buyin se eliminó exitosamente'];
         }
 
+        if ($view instanceof JsonView) {
+            $expectedResponse = $expectedResponse->withStatus(204);
+        }
 
         return [ 
-            'controller'      => $controller, 
-            'expectedDatosUI' => $expectedDatosUI,
-            'request'         => $request,
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' =>  $expectedResponse
         ];
     }
 
@@ -946,20 +953,18 @@ class BuyinSessionControllerTest extends TestCase
           'idbuyin'   => 1
         ];
 
-        $response = new Slim\Psr7\Response();
-
-        $setup           = $this->deleteSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-        $request         = $setup['request'];
-
-
+        $setup            = $this->deleteSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
@@ -981,26 +986,21 @@ class BuyinSessionControllerTest extends TestCase
           'idbuyin'   => 1
         ];
 
-        $response = new Slim\Psr7\Response();
-
-        $setup           = $this->deleteSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-        $request         = $setup['request'];
-
-        // set right response
-        $response = $response->withStatus(204);
+        $setup            = $this->deleteSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
         ->with(
             $this->equalTo($request),
-            $this->equalTo($response),
+            $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
         );
 
         $controller->delete($request, $response, $args);
     }
-
-
 }

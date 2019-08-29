@@ -1,5 +1,6 @@
 <?php
-
+ header("Access-Control-Allow-Origin: *");
+ 
 use DI\Container;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;

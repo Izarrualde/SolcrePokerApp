@@ -13,14 +13,8 @@ use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Solcre\Pokerclub\Exception\UserInvalidException;
 use Exception;
 
-class UserController
+class UserController extends BaseController
 {
-    const STATUS_CODE_201 = 201;
-    const STATUS_CODE_204 = 204;
-    const STATUS_CODE_400 = 400;
-    const STATUS_CODE_404 = 404;
-    const STATUS_CODE_500 = 500;
-    
     protected $view;
     protected $userService;
 
@@ -32,8 +26,8 @@ class UserController
     
     public function listAll($request, $response, $args)
     {
-        $users   = [];
-        $datosUI = [];
+        $users          = null;
+        $datosUI        = null;
 
         $datosUsers = $this->userService->fetchAll(
             array(
@@ -44,7 +38,7 @@ class UserController
             )
         );
 
-        if (isset($datosUsers)) {
+        if (is_array($datosUsers)) {
             foreach ($datosUsers as $userObject) {
                 $users[] = $userObject->toArray();
             }
@@ -58,6 +52,7 @@ class UserController
 
         // JsonView
         if ($this->view instanceof JsonView) {
+            $response = $response->withStatus(parent::STATUS_CODE_200);
             $datosUI = $users;
         }
 
@@ -66,66 +61,98 @@ class UserController
 
     public function list($request, $response, $args)
     {
-        $idUser  = $args['iduser'];
-        $datosUI = null;
+        $idUser         = $args['iduser'];
+        $datosUI        = null;
+        $user           = null;
+        $status         = null;
+        $expectedStatus = parent::STATUS_CODE_200;
+        $message        = null;
 
-        $user = $this->userService->fetchOne(array('id' => $idUser));
+        try {
+            $user = $this->userService->fetch(array('id' => $idUser));
+            $status  = parent::STATUS_CODE_200;  
+        } catch (UserNotFoundException $e) {
+            $message[] = $e->getMessage();
+            $status  = parent::STATUS_CODE_404;
+        } catch (\Exception $e) {
+            $message[] = $e->getMessage();
+            $status  = parent::STATUS_CODE_500;
+        }
 
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI['user']       = isset($user) ? $user->toArray() :  [];
+            if ($status == $expectedStatus) {
+                $datosUI['user'] = isset($user) ? $user->toArray() : [];
+            }
+            
             $datosUI['breadcrumb'] = 'Editar Usuario';
+           
+            if (isset($message)) {
+                $datosUI['message'] = $message;
+            }
         }
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            if (isset($user)) {
-                $datosUI  = $user->toArray();
-            } else {
-                $response = $response->withStatus(self::STATUS_CODE_404);
-            }
+            $datosUI = is_null($user) ? [] : $user->toArray();
+            $response = $response->withStatus($status);
         }
 
         return $this->view->render($request, $response, $datosUI);
     }
 
+    public function loadData($message)
+    {
+        $data = null;
+        
+        // TwigWrapperView
+        if ($this->view instanceof TwigWrapperView) {
+            $template = 'user/listAll.html.twig';
+            $this->view->setTemplate($template);
+
+            $datosUsers = $this->userService->fetchAll();
+            $users = [];
+
+            if (is_array($datosUsers)) {
+                foreach ($datosUsers as $userObject) {
+                    $users[] = $userObject->toArray();
+                }
+            }
+        
+            $data['users']      = $users;
+            $data['breadcrumb'] = 'Usuarios';
+            $data['message']    = $message;
+        }
+
+        return $data;
+    }
+
     public function add($request, $response, $args)
     {
-        $post = $request->getParsedBody();
-        $datosUI = [];
-        $message = [];
+        $post    = $request->getParsedBody();
+        $datosUI = null;
+        $message = null;
+        $status  = null;
         
         if (is_array($post)) {
             try {
-                $user = $this->userService->add($post);
-                $message[]  = 'El usuario se agregó exitosamente.';
+                $user      = $this->userService->add($post);
+                $message[] = 'El usuario se agregó exitosamente.';
+                $status    = parent::STATUS_CODE_201;
             } catch (UserInvalidException $e) {
                 $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_400;
+            } catch (\Exception $e) {
+                $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_500;
             }
 
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $template = 'user/listAll.html.twig';
-                $this->view->setTemplate($template);
-
-                // BUSQUEDA DE DATOS PARA LA UI
-                $datosUsers = $this->userService->fetchAll();
-
-                if (isset($datosUsers)) {
-                    foreach ($datosUsers as $userObject) {
-                        $users[] = $userObject->toArray();
-                    }
-                }
-        
-                $datosUI['users']      = $users;
-                $datosUI['breadcrumb'] = 'Usuarios';
-                $datosUI['message']    = $message;
-            }
-
-            // JsonView
+            $datosUI  = $this->view instanceof JsonView ? 
+                (isset($user) ? $user->toArray() : null) : 
+                $this->loadData($message);
+            
             if ($this->view instanceof JsonView) {
-                $datosUI = isset($user) ? $user->toArray() : [];
-                $response = $response->withStatus(self::STATUS_CODE_201);
+                $response = $response->withStatus($status);
             }
         }
 
@@ -146,49 +173,34 @@ class UserController
 
     public function update($request, $response, $args)
     {
-        $post = $request->getParsedBody();
+        $post    = $request->getParsedBody();
         $datosUI = null;
-        $users   = [];
-        $message = [];
-
+        $message = null;
+        $status  = null;
 
         if (is_array($post)) {
             try {
-                $user = $this->userService->update($post);
-                $message[]  = 'El usuario se actualizó exitosamente';
-            // @codeCoverageIgnoreStart
+                $user      = $this->userService->update($post);
+                $message[] = 'El usuario se actualizó exitosamente';
+                $status    = parent::STATUS_CODE_200;
             } catch (UserInvalidException $e) {
-                 $message[] = $e->getMessage();
-            // @codeCoverageIgnoreEnd
+                $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_400;
+            } catch (UserNotFoundException $e) {
+                $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_404;
+            } catch (\Exception $e) {
+                $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_500;
             }
 
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $template = 'user/listAll.html.twig';
-                $this->view->setTemplate($template);
-
-                // BUSQUEDA DE DATOS PARA LA UI
-                $datosUsers = $this->userService->fetchAll();
-
-                if (isset($datosUsers)) {
-                    foreach ($datosUsers as $userObject) {
-                        $users[] = $userObject->toArray();
-                    }
-                }
-
-                $datosUI['users']      = $users;
-                $datosUI['breadcrumb'] = 'Usuarios';
-                $datosUI['message']    = $message;
-            }
-
-            // JsonView
             if ($this->view instanceof JsonView) {
-                if (isset($user)) {
-                    $datosUI  = $user->toArray();
-                } else {
-                    $response = $response->withStatus(self::STATUS_CODE_404);
-                }
+                $response = $response->withStatus($status);
             }
+
+            $datosUI  = $this->view instanceof JsonView ? 
+                (isset($user) ? $user->toArray() : null) : 
+                $this->loadData($message);
         }
         
         return $this->view->render($request, $response, $datosUI);
@@ -196,46 +208,32 @@ class UserController
 
     public function delete($request, $response, $args)
     {
-        $idUser = $args['iduser'];
+        $idUser  = $args['iduser'];
         $datosUI = null;
-        $users   = [];
-
-        // JsonView
-        if ($this->view instanceof JsonView) {
-            $response = $response->withStatus(self::STATUS_CODE_204); //magic number
-        }
+        $message = null;
+        $status  = null;
         
         try {
-            $delete = $this->userService->delete($idUser);
+            $delete    = $this->userService->delete($idUser);
             $message[] = 'El usuario se eliminó exitosamente';
+            $status    = parent::STATUS_CODE_204;
         } catch (UserHadActionException $e) {
-            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
+            $status    = parent::STATUS_CODE_400;
         } catch (UserNotFoundException $e) {
-            $response = $response->withStatus(self::STATUS_CODE_404);
             $message[] = $e->getMessage();
+            $status    = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $response = $response->withStatus(self::STATUS_CODE_500);
             $message[] = $e->getMessage();
+            $status    = parent::STATUS_CODE_500;
         }
 
-        // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
-            $template = 'user/listAll.html.twig';
-            $this->view->setTemplate($template);
-
-            // BUSQUEDA DE DATOS PARA LA UI
-            $datosUsers = $this->userService->fetchAll();
-
-            if (isset($datosUsers)) {
-                foreach ($datosUsers as $userObject) {
-                    $users[] = $userObject->toArray();
-                }
-            }
-
-            $datosUI['users']      = $users;
-            $datosUI['breadcrumb'] = 'Usuarios';
-            $datosUI['message']    = $message;
+            $datosUI  = $this->loadData($message);            
+        }
+        
+        if ($this->view instanceof JsonView) {
+            $response = $response->withStatus($status);
         }
 
         return $this->view->render($request, $response, $datosUI);

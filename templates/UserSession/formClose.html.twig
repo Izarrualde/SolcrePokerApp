@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <section class="container row justify-content-center">
                         <article>
-                            <form class="was-validated" action="/userssession/{{ userSession.id }}/close" method="post">
+                            <form class="was-validated" action="/{{ userSession.session.id }}/userssession/{{ userSession.id }}/close" method="post">
                                 <input name="id" type="hidden" value="{{ userSession.id }}">
                                 <input name="idSession" type="hidden" value="{{ userSession.session.id }}">
                                 <input name="idUser" type="hidden" value="{{ userSession.user.id }}">

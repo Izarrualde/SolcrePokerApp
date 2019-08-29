@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <section class="container row justify-content-center">
                         <article>
-                            <form class="was-validated" action="/users/{iduser}/update" method="post">
+                            <form class="was-validated" action="/users/{{ user.id }}/update" method="post">
                                 <input name="id" type="hidden" value="{{ user.id }}">
                                 <input name="password" type="hidden" value="{{ user.password }}">
                                 <input name="isActive" type="hidden" value="{{ user.isActive }}">
