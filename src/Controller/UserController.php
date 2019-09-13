@@ -27,7 +27,7 @@ class UserController extends BaseController
     public function listAll($request, $response, $args)
     {
         $users          = null;
-        $datosUI        = null;
+        $datosUI        = [];
 
         $datosUsers = $this->userService->fetchAll(
             array(
@@ -62,7 +62,7 @@ class UserController extends BaseController
     public function list($request, $response, $args)
     {
         $idUser         = $args['iduser'];
-        $datosUI        = null;
+        $datosUI        = [];
         $user           = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -94,7 +94,7 @@ class UserController extends BaseController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI = is_null($user) ? [] : $user->toArray();
+            $datosUI  = isset($user) ? $user->toArray() : [];
             $response = $response->withStatus($status);
         }
 
@@ -103,7 +103,7 @@ class UserController extends BaseController
 
     public function loadData($message)
     {
-        $data = null;
+        $data = [];
         
         // TwigWrapperView
         if ($this->view instanceof TwigWrapperView) {
@@ -130,7 +130,7 @@ class UserController extends BaseController
     public function add($request, $response, $args)
     {
         $post    = $request->getParsedBody();
-        $datosUI = null;
+        $datosUI = [];
         $message = null;
         $status  = null;
         
@@ -147,13 +147,16 @@ class UserController extends BaseController
                 $status    = parent::STATUS_CODE_500;
             }
 
-            $datosUI  = $this->view instanceof JsonView ? 
-                (isset($user) ? $user->toArray() : null) : 
-                $this->loadData($message);
-            
-            if ($this->view instanceof JsonView) {
-                $response = $response->withStatus($status);
+            // TwigWrapperView
+            if ($this->view instanceof TwigWrapperView) {
+                $datosUI  =  $this->loadData($message);
             }
+
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI  = isset($user) ? $user->toArray() : [];
+                $response = $response->withStatus($status);
+            } 
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -174,7 +177,7 @@ class UserController extends BaseController
     public function update($request, $response, $args)
     {
         $post    = $request->getParsedBody();
-        $datosUI = null;
+        $datosUI = [];
         $message = null;
         $status  = null;
 
@@ -194,13 +197,16 @@ class UserController extends BaseController
                 $status    = parent::STATUS_CODE_500;
             }
 
-            if ($this->view instanceof JsonView) {
-                $response = $response->withStatus($status);
+            // TwigWrapperView
+            if ($this->view instanceof TwigWrapperView) {
+                $datosUI  =  $this->loadData($message);
             }
 
-            $datosUI  = $this->view instanceof JsonView ? 
-                (isset($user) ? $user->toArray() : null) : 
-                $this->loadData($message);
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI  = isset($user) ? $user->toArray() : [];
+                $response = $response->withStatus($status);
+            } 
         }
         
         return $this->view->render($request, $response, $datosUI);

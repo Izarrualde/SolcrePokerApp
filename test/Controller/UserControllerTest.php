@@ -527,7 +527,7 @@ class UserControllerTest extends TestCase
 
         $controller = $this->createController($view, $userService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         foreach ($expectedUsers as $user) {
           $expectedUsersArray[] = $user->toArray();

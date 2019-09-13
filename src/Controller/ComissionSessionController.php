@@ -32,7 +32,7 @@ class ComissionSessionController extends BaseController
     {
         $idSession      = $args['idSession'];
         $comissions     = null;
-        $datosUI        = null;
+        $datosUI        = [];
         $message        = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -69,7 +69,7 @@ class ComissionSessionController extends BaseController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI  = $comissions;
+            $datosUI  = isset($comissions) ? $comissions : [];
             $response = $response->withStatus($status);
         }  
 
@@ -80,7 +80,7 @@ class ComissionSessionController extends BaseController
     {
         $id             = $args['idcomission'];
         $idSession      = $args['idSession'];
-        $datosUI        = null;
+        $datosUI        = [];
         $comission      = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -114,7 +114,7 @@ class ComissionSessionController extends BaseController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI = is_null($comission) ? [] : $comission->toArray();
+            $datosUI = isset($comission) ? $comission->toArray() : [];
             $response = $response->withStatus($status);
         }
 
@@ -160,7 +160,7 @@ class ComissionSessionController extends BaseController
     { 
         $post           = $request->getParsedBody();
         $idSession      = $args['idSession'];
-        $datosUI        = null;
+        $datosUI        = [];
         $message        = null;
         $status         = null;
         //$expectedStatus = parent::STATUS_CODE_201;
@@ -168,7 +168,7 @@ class ComissionSessionController extends BaseController
         if (is_array($post)) {
             try {
                 $comission = $this->comissionService->add($post);
-                $message[] = 'la comission se ingreso exitosamente.';
+                $message[] = 'la comission se ingresó exitosamente.';
                 $status = parent::STATUS_CODE_201;
             } catch (ComissionInvalidException $e) {
                 $message[] = $e->getMessage();
@@ -186,7 +186,7 @@ class ComissionSessionController extends BaseController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = isset($comission) ? $comission->toArray() : null;
+                $datosUI = isset($comission) ? $comission->toArray() : [];
                 $response = $response->withStatus($status);
             } 
         }
@@ -223,7 +223,7 @@ class ComissionSessionController extends BaseController
     {
         $post           = $request->getParsedBody();
         $idSession      = $post['idSession'];
-        $datosUI        = null;
+        $datosUI        = [];
         $message        = null;
         $status         = null;
 
@@ -254,7 +254,7 @@ class ComissionSessionController extends BaseController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI  = isset($comission) ? $comission->toArray() : null;
+                $datosUI  = isset($comission) ? $comission->toArray() : [];
                 $response = $response->withStatus($status);
             } 
         }

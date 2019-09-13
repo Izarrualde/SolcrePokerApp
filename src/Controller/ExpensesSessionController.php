@@ -29,8 +29,8 @@ class ExpensesSessionController extends BaseController
     public function listAll($request, $response, $args)
     {
         $idSession      = $args['idSession'];
-        $expenses       = null;
-        $datosUI        = null;
+        $expenses       = [];
+        $datosUI        = [];
         $message        = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -79,7 +79,7 @@ class ExpensesSessionController extends BaseController
     {
         $id             = $args['idExpenditure'];
         $idSession      = $args['idSession'];
-        $datosUI        = null;
+        $datosUI        = [];
         $expenditure    = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -113,7 +113,7 @@ class ExpensesSessionController extends BaseController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI  = is_null($expenditure) ? [] : $expenditure->toArray();
+            $datosUI  = isset($expenditure) ? $expenditure->toArray() : [];
             $response = $response->withStatus($status);
         }
 
@@ -160,7 +160,7 @@ class ExpensesSessionController extends BaseController
     {
         $post           = $request->getParsedBody();
         $idSession      = $args['idSession'];
-        $datosUI        = null;
+        $datosUI        = [];
         $message        = null;
         $status         = null;
         
@@ -177,13 +177,16 @@ class ExpensesSessionController extends BaseController
                 $status    = parent::STATUS_CODE_500;
             }
             
-            $datosUI  = $this->view instanceof JsonView ? 
-                (isset($expenditure) ? $expenditure->toArray() : null) : 
-                $this->loadData($idSession, $message);
-
-            if ($this->view instanceof JsonView) {
-                $response = $response->withStatus($status);
+            // TwigWrapperView
+            if ($this->view instanceof TwigWrapperView) {
+                $datosUI  =  $this->loadData($idSession, $message);
             }
+
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI = isset($expenditure) ? $expenditure->toArray() : [];
+                $response = $response->withStatus($status);
+            } 
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -218,7 +221,7 @@ class ExpensesSessionController extends BaseController
     {
         $post           = $request->getParsedBody();
         $idSession      = $post['idSession'];
-        $datosUI        = null;
+        $datosUI        = [];
         $message        = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -239,13 +242,16 @@ class ExpensesSessionController extends BaseController
                 $status    = parent::STATUS_CODE_500;
             }
 
-            $datosUI  = $this->view instanceof JsonView ? 
-                (isset($expenditure) ? $expenditure->toArray() : null) : 
-                $this->loadData($idSession, $message);
-
-            if ($this->view instanceof JsonView) {
-                $response = $response->withStatus($status);
+            // TwigWrapperView
+            if ($this->view instanceof TwigWrapperView) {
+                $datosUI  =  $this->loadData($idSession, $message);
             }
+
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI  = isset($expenditure) ? $expenditure->toArray() : [];
+                $response = $response->withStatus($status);
+            } 
         }
 
         return $this->view->render($request, $response, $datosUI);

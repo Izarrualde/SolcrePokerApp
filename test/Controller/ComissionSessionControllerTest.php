@@ -174,8 +174,7 @@ class ComissionSessionControllerTest extends TestCase
 
           $controller = $this->createController($view, $comissionService, $sessionService); 
           
-          $expectedDatosUI = null;
-
+          $expectedDatosUI = [];
 
           if ($view instanceof TwigWrapperView) {
               $expectedDatosUI['message']    = [$exception->getMessage()];
@@ -308,7 +307,7 @@ class ComissionSessionControllerTest extends TestCase
 
         if ($view instanceof TwigWrapperView) {
             $expectedDatosUI['message']    = [$exception->getMessage()];
-            $expectedDatosUI['breadcrumb']           = 'Editar Comision';
+            $expectedDatosUI['breadcrumb'] = 'Editar Comision';
         }
 
         return [ 
@@ -501,8 +500,21 @@ class ComissionSessionControllerTest extends TestCase
         $controller->list($request, $response, $args);
     }
 
-    public function addSetup($view, $request)
+    public function addSetup($view)
     {
+        $request = $this->createMock(Slim\Psr7\Request::class);
+
+        $request->method('getParsedBody')->willReturn(
+            [
+              'comission' => 30,
+              'idSession' => 2,
+              'hour'      => '2019-06-26 19:05:00'
+            ]
+        );
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
+
         $comissionService = $this->createMock(ComissionSessionService::class);
         $sessionService   = $this->createMock(SessionService::class);
 
@@ -553,7 +565,7 @@ class ComissionSessionControllerTest extends TestCase
             $expectedDatosUI['session']               = $expectedSession->toArray();
             $expectedDatosUI['session']['comissions'] = $expectedComissionsArray;
             $expectedDatosUI['breadcrumb']            = 'Comisiones';
-            $expectedDatosUI['message']               = ['la comission se ingreso exitosamente.'];
+            $expectedDatosUI['message']               = ['la comission se ingresó exitosamente.'];
         }
 
         if ($view instanceof JsonView) {
@@ -561,35 +573,29 @@ class ComissionSessionControllerTest extends TestCase
         }
 
         return [ 
-            'controller'      => $controller, 
-            'expectedDatosUI' => $expectedDatosUI 
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' => $expectedResponse
         ];
     }
 
     public function testAdd()
     {
         $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-
-        $request->method('getParsedBody')->willReturn(
-            [
-              'comission' => 30,
-              'idSession' => 2,
-              'hour'      => '2019-06-26 19:05:00'
-            ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
         ];
 
         // metthod with data post use 2 parameters in addSetup
-        $setup           = $this->addSetup($view, $request);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
@@ -612,28 +618,18 @@ class ComissionSessionControllerTest extends TestCase
     public function testAddWithJsonView()
     {
         $view    = $this->createMock(JsonView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-
-        $request->method('getParsedBody')->willReturn(
-            [
-              'comission' => 30,
-              'idSession' => 2,
-              'hour'      => '2019-06-26 19:05:00'
-            ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response->withStatus(201);
 
         $args = [
           'idSession' => 2
         ];
 
-
         // metthod with data post use 2 parameters in addSetup
-        $setup           = $this->addSetup($view, $request);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(201);
 
         $view->expects($this->once())
         ->method('render')
@@ -653,7 +649,7 @@ class ComissionSessionControllerTest extends TestCase
 
         $request->method('getParsedBody')->willReturn(
             [
-              'comission' => 30,
+              'comission' => 'a non numeric value',
               'idSession' => 2,
               'hour'      => '2019-06-26 19:05:00'
             ]
@@ -661,7 +657,6 @@ class ComissionSessionControllerTest extends TestCase
 
         $response         = new Slim\Psr7\Response();
         $expectedResponse = $response;
-        
         $comissionService = $this->createMock(ComissionSessionService::class);
         $sessionService   = $this->createMock(SessionService::class);
 
@@ -676,7 +671,7 @@ class ComissionSessionControllerTest extends TestCase
         $comissionService->method('update')->will($this->throwException($exception));
 
         $controller = $this->createController($view, $comissionService, $sessionService);
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         if (is_array($expectedComissions)) {
              foreach ($expectedComissions as $comission) {
@@ -693,25 +688,17 @@ class ComissionSessionControllerTest extends TestCase
         }
 
         return [ 
-            'controller'      => $controller, 
-            'expectedDatosUI' => $expectedDatosUI 
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' => $expectedResponse
         ];
     }
 
     public function testAddWithInvalidComission() 
     {
         $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
@@ -719,9 +706,13 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new ComissionInvalidException();
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
 
         $view->expects($this->once())
         ->method('render')
@@ -743,27 +734,20 @@ class ComissionSessionControllerTest extends TestCase
     public function testAddWithInvalidComissionWithJsonView() 
     {
         $view    = $this->createMock(JsonView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response->withStatus(400);
 
         $args = [
           'idSession' => 2
         ];
 
         $exception = new ComissionInvalidException();
+        
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(400);
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
 
         $view->expects($this->once())
         ->method('render')
@@ -780,27 +764,19 @@ class ComissionSessionControllerTest extends TestCase
     public function testAddWithException() 
     {
         $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
         ];
 
         $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
-
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
@@ -822,17 +798,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testAddWithExceptionWithJsonView() 
     {
         $view    = $this->createMock(JsonView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response->withStatus(500);
 
         $args = [
           'idSession' => 2
@@ -840,9 +805,13 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(500);
+
 
         $view->expects($this->once())
         ->method('render')
@@ -932,6 +901,11 @@ class ComissionSessionControllerTest extends TestCase
     public function testFormWithException()
     {
         $view             = $this->createMock(TwigWrapperView::class);
+
+        $request          = $this->createMock(Slim\Psr7\Request::class);
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
+
         $comissionService = $this->createMock(ComissionSessionService::class);
         $sessionService   = $this->createMock(SessionService::class);
 
@@ -943,10 +917,7 @@ class ComissionSessionControllerTest extends TestCase
         $sessionService->method('fetch')->will($this->throwException($exception));
 
         $controller = $this->createController($view, $comissionService, $sessionService);
-        $request    = $this->createMock(Slim\Psr7\Request::class);
 
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $expectedDatosUI = [];
 
@@ -1112,17 +1083,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testUpdateWithInvalidComission() 
     {
         $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
@@ -1130,9 +1090,13 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new ComissionInvalidException();
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
 
         $view->expects($this->once())
         ->method('render')
@@ -1154,17 +1118,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testUpdateWithInvalidComissionWithJsonView() 
     {
         $view    = $this->createMock(JsonView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response->withStatus(400);
 
         $args = [
           'idSession' => 2
@@ -1172,9 +1125,12 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new ComissionInvalidException();
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(400);
 
         $view->expects($this->once())
         ->method('render')
@@ -1190,17 +1146,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testUpdateWithComissionNotFound() 
     {
         $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
@@ -1211,6 +1156,10 @@ class ComissionSessionControllerTest extends TestCase
         $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
         $controller      = $setup['controller'];
         $expectedDatosUI = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse         = $setup['expectedResponse'];
+
 
         $view->expects($this->once())
         ->method('render')
@@ -1232,17 +1181,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testUpdateWithComissionNotFoundWithJsonView() 
     {
         $view    = $this->createMock(JsonView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response->withStatus(404);
 
         $args = [
           'idSession' => 2
@@ -1250,9 +1188,12 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new ComissionNotFoundException();
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(404);
 
         $view->expects($this->once())
         ->method('render')
@@ -1268,17 +1209,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testUpdateWithException() 
     {
         $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
 
         $args = [
           'idSession' => 2
@@ -1286,9 +1216,12 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
 
         $view->expects($this->once())
         ->method('render')
@@ -1310,17 +1243,6 @@ class ComissionSessionControllerTest extends TestCase
     public function testUpdateWithExceptionWithJsonView() 
     {
         $view    = $this->createMock(JsonView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-        $request->method('getParsedBody')->willReturn(
-          [
-            'idSession' => 2,
-            'comission' => 'a not numeric value',
-            'hour'      => '2019-06-26T19:05'
-          ]
-        );
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response->withStatus(500);
 
         $args = [
           'idSession' => 2
@@ -1328,9 +1250,12 @@ class ComissionSessionControllerTest extends TestCase
 
         $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
 
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(500);
 
         $view->expects($this->once())
         ->method('render')

@@ -112,7 +112,7 @@ class ExpensesSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $expensesService, $sessionService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
             if ($view instanceof TwigWrapperView) {
             $expectedDatosUI['message']    = [$exception->getMessage()];
@@ -654,7 +654,7 @@ class ExpensesSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $expensesService, $sessionService);
         
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         if (is_array($expectedExpenses)) {
              foreach ($expectedExpenses as $expenditure) {

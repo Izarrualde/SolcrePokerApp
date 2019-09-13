@@ -502,7 +502,7 @@ class SessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $sessionService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         foreach ($expectedSessions as $session) {
           $expectedSessionsArray[] = $session->toArray();
@@ -1296,4 +1296,280 @@ class SessionControllerTest extends TestCase
 
         $controller->delete($request, $response, $args);
     }
+
+    public function calculatePointsSetup($view)
+    {
+        $request = $this->createMock(Slim\Psr7\Request::class);
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
+
+        $sessionService = $this->createMock(SessionService::class);
+
+        $expectedSessions = $this->getAListOfSessions();
+
+        $sessionService->method('fetchAll')->willReturn($expectedSessions);
+        $sessionService->method('calculateRakeback')->willReturn(true);
+
+        $controller = $this->createController($view, $sessionService);
+
+        $expectedDatosUI = null;
+
+        foreach ($expectedSessions as $session) {
+          $sessions[] = $session->toArray();
+        }
+
+        if ($view instanceof TwigWrapperView) {
+            $expectedDatosUI['sessions'] = $sessions;
+            $expectedDatosUI['message'] = ['Puntos asignados exitosamente.'];
+        }
+
+        if ($view instanceof JsonView) {
+            $expectedResponse = $response->withStatus(200);
+        }
+
+        return [ 
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' => $expectedResponse
+        ];
+    }
+
+    public function calculatePointsWithExceptionSetup($view, $exception)
+    {
+        $request = $this->createMock(Slim\Psr7\Request::class);
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
+
+        $sessionService = $this->createMock(SessionService::class);
+
+        $expectedSessions = $this->getAListOfSessions();
+
+        $sessionService->method('fetchAll')->willReturn($expectedSessions);
+        $sessionService->method('calculateRakeback')->will($this->throwException($exception));
+
+        $controller = $this->createController($view, $sessionService);
+
+        $expectedDatosUI = null;
+
+        foreach ($expectedSessions as $session) {
+          $sessions[] = $session->toArray();
+        }
+
+        if ($view instanceof TwigWrapperView) {
+            $expectedDatosUI['sessions'] = $sessions;
+            $expectedDatosUI['message']  = [$exception->getMessage()];
+        }
+
+        if ($view instanceof JsonView) {
+            $expectedResponse = $response->withStatus(200);
+        }
+
+        return [ 
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' => $expectedResponse
+        ];
+    }
+
+    public function testCalcuatePoints()
+    {
+        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
+
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession' => 1
+        ];
+
+        $setup            = $this->calculatePointsSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('session/listAll.html.twig'),
+        );
+
+        $controller->calculatePoints($request, $response, $args);
+    }
+
+    public function testCalcuatePointsWithJsonView()
+    {
+        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
+
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession' => 1
+        ];
+
+        $setup            = $this->calculatePointsSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->calculatePoints($request, $response, $args);
+    }
+
+    public function testCalcuatePointsWithSessionNotFound()
+    {
+        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
+
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession' => 1
+        ];
+
+        $exception = new SessionNotFoundException();
+
+        $setup            = $this->calculatePointsWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('session/listAll.html.twig'),
+        );
+
+        $controller->calculatePoints($request, $response, $args);
+    }
+
+    public function testCalcuatePointsWithSessionNotFoundWithJsonView()
+    {
+        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
+
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession' => 1
+        ];
+
+        $exception = new SessionNotFoundException();
+
+        $setup            = $this->calculatePointsWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(404);
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->calculatePoints($request, $response, $args);
+    }
+
+    public function testCalcuatePointsWithException()
+    {
+        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
+
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession' => 1
+        ];
+
+        $exception = new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
+
+        $setup            = $this->calculatePointsWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('session/listAll.html.twig'),
+        );
+
+        $controller->calculatePoints($request, $response, $args);
+    }
+
+    public function testCalcuatePointsWithExceptionWithJsonView()
+    {
+        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null. y que haya llamado a calcuateRakeback
+        // puedo asumir que calculate rakeback trabaja bien. tambien podria chequearlo.
+
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession' => 1
+        ];
+
+        $exception = new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
+
+        $setup            = $this->calculatePointsWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(500);
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->calculatePoints($request, $response, $args);
+    }
+
 }

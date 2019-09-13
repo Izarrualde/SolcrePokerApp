@@ -40,7 +40,7 @@ return function (App $app) {
     $app->get('/{idSession}/buyins/{idbuyin}/remove', 'BuyinSessionController:delete');
     $app->post('/buyins/{idBuyin}/update', 'BuyinSessionController:update');
 
-    $app->get('/sessions/{idSession}/comissions', 'ComissionSessionController:listAll'); //comi
+    $app->get('/sessions/{idSession}/comissions', 'ComissionSessionController:listAll');
     $app->get('/sessions/{idSession}/comissions/{idcomission}', 'ComissionSessionController:list');
     $app->post('/sessions/{idSession}/comissions', 'ComissionSessionController:add');
     $app->get('/{idSession}/comissions/form', 'ComissionSessionController:form');

@@ -38,9 +38,9 @@ class TipSessionController extends BaseController
     public function listAll($request, $response, $args)
     {
         $idSession      = $args['idSession'];
-        $serviceTips    = null;
-        $dealerTips     = null;
-        $datosUI        = null;
+        $serviceTips    = [];
+        $dealerTips     = [];
+        $datosUI        = [];
         $message        = null;
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
@@ -127,7 +127,7 @@ class TipSessionController extends BaseController
             $data['session']['dealerTips']  = $dealerTips;
             $data['session']['serviceTips'] = $serviceTips;
             $data['message']                = $message;
-            $data['breadcrumb']          = 'Tips';
+            $data['breadcrumb']             = 'Tips';
 
         }    
 
@@ -137,17 +137,17 @@ class TipSessionController extends BaseController
     public function list($request, $response, $args)
     {
         $idSession      = $args['idSession'];
-        $datosUI        = null;
-        $comission      = null;
+        $datosUI        = [];
         $status         = null;
         $expectedStatus = parent::STATUS_CODE_200;
         $message        = null;
 
         if (isset($args['idDealerTip'])) {
             $id = $args['idDealerTip'];
+            // $keyTip = 'dealerTip';
 
             try {
-                $dealerTip = $this->dealerTipService->fetch(array('id' => $id));
+                $tip = $this->dealerTipService->fetch(array('id' => $id));
                 $status    = parent::STATUS_CODE_200;        
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
@@ -162,7 +162,7 @@ class TipSessionController extends BaseController
                 if ($status == $expectedStatus) {
                     $session   = $this->sessionService->fetch(array('id' => $idSession));
                     $datosUI['session']              = isset($session) ? $session->toArray() : [];
-                    $datosUI['session']['dealerTip'] = isset($dealerTip) ? $dealerTip->toArray() : [];
+                    $datosUI['session']['dealerTip'] = isset($tip) ? $tip->toArray() : [];
                 }
 
                 $datosUI['breadcrumb'] = 'Editar DealerTip';
@@ -170,17 +170,12 @@ class TipSessionController extends BaseController
                     $datosUI['message'] = $message;    
                 }  
             }
-
-            // JsonView
-            if ($this->view instanceof JsonView) {
-                $datosUI  = isset($dealerTip) ? $dealerTip->toArray() : [];
-                $response = $response->withStatus($status);
-            }
         } elseif (isset($args['idServiceTip'])) {
             $id = $args['idServiceTip'];
+            // $keyTip = 'serviceTip';
 
             try {
-                $serviceTip = $this->serviceTipService->fetch(array('id' => $id));          
+                $tip = $this->serviceTipService->fetch(array('id' => $id));          
                 $status     = parent::STATUS_CODE_200;        
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
@@ -194,7 +189,7 @@ class TipSessionController extends BaseController
                 if ($status == $expectedStatus) {
                     $session   = $this->sessionService->fetch(array('id' => $idSession));
                     $datosUI['session']               = isset($session) ? $session->toArray() : [];
-                    $datosUI['session']['serviceTip'] = isset($serviceTip) ? $serviceTip->toArray() : [];
+                    $datosUI['session']['serviceTip'] = isset($tip) ? $tip->toArray() : [];
                 }
 
                 $datosUI['breadcrumb'] = 'Editar ServiceTip';
@@ -202,13 +197,14 @@ class TipSessionController extends BaseController
                     $datosUI['message'] = $message;
                 }
             }
-
-            // JsonView
-            if ($this->view instanceof JsonView) {
-                $datosUI  = isset($serviceTip) ? $serviceTip->toArray() : [];
-                $response = $response->withStatus($status);
-            }
         }
+
+        // JsonView
+        if ($this->view instanceof JsonView) {
+            $datosUI          = isset($tip) ? $tip->toArray() : [];
+            $response         = $response->withStatus($status);
+        }
+
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -230,7 +226,7 @@ class TipSessionController extends BaseController
     public function add($request, $response, $args)
     {
         $idSession        = $args['idSession'];
-        $datosUI          = null;
+        $datosUI          = [];
         $message          = null;
         $statusDealerTip  = null;
         $statusServiceTip = null;
@@ -278,15 +274,8 @@ class TipSessionController extends BaseController
             }
 
             if ($this->view instanceof JsonView ) {
-
-                if (isset($dealerTip)) {
-                    $datosUI['dealerTip'] = $dealerTip->toArray();
-                }    
-
-                if (isset($serviceTip)) {
-                    $datosUI['serviceTip'] = $serviceTip->toArray();
-                } 
-
+                $datosUI['dealerTip']  = isset($dealerTip) ? $dealerTip->toArray() : [];
+                $datosUI['serviceTip'] = isset($serviceTip) ? $serviceTip->toArray() : []; 
                 $response = $response->withStatus($this->setStatusForResponse($statusDealerTip, $statusServiceTip, $expectedStatus));
             }
 
@@ -326,7 +315,7 @@ class TipSessionController extends BaseController
 
     public function update($request, $response, $args)
     {
-        $datosUI          = null;
+        $datosUI          = [];
         $message          = null;
         $statusDealerTip  = null;
         $statusServiceTip = null;
@@ -336,8 +325,9 @@ class TipSessionController extends BaseController
 
         if (is_array($post)) {
             if (isset($args['idDealerTip'])) {
+                $keyTip = 'dealerTip';
                 try {
-                    $dealerTip = $this->dealerTipService->update($post);
+                    $tip = $this->dealerTipService->update($post);
                     $message[] = 'El dealerTip se actualizó exitosamente.';
                     $statusDealerTip = parent::STATUS_CODE_200;
                 } catch (DealerTipInvalidException $e) {
@@ -350,8 +340,9 @@ class TipSessionController extends BaseController
             }
 
             if (isset($args['idServiceTip'])) {
+                $keyTip = 'serviceTip';
                 try {
-                    $serviceTip = $this->serviceTipService->update($post);
+                    $tip = $this->serviceTipService->update($post);
                     $message[] = 'El serviceTip se actualizó exitosamente.';
                     $statusServiceTip = parent::STATUS_CODE_200;
                 } catch (ServiceTipInvalidException $e) {
@@ -364,14 +355,7 @@ class TipSessionController extends BaseController
             }
 
             if ($this->view instanceof JsonView ) {
-                if (isset($dealerTip)) {
-                    $datosUI['dealerTip'] = $dealerTip->toArray();     
-                }    
-
-                if (isset($serviceTip)) {
-                    $datosUI['serviceTip'] = $serviceTip->toArray();
-                } 
-
+                $datosUI[$keyTip]  = isset($tip) ? $tip->toArray() : [];
                 $response = $response->withStatus(isset($statusDealerTip) ? $statusDealerTip : $statusServiceTip);
             }
 

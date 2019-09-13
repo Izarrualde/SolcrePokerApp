@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="horaInicio"> hora inicio: </label>
-                                    <input class="form-control" name="startTime" id="startTime" type="datetime-local" placeholder="hora de inicio" required="true" value="">
+                                    <input class="form-control" name="startTime" id="startTime" type="datetime-local" placeholder="hora de inicio" required="true" value="{{ 'now'|date('Y-m-d\\TH:i') }}">
                                     <small id="end" class="form-tet text-muted"> Fecha y hora de inicio </small>
                                 </div>
                                 <div class="form-group">

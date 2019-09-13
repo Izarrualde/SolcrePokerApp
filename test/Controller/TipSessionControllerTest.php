@@ -13,6 +13,8 @@ use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
 use \Solcre\Pokerclub\Exception\ServiceTipInvalidException;
+use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
+use Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
 use Test\AppWrapper;
 use Solcre\lmsuy\Controller\TipSessionController;
 
@@ -164,7 +166,7 @@ class TipSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $dealerTipService, $serviceTipService, $sessionService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         if ($view instanceof TwigWrapperView) {
             $expectedDatosUI['message']    = [$exception->getMessage()];
@@ -172,8 +174,8 @@ class TipSessionControllerTest extends TestCase
         }
 
         if ($view instanceof JsonView) {
-            $expectedDatosUI['dealerTips']  = null;
-            $expectedDatosUI['serviceTips'] = null;
+            $expectedDatosUI['dealerTips']  = [];
+            $expectedDatosUI['serviceTips'] = [];
         }
 
         return [ 
@@ -430,6 +432,10 @@ class TipSessionControllerTest extends TestCase
             $expectedDatosUI['breadcrumb'] = 'Editar DealerTip';
         }
 
+        if ($view instanceof JsonView) {
+            $expectedDatosUI = [];
+        }
+
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI, 
@@ -462,6 +468,10 @@ class TipSessionControllerTest extends TestCase
             $expectedDatosUI['breadcrumb'] = 'Editar ServiceTip';
         }
 
+        if ($view instanceof JsonView) {
+            $expectedDatosUI = [];
+        }
+
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI, 
@@ -480,9 +490,9 @@ class TipSessionControllerTest extends TestCase
             'idDealerTip' => 1
         ];
 
-        $setup           = $this->listDealerTipSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->listDealerTipSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
         $request          = $setup['request'];
         $response         = $setup['response'];
         $expectedResponse = $setup['expectedResponse'];
@@ -532,13 +542,13 @@ class TipSessionControllerTest extends TestCase
         $view    = $this->createMock(TwigWrapperView::class);
 
         $args = [
-            'idSession'   => 2,
+            'idSession'    => 2,
             'idServiceTip' => 1
         ];
 
-        $setup           = $this->listServiceTipSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
+        $setup            = $this->listServiceTipSetup($view);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
         $request          = $setup['request'];
         $response         = $setup['response'];
         $expectedResponse = $setup['expectedResponse'];
@@ -559,7 +569,7 @@ class TipSessionControllerTest extends TestCase
         $view    = $this->createMock(JsonView::class);
 
         $args = [
-            'idSession'   => 2,
+            'idSession'    => 2,
             'idServiceTip' => 1
         ];
 
@@ -610,7 +620,6 @@ class TipSessionControllerTest extends TestCase
         $controller->list($request, $response, $args);
     }
 
-
     public function testListDealerTipWithExceptionWithJsonView()
     {
         $view    = $this->createMock(JsonView::class);
@@ -645,7 +654,7 @@ class TipSessionControllerTest extends TestCase
         $view    = $this->createMock(TwigWrapperView::class);
 
         $args = [
-            'idSession'   => 2,
+            'idSession'    => 2,
             'idServiceTip' => 1
         ];
 
@@ -675,7 +684,7 @@ class TipSessionControllerTest extends TestCase
         $view    = $this->createMock(JsonView::class);
 
         $args = [
-            'idSession'   => 2,
+            'idSession'    => 2,
             'idServiceTip' => 1
         ];
 
@@ -891,7 +900,8 @@ class TipSessionControllerTest extends TestCase
 
         if ($view instanceof JsonView) {
             $expectedDatosUI = [
-              'serviceTip' => $expectedServiceTipAdded->toArray()
+                'dealerTip'  => [],
+                'serviceTip' => $expectedServiceTipAdded->toArray()
           ];
         }
 
@@ -985,7 +995,8 @@ class TipSessionControllerTest extends TestCase
 
         if ($view instanceof JsonView) {
             $expectedDatosUI = [
-              'dealerTip'  => $expectedDealerTipAdded->toArray()
+                'dealerTip'  => $expectedDealerTipAdded->toArray(),
+                'serviceTip' => []
             ];
         }
 
@@ -1044,7 +1055,7 @@ class TipSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $dealerTipService, $serviceTipService, $sessionService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         foreach ($expectedDealerTips as $dealerTip) {
           $expectedDealerTipsArray[] = $dealerTip->toArray();
@@ -1062,6 +1073,13 @@ class TipSessionControllerTest extends TestCase
             $expectedDatosUI['message']                = [$exceptionDealerTip->getMessage(), $exceptionServiceTip->getMessage()];
         }
 
+        if ($view instanceof JsonView) {
+            $expectedDatosUI = [
+                'dealerTip'  => [],
+                'serviceTip' => []
+            ];
+        }
+
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI,
@@ -1074,7 +1092,6 @@ class TipSessionControllerTest extends TestCase
     public function testAdd()
     {
         $view    = $this->createMock(TwigWrapperView::class);
-
 
         $args = [
           'idSession' => 2
@@ -1906,7 +1923,7 @@ class TipSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $dealerTipService, $serviceTipService, $sessionService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         foreach ($expectedDealerTips as $dealerTip) {
           $expectedDealerTipsArray[] = $dealerTip->toArray();
@@ -1922,6 +1939,10 @@ class TipSessionControllerTest extends TestCase
             $expectedDatosUI['session']['serviceTips'] = $expectedServiceTipsArray;
             $expectedDatosUI['breadcrumb']             = 'Tips';
             $expectedDatosUI['message']                = [$exception->getMessage()];
+        }
+
+        if ($view instanceof JsonView) {
+            $expectedDatosUI['dealerTip'] = [];
         }
 
         return [ 
@@ -2085,7 +2106,7 @@ class TipSessionControllerTest extends TestCase
 
         $controller = $this->createController($view, $dealerTipService, $serviceTipService, $sessionService);
 
-        $expectedDatosUI = null;
+        $expectedDatosUI = [];
 
         foreach ($expectedDealerTips as $dealerTip) {
           $expectedDealerTipsArray[] = $dealerTip->toArray();
@@ -2101,6 +2122,10 @@ class TipSessionControllerTest extends TestCase
             $expectedDatosUI['session']['serviceTips'] = $expectedServiceTipsArray;
             $expectedDatosUI['breadcrumb']             = 'Tips';
             $expectedDatosUI['message']                = [$exception->getMessage()];
+        }
+
+        if ($view instanceof JsonView) {
+            $expectedDatosUI['serviceTip'] = [];
         }
 
         return [ 
@@ -2561,6 +2586,72 @@ class TipSessionControllerTest extends TestCase
 
     }
 
+    public function deleteDealerTipWIthExceptionSetup($view, $exception)
+    {
+        $request = $this->createMock(Slim\Psr7\Request::class);
+        $request->method('getQueryParams')->willReturn(
+          [
+            'idSession' => 2
+          ]
+        );
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
+
+
+        $dealerTipService  = $this->createMock(DealerTipSessionService::class);
+        $serviceTipService = $this->createMock(ServiceTipSessionService::class);
+        $sessionService    = $this->createMock(SessionService::class);
+
+        $expectedSession = new SessionEntity(
+          2,
+          date_create('2019-06-27 15:00:00'),
+          'another test session',
+          'another test description',
+          'another test photo',
+          10,
+          date_create('2019-06-27 19:00:00'),
+          date_create('2019-06-27 19:30:00'),
+          date_create('2019-06-27 23:30:00')
+        );
+
+        $expectedDealerTips = $this->getAListOfDealerTips($expectedSession);
+        $expectedServiceTips = $this->getAListOfServiceTips($expectedSession);
+
+        $sessionService->method('fetch')->willReturn($expectedSession);
+        $dealerTipService->method('fetchAll')->willReturn($expectedDealerTips);
+        $dealerTipService->method('delete')->will($this->throwException($exception));
+        $serviceTipService->method('fetchAll')->willReturn($expectedServiceTips);
+
+        $controller = $this->createController($view, $dealerTipService, $serviceTipService, $sessionService);
+
+        $expectedDatosUI = null;
+
+        foreach ($expectedDealerTips as $dealerTip) {
+          $expectedDealerTipsArray[] = $dealerTip->toArray();
+        }
+
+        foreach ($expectedServiceTips as $serviceTip) {
+          $expectedServiceTipsArray[] = $serviceTip->toArray();
+        }
+
+        if ($view instanceof TwigWrapperView) {
+            $expectedDatosUI['session']                = $expectedSession->toArray();
+            $expectedDatosUI['session']['dealerTips']  = $expectedDealerTipsArray;
+            $expectedDatosUI['session']['serviceTips'] = $expectedServiceTipsArray;
+            $expectedDatosUI['breadcrumb']             = 'Tips';
+            $expectedDatosUI['message']                = [$exception->getMessage()];
+        }
+
+        return [ 
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' =>  $expectedResponse
+        ];
+
+    }
 
     public function deleteServiceTipSetup($view)
     {
@@ -2630,9 +2721,74 @@ class TipSessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' =>  $expectedResponse
         ];
-
     }
 
+    public function deleteServiceTipWithExceptionSetup($view, $exception)
+    {
+        $request = $this->createMock(Slim\Psr7\Request::class);
+        $request->method('getQueryParams')->willReturn(
+          [
+            'idSession' => 2
+          ]
+        );
+
+        $response         = new Slim\Psr7\Response();
+        $expectedResponse = $response;
+
+
+        $dealerTipService  = $this->createMock(DealerTipSessionService::class);
+        $serviceTipService = $this->createMock(ServiceTipSessionService::class);
+        $sessionService    = $this->createMock(SessionService::class);
+
+        $expectedSession = new SessionEntity(
+          2,
+          date_create('2019-06-27 15:00:00'),
+          'another test session',
+          'another test description',
+          'another test photo',
+          10,
+          date_create('2019-06-27 19:00:00'),
+          date_create('2019-06-27 19:30:00'),
+          date_create('2019-06-27 23:30:00')
+        );
+
+        $expectedDealerTips = $this->getAListOfDealerTips($expectedSession);
+        $expectedServiceTips = $this->getAListOfServiceTips($expectedSession);
+
+        $sessionService->method('fetch')->willReturn($expectedSession);
+        $dealerTipService->method('fetchAll')->willReturn($expectedDealerTips);
+        $serviceTipService->method('delete')->will($this->throwException($exception));
+        $serviceTipService->method('fetchAll')->willReturn($expectedServiceTips);
+
+        $controller = $this->createController($view, $dealerTipService, $serviceTipService, $sessionService);
+
+        $expectedDatosUI = null;
+
+        foreach ($expectedDealerTips as $dealerTip) {
+          $expectedDealerTipsArray[] = $dealerTip->toArray();
+        }
+
+        foreach ($expectedServiceTips as $serviceTip) {
+          $expectedServiceTipsArray[] = $serviceTip->toArray();
+        }
+
+        if ($view instanceof TwigWrapperView) {
+            $expectedDatosUI['session']                = $expectedSession->toArray();
+            $expectedDatosUI['session']['dealerTips']  = $expectedDealerTipsArray;
+            $expectedDatosUI['session']['serviceTips'] = $expectedServiceTipsArray;
+            $expectedDatosUI['breadcrumb']             = 'Tips';
+            $expectedDatosUI['message']                = [$exception->getMessage()];
+        }
+
+        return [ 
+            'controller'       => $controller, 
+            'expectedDatosUI'  => $expectedDatosUI,
+            'request'          => $request,
+            'response'         => $response,
+            'expectedResponse' =>  $expectedResponse
+        ];
+
+    }
 
     public function testDeleteDealerTip() 
     {
@@ -2682,6 +2838,134 @@ class TipSessionControllerTest extends TestCase
         $request          = $setup['request'];
         $response         = $setup['response'];
         $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->delete($request, $response, $args);
+    }
+
+    public function testDeleteDealerTipNotFound() 
+    {
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idDealerTip'  => 1
+        ];
+
+        $exception = new DealerTipNotFoundException();
+
+        $setup            = $this->deleteDealerTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('tipSession/listAll.html.twig'),
+        );
+
+        $controller->delete($request, $response, $args);
+    }
+
+    public function testDeleteDealerTipWithException() 
+    {
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idDealerTip'  => 1
+        ];
+
+        $exception = new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
+
+        $setup            = $this->deleteDealerTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('tipSession/listAll.html.twig'),
+        );
+
+        $controller->delete($request, $response, $args);
+    }
+
+    public function testDeleteDealerTipWithExceptionWithJsonView() 
+    {
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idDealerTip'  => 1
+        ];
+
+        $exception = new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
+
+        $setup            = $this->deleteDealerTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(500);
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->delete($request, $response, $args);
+    }
+
+    public function testDeleteDealerTipNotFoundWithJsonView() 
+    {
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idDealerTip'  => 1
+        ];
+
+        $exception = new DealerTipNotFoundException();
+
+        $setup            = $this->deleteDealerTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->WithStatus(404);
 
         $view->expects($this->once())
         ->method('render')
@@ -2753,4 +3037,133 @@ class TipSessionControllerTest extends TestCase
 
         $controller->delete($request, $response, $args);
     } 
+
+    public function testDeleteServiceTipNotFound() 
+    {
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idServiceTip'  => 1
+        ];
+
+        $exception = new ServiceTipNotFoundException();
+
+        $setup            = $this->deleteServiceTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('tipSession/listAll.html.twig'),
+        );
+
+        $controller->delete($request, $response, $args);
+    } 
+
+    public function testDeleteServiceTipNotFoundWithJsonView() 
+    {
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idServiceTip'  => 1
+        ];
+
+        $exception = new ServiceTipNotFoundException();
+
+        $setup            = $this->deleteServiceTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(404);
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->delete($request, $response, $args);
+    } 
+
+    public function testDeleteServiceTipWithException() 
+    {
+        $view = $this->createMock(TwigWrapperView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idServiceTip'  => 1
+        ];
+
+        $exception = new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404);
+
+        $setup            = $this->deleteServiceTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $setup['expectedResponse'];
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $view->expects($this->once())
+        ->method('setTemplate')
+        ->with(
+            $this->equalTo('tipSession/listAll.html.twig'),
+        );
+
+        $controller->delete($request, $response, $args);
+    } 
+
+    public function testDeleteServiceTipWithExceptionWithJsonView() 
+    {
+        $view = $this->createMock(JsonView::class);
+
+        $args = [
+          'idSession'    => 2,
+          'idServiceTip'  => 1
+        ];
+
+        $exception = new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404);
+
+        $setup            = $this->deleteServiceTipWithExceptionSetup($view, $exception);
+        $controller       = $setup['controller'];
+        $expectedDatosUI  = $setup['expectedDatosUI'];
+        $request          = $setup['request'];
+        $response         = $setup['response'];
+        $expectedResponse = $response->withStatus(500);
+
+        $view->expects($this->once())
+        ->method('render')
+        ->with(
+            $this->equalTo($request),
+            $this->equalTo($expectedResponse),
+            $this->equalTo($expectedDatosUI),
+        );
+
+        $controller->delete($request, $response, $args);
+    } 
+
 }
