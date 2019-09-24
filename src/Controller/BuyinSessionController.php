@@ -171,19 +171,24 @@ class BuyinSessionController extends BaseController
 
         if (is_array($post)) {
             try {
+                var_dump('en Controller 1');
                 $buyin = $this->buyinSessionService->add($post);
+                var_dump('en Controller 2');
                 $message[] = 'El buyin se agregó exitosamente';
                 $status = parent::STATUS_CODE_201;
             } catch (BuyinInvalidException $e) {
                 $message[] = $e->getMessage();
+                var_dump('en Controller 3');
                 $status    = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
+                var_dump('en Controller 4');
                 $status    = parent::STATUS_CODE_500;
             }
             
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
+                var_dump('en Controller 5');
                 $datosUI  =  $this->loadData($idSession, $message);
             }
 

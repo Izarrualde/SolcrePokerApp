@@ -9,6 +9,7 @@ use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Service\SessionService;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\SessionInvalidException;
+use Solcre\Pokerclub\Exception\ClassNotExistingException;
 use Exception;
 
 class SessionController extends BaseController
@@ -248,6 +249,9 @@ class SessionController extends BaseController
         } catch (SessionNotFoundException $e) {
             $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_404;
+        } catch (ClassNotExistingException $e) {
+            $message[] = $e->getMessage();
+            $status    = parent::STATUS_CODE_400;
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_500;
