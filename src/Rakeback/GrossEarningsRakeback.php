@@ -2,6 +2,7 @@
 namespace Solcre\lmsuy\Rakeback;
 
 use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Rakeback\RakebackAlgorithm;
 
 class GrossEarningsRakeback implements RakebackAlgorithm
 {
