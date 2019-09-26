@@ -141,7 +141,7 @@ class UserSessionController extends BaseController
                     'start'      => $post['start'],
                     'end'        => $post['end'],
                     'isApproved' => $post['approved'],
-                    'points'     => $post['accumulatedPoints'],
+                    'points'     => $post['points'],
                     'idSession'  => $post['idSession'],
                     'idUser'     => $userId
                 ];
