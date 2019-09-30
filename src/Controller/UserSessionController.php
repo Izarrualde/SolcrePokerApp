@@ -138,8 +138,6 @@ class UserSessionController extends BaseController
 
             foreach ($post['user_id'] as $userId) {
                 $data = [
-                    'start'      => $post['start'],
-                    'end'        => $post['end'],
                     'isApproved' => $post['approved'],
                     'points'     => $post['points'],
                     'idSession'  => $post['idSession'],
