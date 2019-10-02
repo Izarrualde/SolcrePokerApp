@@ -506,13 +506,13 @@ class UserSessionControllerTest extends TestCase
         $request = $this->createMock(Slim\Psr7\Request::class);
         $request->method('getParsedBody')->willReturn(
           [
-            'idSession'         => 2,
-            'user_id'           => [1],
-            'start'             => '2019-06-27 19:00:00',
-            'end'               => null,
-            'approved'          => 1,
-            'accumulatedPoints' => 0,
-            'idSession'         => 2
+            'idSession' => 2,
+            'user_id'   => [1],
+            'start'     => '2019-06-27 19:00:00',
+            'end'       => null,
+            'approved'  => 1,
+            'points'    => 0,
+            'idSession' => 2
           ]
         );
 
@@ -541,7 +541,7 @@ class UserSessionControllerTest extends TestCase
           $expectedSession,
           $post['user_id'][0],
           $post['approved'],
-          $post['accumulatedPoints'],
+          $post['points'],
           null,
           date_create($post['start']),
           null,
@@ -606,11 +606,10 @@ class UserSessionControllerTest extends TestCase
                 'user2' => 2,
                 'user3' => 3
             ],
-            'start'             => '2019-06-27 19:00:00',
-            'end'               => null,
-            'approved'          => 1,
-            'accumulatedPoints' => 0,
-            'idSession'         => 2
+            'end'       => null,
+            'approved'  => 1,
+            'points'    => 0,
+            'idSession' => 2
           ]
         );
 
@@ -639,9 +638,9 @@ class UserSessionControllerTest extends TestCase
           $expectedSession,
           $post['user_id']['user1'],
           $post['approved'],
-          $post['accumulatedPoints'],
+          $post['points'],
           null,
-          date_create($post['start']),
+          null,
           null,
           $user1 = New UserEntity($post['user_id']['user1'])
         );
@@ -651,9 +650,9 @@ class UserSessionControllerTest extends TestCase
           $expectedSession,
           $post['user_id']['user2'],
           $post['approved'],
-          $post['accumulatedPoints'],
+          $post['points'],
           null,
-          date_create($post['start']),
+          null,
           null,
           $user1 = New UserEntity($post['user_id']['user2'])
         );
@@ -663,9 +662,9 @@ class UserSessionControllerTest extends TestCase
           $expectedSession,
           $post['user_id']['user3'],
           $post['approved'],
-          $post['accumulatedPoints'],
+          $post['points'],
           null,
-          date_create($post['start']),
+          null,
           null,
           $user1 = New UserEntity($post['user_id']['user3'])
         );
@@ -681,7 +680,7 @@ class UserSessionControllerTest extends TestCase
             1,
             0,
             null,
-            date_create('2019-06-27 19:00:00'),
+            null,
             null,
             $user1 = New UserEntity(2)),
           $expectedUserAdded1,
@@ -692,7 +691,6 @@ class UserSessionControllerTest extends TestCase
 
 ///////////////////////////////////////////
                 $data1 = [
-                    'start'      => '2019-06-27 19:00:00',
                     'end'        => null,
                     'isApproved' => 1,
                     'points'     => 0,
@@ -701,7 +699,6 @@ class UserSessionControllerTest extends TestCase
                 ];
 
                 $data2 = [
-                    'start'      => '2019-06-27 19:00:00',
                     'end'        => null,
                     'isApproved' => 1,
                     'points'     => 0,
@@ -710,7 +707,6 @@ class UserSessionControllerTest extends TestCase
                 ];
 
                 $data3 = [
-                    'start'      => '2019-06-27 19:00:00',
                     'end'        => null,
                     'isApproved' => 1,
                     'points'     => 0,
@@ -806,12 +802,12 @@ class UserSessionControllerTest extends TestCase
         $request->method('getParsedBody')->willReturn(
           [
             'userSession to add',
-            'idSession'         => 2,
-            'user_id'           => [1],
-            'start'             => '2019-06-27 19:00:00',
-            'approved'          => 1,
-            'accumulatedPoints' => 0,
-            'idSession'         => 2
+            'idSession' => 2,
+            'user_id'   => [1],
+            'start'     => '2019-06-27 19:00:00',
+            'approved'  => 1,
+            'points'    => 0,
+            'idSession' => 2
           ]
         );
 
@@ -845,13 +841,13 @@ class UserSessionControllerTest extends TestCase
         $request = $this->createMock(Slim\Psr7\Request::class);
         $request->method('getParsedBody')->willReturn(
           [
-            'idSession'         => 2,
-            'user_id'           => [1],
-            'start'             => '2019-06-27 19:00:00',
-            'end'               => '2019-06-27 23:00:00',
-            'approved'          => 1,
-            'accumulatedPoints' => 0,
-            'idSession'         => 2
+            'idSession' => 2,
+            'user_id'   => [1],
+            'start'     => '2019-06-27 19:00:00',
+            'end'       => '2019-06-27 23:00:00',
+            'approved'  => 1,
+            'points'    => 0,
+            'idSession' => 2
           ]
         );
 
@@ -1107,7 +1103,6 @@ class UserSessionControllerTest extends TestCase
           'idSession'     => 2
         ];
 
-        // metthod with data post use 2 parameters in addSetup
         $setup            = $this->addManySetup($view);
         $controller       = $setup['controller'];
         $expectedDatosUI  = $setup['expectedDatosUI'];
@@ -1140,7 +1135,6 @@ class UserSessionControllerTest extends TestCase
           'idSession'     => 2
         ];
 
-        // metthod with data post use 2 parameters in addSetup
         $setup            = $this->addManySetup($view);
         $controller       = $setup['controller'];
         $expectedDatosUI  = $setup['expectedDatosUI'];

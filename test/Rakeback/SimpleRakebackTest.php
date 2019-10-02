@@ -1,11 +1,11 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Entity\UserSessionEntity;
-use Solcre\lmsuy\Entity\ComissionSessionEntity;
-use Solcre\lmsuy\Entity\ExpensesSessionEntity;
-use Solcre\lmsuy\Service\SessionService;
+use Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\ComissionSessionEntity;
+use Solcre\Pokerclub\Entity\ExpensesSessionEntity;
+use Solcre\Pokerclub\Service\SessionService;
 use Solcre\lmsuy\Rakeback\SimpleRakeback;
 use Doctrine\Common\Collections\ArrayCollection;
 
