@@ -34,7 +34,7 @@ class BuyinSessionController extends BaseController
     }
 
     public function listAll($request, $response, $args)
-        {
+    {
         $idSession      = $args['idSession'];
         $buyins         = null;
         $datosUI        = [];
@@ -43,11 +43,11 @@ class BuyinSessionController extends BaseController
         $expectedStatus = parent::STATUS_CODE_200;
 
         try {
-            $session = $this->sessionService->fetch(array('id' => $idSession));   
+            $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
                 $message[] = $e->getMessage();
-                $status  = parent::STATUS_CODE_404;
+                $status    = parent::STATUS_CODE_404;
         }
         
         $datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
@@ -64,7 +64,7 @@ class BuyinSessionController extends BaseController
                 $datosUI['session']['buyins'] = $buyins;
             }
 
-            $datosUI['breadcrumb']        = 'Buyins';
+            $datosUI['breadcrumb'] = 'Buyins';
 
             if (isset($message)) {
                 $datosUI['message'] = $message;
@@ -73,7 +73,7 @@ class BuyinSessionController extends BaseController
 
         // JsonView
         if ($this->view instanceof JsonView) {
-            $datosUI = isset($buyins) ? $buyins : [];
+            $datosUI  = isset($buyins) ? $buyins : [];
             $response = $response->withStatus($status);
         }
 
@@ -91,14 +91,14 @@ class BuyinSessionController extends BaseController
         $message        = null;
 
         try {
-            $buyin    = $this->buyinSessionService->fetch(array('id' => $id));
-            $status = parent::STATUS_CODE_200;             
+            $buyin  = $this->buyinSessionService->fetch(array('id' => $id));
+            $status = parent::STATUS_CODE_200;
         } catch (BuyinNotFoundException $e) {
             $message[] = $e->getMessage();
-            $status = parent::STATUS_CODE_404;
+            $status    = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
-            $status  = parent::STATUS_CODE_500;
+            $status    = parent::STATUS_CODE_500;
         }
 
         // TwigWrapperView
@@ -136,8 +136,8 @@ class BuyinSessionController extends BaseController
             $this->view->setTemplate($template);
                 
             try {
-               $session = $this->sessionService->fetch(array('id' => $idSession)); 
-            // @codeCoverageIgnoreStart   
+                $session = $this->sessionService->fetch(array('id' => $idSession));
+            // @codeCoverageIgnoreStart
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
             }
@@ -163,11 +163,11 @@ class BuyinSessionController extends BaseController
 
     public function add($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $message        = null;
-        $status         = null;
+        $post      = $request->getParsedBody();
+        $idSession = $args['idSession'];
+        $datosUI   = [];
+        $message   = null;
+        $status    = null;
 
         if (is_array($post)) {
             try {
@@ -189,10 +189,9 @@ class BuyinSessionController extends BaseController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = isset($buyin) ? $buyin->toArray() : [];
+                $datosUI  = isset($buyin) ? $buyin->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
-
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -229,7 +228,7 @@ class BuyinSessionController extends BaseController
             $datosUI['breadcrumb']              = 'Nuevo Buyin';
             
             if (isset($message)) {
-                $datosUI['message']    = $message;                
+                $datosUI['message'] = $message;
             }
         }
 
@@ -238,15 +237,15 @@ class BuyinSessionController extends BaseController
 
     public function update($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $post['idSession'];
-        $datosUI        = [];
-        $message        = null;
-        $status         = null;
+        $post      = $request->getParsedBody();
+        $idSession = $post['idSession'];
+        $datosUI   = [];
+        $message   = null;
+        $status    = null;
 
         if (is_array($post)) {
             try {
-                $buyin = $this->buyinSessionService->update($post);
+                $buyin     = $this->buyinSessionService->update($post);
                 $message[] = 'El buyin se actualizó exitosamente';
                 $status    = parent::STATUS_CODE_200;
             } catch (BuyinInvalidException $e) {
@@ -269,7 +268,7 @@ class BuyinSessionController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($buyin) ? $buyin->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -278,15 +277,15 @@ class BuyinSessionController extends BaseController
 
     public function delete($request, $response, $args)
     {
-        $idSession      = $args['idSession'];
-        $id             = $args['idbuyin'];
-        $datosUI        = null;
-        $message        = null;
-        $status         = null;
+        $idSession = $args['idSession'];
+        $id        = $args['idbuyin'];
+        $datosUI   = null;
+        $message   = null;
+        $status    = null;
 
         try {
-            $delete = $this->buyinSessionService->delete($id);
-            $message[]  = 'El buyin se eliminó exitosamente';
+            $delete    = $this->buyinSessionService->delete($id);
+            $message[] = 'El buyin se eliminó exitosamente';
             $status    = parent::STATUS_CODE_204;
         } catch (BuyinNotFoundException $e) {
             $message[] = $e->getMessage();

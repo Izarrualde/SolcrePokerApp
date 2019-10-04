@@ -600,11 +600,11 @@ class UserSessionControllerTest extends TestCase
         $request = $this->createMock(Slim\Psr7\Request::class);
         $request->method('getParsedBody')->willReturn(
           [
-            'idSession'         => 2,
-            'user_id'           => [
-                'user1' => 1,
-                'user2' => 2,
-                'user3' => 3
+            'idSession' => 2,
+            'user_id'   => [
+                  'user1' => 1,
+                  'user2' => 2,
+                  'user3' => 3
             ],
             'end'       => null,
             'approved'  => 1,
@@ -613,11 +613,11 @@ class UserSessionControllerTest extends TestCase
           ]
         );
 
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
+        $response           = new Slim\Psr7\Response();
+        $expectedResponse   = $response;
         $userSessionService = $this->createMock(UserSessionService::class);
-        $userService = $this->createMock(UserService::class);
-        $sessionService = $this->createMock(SessionService::class);
+        $userService        = $this->createMock(UserService::class);
+        $sessionService     = $this->createMock(SessionService::class);
 
         $post = $request->getParsedBody();
 
@@ -669,7 +669,6 @@ class UserSessionControllerTest extends TestCase
           $user1 = New UserEntity($post['user_id']['user3'])
         );
 
-        //$expectedUsersAdded = [];
         $expectedUsersAdded = [$expectedUserAdded1, $expectedUserAdded2, $expectedUserAdded3];
 
         $expectedUsersSession = [
@@ -688,10 +687,7 @@ class UserSessionControllerTest extends TestCase
           $expectedUserAdded3
         ];
 
-
-///////////////////////////////////////////
                 $data1 = [
-                    'end'        => null,
                     'isApproved' => 1,
                     'points'     => 0,
                     'idSession'  => 2,
@@ -699,7 +695,6 @@ class UserSessionControllerTest extends TestCase
                 ];
 
                 $data2 = [
-                    'end'        => null,
                     'isApproved' => 1,
                     'points'     => 0,
                     'idSession'  => 2,
@@ -707,15 +702,12 @@ class UserSessionControllerTest extends TestCase
                 ];
 
                 $data3 = [
-                    'end'        => null,
                     'isApproved' => 1,
                     'points'     => 0,
                     'idSession'  => 2,
                     'idUser'     => 3
                 ];
 
-
-        ////////////////////////////////////////////
         $map = [
             [$data1, null, $expectedUserAdded1],
             [$data2, null, $expectedUserAdded2],
@@ -1372,6 +1364,7 @@ class UserSessionControllerTest extends TestCase
         $request          = $setup['request'];
         $response         = $setup['response'];
         $expectedResponse = $setup['expectedResponse'];
+
 
         $view->expects($this->once())
         ->method('render')

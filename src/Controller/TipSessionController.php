@@ -103,7 +103,7 @@ class TipSessionController extends BaseController
 
             // @codeCoverageIgnoreStart
             try {
-                $session = $this->sessionService->fetch(array('id' => $idSession));         
+                $session = $this->sessionService->fetch(array('id' => $idSession));
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
             }
@@ -112,7 +112,7 @@ class TipSessionController extends BaseController
             $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
             $datosServiceTips = $this->serviceTipService->fetchAll(array('session' => $idSession));
 
-            $dealerTips = [];
+            $dealerTips  = [];
             $serviceTips = [];
 
             foreach ($datosDealerTips as $dealerTip) {
@@ -128,8 +128,7 @@ class TipSessionController extends BaseController
             $data['session']['serviceTips'] = $serviceTips;
             $data['message']                = $message;
             $data['breadcrumb']             = 'Tips';
-
-        }    
+        }
 
         return $data;
     }
@@ -144,15 +143,14 @@ class TipSessionController extends BaseController
 
         if (isset($args['idDealerTip'])) {
             $id = $args['idDealerTip'];
-            // $keyTip = 'dealerTip';
 
             try {
                 $tip = $this->dealerTipService->fetch(array('id' => $id));
-                $status    = parent::STATUS_CODE_200;        
+                $status    = parent::STATUS_CODE_200;
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status  = parent::STATUS_CODE_404;
-            } 
+            }
 
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
@@ -167,20 +165,19 @@ class TipSessionController extends BaseController
 
                 $datosUI['breadcrumb'] = 'Editar DealerTip';
                 if (isset($message)) {
-                    $datosUI['message'] = $message;    
-                }  
+                    $datosUI['message'] = $message;
+                }
             }
         } elseif (isset($args['idServiceTip'])) {
             $id = $args['idServiceTip'];
-            // $keyTip = 'serviceTip';
 
             try {
-                $tip = $this->serviceTipService->fetch(array('id' => $id));          
-                $status     = parent::STATUS_CODE_200;        
+                $tip = $this->serviceTipService->fetch(array('id' => $id));
+                $status     = parent::STATUS_CODE_200;
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_404;
-            } 
+            }
 
             // TwigWrapperView
             if ($this->view instanceof TwigWrapperView) {
@@ -217,7 +214,7 @@ class TipSessionController extends BaseController
             $status = parent::STATUS_CODE_400;
         } else {
             $status = parent::STATUS_CODE_500;
-        }        
+        }
 
         return $status;
     }
@@ -273,10 +270,12 @@ class TipSessionController extends BaseController
                 $statusServiceTip = parent::STATUS_CODE_500;
             }
 
-            if ($this->view instanceof JsonView ) {
+            if ($this->view instanceof JsonView) {
                 $datosUI['dealerTip']  = isset($dealerTip) ? $dealerTip->toArray() : [];
-                $datosUI['serviceTip'] = isset($serviceTip) ? $serviceTip->toArray() : []; 
-                $response = $response->withStatus($this->setStatusForResponse($statusDealerTip, $statusServiceTip, $expectedStatus));
+                $datosUI['serviceTip'] = isset($serviceTip) ? $serviceTip->toArray() : [];
+                $response = $response->withStatus(
+                    $this->setStatusForResponse($statusDealerTip, $statusServiceTip, $expectedStatus)
+                );
             }
 
             if ($this->view instanceof TwigWrapperView) {
@@ -295,7 +294,7 @@ class TipSessionController extends BaseController
         $message   = null;
 
         try {
-            $session   = $this->sessionService->fetch(array('id' => $idSession));    
+            $session   = $this->sessionService->fetch(array('id' => $idSession));
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
         }
@@ -306,7 +305,7 @@ class TipSessionController extends BaseController
             $datosUI['breadcrumb'] = 'Nuevo Tip';
 
             if (isset($message)) {
-                $datosUI['message']    = $message;                
+                $datosUI['message']    = $message;
             }
         }
 
@@ -315,11 +314,10 @@ class TipSessionController extends BaseController
 
     public function update($request, $response, $args)
     {
-        $datosUI          = [];
-        $message          = null;
-        $statusDealerTip  = null;
-        $statusServiceTip = null;
-        $expectedStatus   = parent::STATUS_CODE_200;
+        $datosUI        = [];
+        $message        = null;
+        $status         = null;
+        $expectedStatus = parent::STATUS_CODE_200;
 
         $post = $request->getParsedBody();
 
@@ -327,40 +325,40 @@ class TipSessionController extends BaseController
             if (isset($args['idDealerTip'])) {
                 $keyTip = 'dealerTip';
                 try {
-                    $tip = $this->dealerTipService->update($post);
+                    $tip       = $this->dealerTipService->update($post);
                     $message[] = 'El dealerTip se actualizó exitosamente.';
-                    $statusDealerTip = parent::STATUS_CODE_200;
+                    $status    = parent::STATUS_CODE_200;
                 } catch (DealerTipInvalidException $e) {
                     $message[] = $e->getMessage();
-                    $statusDealerTip = parent::STATUS_CODE_400;
+                    $status    = parent::STATUS_CODE_400;
                 } catch (\Exception $e) {
-                    $message[]       = $e->getMessage();
-                    $statusDealerTip = parent::STATUS_CODE_500;
+                    $message[] = $e->getMessage();
+                    $status    = parent::STATUS_CODE_500;
                 }
             }
 
             if (isset($args['idServiceTip'])) {
                 $keyTip = 'serviceTip';
                 try {
-                    $tip = $this->serviceTipService->update($post);
+                    $tip       = $this->serviceTipService->update($post);
                     $message[] = 'El serviceTip se actualizó exitosamente.';
-                    $statusServiceTip = parent::STATUS_CODE_200;
+                    $status    = parent::STATUS_CODE_200;
                 } catch (ServiceTipInvalidException $e) {
                     $message[] = $e->getMessage();
-                    $statusServiceTip = parent::STATUS_CODE_400;
+                    $status    = parent::STATUS_CODE_400;
                 } catch (\Exception $e) {
-                    $message[]       = $e->getMessage();
-                    $statusServiceTip = parent::STATUS_CODE_500;
+                    $message[] = $e->getMessage();
+                    $status    = parent::STATUS_CODE_500;
                 }
             }
 
-            if ($this->view instanceof JsonView ) {
+            if ($this->view instanceof JsonView) {
                 $datosUI[$keyTip]  = isset($tip) ? $tip->toArray() : [];
-                $response = $response->withStatus(isset($statusDealerTip) ? $statusDealerTip : $statusServiceTip);
+                $response = $response->withStatus($status);
             }
 
             if ($this->view instanceof TwigWrapperView) {
-                $datosUI = isset($post['idSession']) ? 
+                $datosUI = isset($post['idSession']) ?
                     $this->loadData($post['idSession'], $message) :
                     ['message' => $message];
             }

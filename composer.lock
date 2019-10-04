@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "296cef3de55e4583996dfaa058015438",
+    "content-hash": "82c80ddc3211f2f3b5cfa3c9862bfb36",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1092,12 +1092,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Izarrualde/pokerclub.git",
-                "reference": "f1e5b3e8a3249ecee0c47a04f9df642147ff3f5e"
+                "reference": "bab8dd48488290b211139560f3bc1462b2e8370e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Izarrualde/pokerclub/zipball/f1e5b3e8a3249ecee0c47a04f9df642147ff3f5e",
-                "reference": "f1e5b3e8a3249ecee0c47a04f9df642147ff3f5e",
+                "url": "https://api.github.com/repos/Izarrualde/pokerclub/zipball/bab8dd48488290b211139560f3bc1462b2e8370e",
+                "reference": "bab8dd48488290b211139560f3bc1462b2e8370e",
                 "shasum": ""
             },
             "require": {
@@ -1134,7 +1134,7 @@
                 }
             ],
             "description": "Library to manage players, games, rake, tips, and expenses of a poker club.",
-            "time": "2019-10-02T15:38:51+00:00"
+            "time": "2019-10-04T01:27:18+00:00"
         },
         {
             "name": "middlewares/negotiation",
@@ -8579,9 +8579,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "slim/slim": 10,
         "izarrualde/pokerclub": 20,
         "middlewares/negotiation": 20,
+        "slim/slim": 10,
         "vlucas/phpdotenv": 20
     },
     "prefer-stable": false,

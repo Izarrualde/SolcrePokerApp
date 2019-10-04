@@ -148,7 +148,7 @@ class SessionController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($session) ? $session->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -198,8 +198,7 @@ class SessionController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($session) ? $session->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
-
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -225,7 +224,7 @@ class SessionController extends BaseController
         }
         
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI  = $this->loadData($message);            
+            $datosUI  = $this->loadData($message);
         }
         
         if ($this->view instanceof JsonView) {
@@ -262,7 +261,7 @@ class SessionController extends BaseController
         }
 
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI = $this->loadData($message);    
+            $datosUI = $this->loadData($message);
         }
 
         return $this->view->render($request, $response, $datosUI);

@@ -71,7 +71,7 @@ class ComissionSessionController extends BaseController
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($comissions) ? $comissions : [];
             $response = $response->withStatus($status);
-        }  
+        }
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -88,7 +88,7 @@ class ComissionSessionController extends BaseController
 
         try {
             $comission = $this->comissionService->fetch(array('id' => $id));
-            $status    = parent::STATUS_CODE_200;        
+            $status    = parent::STATUS_CODE_200;
         } catch (ComissionNotFoundException $e) {
             $message[] = $e->getMessage();
             $status  = parent::STATUS_CODE_404;
@@ -157,13 +157,12 @@ class ComissionSessionController extends BaseController
     }
 
     public function add($request, $response, $args)
-    { 
+    {
         $post           = $request->getParsedBody();
         $idSession      = $args['idSession'];
         $datosUI        = [];
         $message        = null;
         $status         = null;
-        //$expectedStatus = parent::STATUS_CODE_201;
 
         if (is_array($post)) {
             try {
@@ -188,7 +187,7 @@ class ComissionSessionController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI = isset($comission) ? $comission->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -201,7 +200,7 @@ class ComissionSessionController extends BaseController
         $message = null;
 
         try {
-            $session   = $this->sessionService->fetch(array('id' => $idSession));    
+            $session   = $this->sessionService->fetch(array('id' => $idSession));
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
         }
@@ -212,7 +211,7 @@ class ComissionSessionController extends BaseController
             $datosUI['breadcrumb'] = 'Nueva Comision';
 
             if (isset($message)) {
-                $datosUI['message']    = $message;                
+                $datosUI['message']    = $message;
             }
         }
 
@@ -256,7 +255,7 @@ class ComissionSessionController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($comission) ? $comission->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -283,7 +282,7 @@ class ComissionSessionController extends BaseController
         }
 
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI  = $this->loadData($idSession, $message);            
+            $datosUI  = $this->loadData($idSession, $message);
         }
         
         if ($this->view instanceof JsonView) {

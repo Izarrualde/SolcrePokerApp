@@ -12,6 +12,8 @@
     "require": {
         "doctrine/doctrine-module": "^2.1",
         "doctrine/orm": "^2.6",
+        "izarrualde/pokerclub": "dev-master",
+        "middlewares/negotiation": "dev-master",
         "php-di/php-di": "^6.0",
         "phpunit/php-code-coverage": "^7.0",
         "slim/http": "^0.7.0",
@@ -20,8 +22,6 @@
         "slim/slim": "^4.0@beta",
         "slim/twig-view": "^2.5",
         "twig/twig": "^2.10",
-        "izarrualde/pokerclub": "dev-master",
-        "middlewares/negotiation": "dev-master",
         "vlucas/phpdotenv": "^3.4@dev"
     },
     "require-dev": {

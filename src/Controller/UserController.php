@@ -70,7 +70,7 @@ class UserController extends BaseController
 
         try {
             $user = $this->userService->fetch(array('id' => $idUser));
-            $status  = parent::STATUS_CODE_200;  
+            $status  = parent::STATUS_CODE_200;
         } catch (UserNotFoundException $e) {
             $message[] = $e->getMessage();
             $status  = parent::STATUS_CODE_404;
@@ -156,7 +156,7 @@ class UserController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($user) ? $user->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
+            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -206,7 +206,7 @@ class UserController extends BaseController
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($user) ? $user->toArray() : [];
                 $response = $response->withStatus($status);
-            } 
+            }
         }
         
         return $this->view->render($request, $response, $datosUI);
@@ -235,7 +235,7 @@ class UserController extends BaseController
         }
 
         if ($this->view instanceof TwigWrapperView) {
-            $datosUI  = $this->loadData($message);            
+            $datosUI  = $this->loadData($message);
         }
         
         if ($this->view instanceof JsonView) {

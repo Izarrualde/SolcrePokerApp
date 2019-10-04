@@ -17,7 +17,7 @@ return function (App $app) {
     });
 */
 
-    $app->get('/', 'SessionController:listAll'); 
+    $app->get('/', 'SessionController:listAll');
     $app->get('/sessions/{idSession:[0-9]+}', 'SessionController:list');
     $app->get('/sessions', 'SessionController:listAll');
     $app->post('/sessions', 'SessionController:add');
