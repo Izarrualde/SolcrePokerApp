@@ -1092,12 +1092,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Izarrualde/pokerclub.git",
-                "reference": "662f52c0705b67f0a11b4f12a1a9e624e041c353"
+                "reference": "f1e5b3e8a3249ecee0c47a04f9df642147ff3f5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Izarrualde/pokerclub/zipball/662f52c0705b67f0a11b4f12a1a9e624e041c353",
-                "reference": "662f52c0705b67f0a11b4f12a1a9e624e041c353",
+                "url": "https://api.github.com/repos/Izarrualde/pokerclub/zipball/f1e5b3e8a3249ecee0c47a04f9df642147ff3f5e",
+                "reference": "f1e5b3e8a3249ecee0c47a04f9df642147ff3f5e",
                 "shasum": ""
             },
             "require": {
@@ -1134,7 +1134,7 @@
                 }
             ],
             "description": "Library to manage players, games, rake, tips, and expenses of a poker club.",
-            "time": "2019-09-26T21:33:26+00:00"
+            "time": "2019-10-02T15:38:51+00:00"
         },
         {
             "name": "middlewares/negotiation",
