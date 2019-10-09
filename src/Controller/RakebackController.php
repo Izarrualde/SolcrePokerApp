@@ -17,22 +17,21 @@ class RakebackController extends BaseController
     {
         $this->view            = $view;
         $path                  = '../src/Rakeback';
-        $this->rakebackService = new RakebackService($path);   
+        $this->rakebackService = new RakebackService($path);
     }
 
     public function listAll($request, $response, $args)
     {
-      try {
-          $rakebackAlhortihms = $this->rakebackService->fetchAll();
-          $status  = parent::STATUS_CODE_200; 
-      }
-      catch (PathIsNotDirException $e) {
-          $status  = parent::STATUS_CODE_404;
-      }
+        try {
+            $rakebackAlhortihms = $this->rakebackService->fetchAll();
+            $status  = parent::STATUS_CODE_200;
+        } catch (PathIsNotDirException $e) {
+            $status  = parent::STATUS_CODE_404;
+        }
 
-      $datosUI  = isset($rakebackAlhortihms) ? $rakebackAlhortihms : [];
-      $response = $response->withStatus($status);
+        $datosUI  = isset($rakebackAlhortihms) ? $rakebackAlhortihms : [];
+        $response = $response->withStatus($status);
 
-      return $this->view->render($request, $response, $datosUI);
+        return $this->view->render($request, $response, $datosUI);
     }
 }

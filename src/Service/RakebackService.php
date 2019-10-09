@@ -15,22 +15,22 @@ class RakebackService
 
     public function fetchAll()
     {
-      if (!is_dir($this->path)) {
+        if (!is_dir($this->path)) {
             throw new PathIsNotDirException();
-      }
+        }
 
-      $param = $this->path.'/*'; // var_dump($param);
+        $param = $this->path.'/*'; // var_dump($param);
 
-      $rakebackAlgorithms      = glob($param);
-      $rakebackAlgorithmsNames = [];
+        $rakebackAlgorithms = glob($param);
+        $algorithmsNames    = [];
 
-      if (is_array($rakebackAlgorithms)) {
-          foreach ($rakebackAlgorithms as $alg) {
-              $path_parts                = pathinfo($alg);
-              $rakebackAlgorithmsNames[] = $path_parts['filename'];
-          }
-      }
+        if (is_array($rakebackAlgorithms)) {
+            foreach ($rakebackAlgorithms as $alg) {
+                $pathParts         = pathinfo($alg);
+                $algorithmsNames[] = $pathParts['filename'];
+            }
+        }
 
-        return $rakebackAlgorithmsNames;
+        return $algorithmsNames;
     }
 }
