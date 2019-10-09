@@ -12,6 +12,7 @@ use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
+use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
 use Exception;
 
 class UserSessionController extends BaseController
@@ -377,6 +378,9 @@ class UserSessionController extends BaseController
                 $userSession = $this->userSessionService->close($post);
                 $message[]   = 'El usuario ha salido de la sesión';
                 $status      = parent::STATUS_CODE_200;
+            } catch (InsufficientUserSessionTimeException $e) {
+                $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
