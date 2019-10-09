@@ -20,6 +20,7 @@ use Solcre\lmsuy\Controller\TipSessionController;
 use Solcre\lmsuy\Controller\UserSessionController;
 use Solcre\lmsuy\Controller\UserController;
 use Solcre\lmsuy\Controller\ExpensesSessionController;
+use Solcre\lmsuy\Controller\RakebackController;
 
 return function (App $app) {
     /** @var Container $container */
@@ -127,6 +128,15 @@ return function (App $app) {
             $view = $c->get("view"); // retrieve the 'view' from the container
             $em = $c->get(EntityManager::class);
             return new ExpensesSessionController($view, $em);
+        }
+    );
+
+    $container->set(
+        'RakebackController',
+        function ($c) {
+            $view = $c->get("view"); // retrieve the 'view' from the container
+            $em = $c->get(EntityManager::class);
+            return new RakebackController($view, $em);
         }
     );
 };

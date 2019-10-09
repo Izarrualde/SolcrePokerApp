@@ -12,6 +12,8 @@ use Solcre\Pokerclub\Exception\SessionInvalidException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
 use Exception;
 
+use Solcre\lmsuy\Service\RakebackService;
+
 class SessionController extends BaseController
 {
     protected $view;

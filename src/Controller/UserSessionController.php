@@ -145,6 +145,7 @@ class UserSessionController extends BaseController
 
                 try {
                     $usersAdded[] = $this->userSessionService->add($data);
+
                     $message[]    = 'Se agregó exitosamente.';
                     // $status       = parent::STATUS_CODE_201;
                 } catch (UserSessionAlreadyAddedException $e) {

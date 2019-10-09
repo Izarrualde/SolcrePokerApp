@@ -73,4 +73,6 @@ return function (App $app) {
     $app->get('/form', 'UserController:form');
     $app->get('/users/{iduser}/remove', 'UserController:delete');
     $app->post('/users/{iduser}/update', 'UserController:update');
+
+    $app->get('/rakeback-Algorithms', 'RakebackController:listAll');
 };
