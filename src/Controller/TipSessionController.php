@@ -10,7 +10,6 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\Pokerclub\Exception\DealerTipInvalidException;
 use Solcre\Pokerclub\Exception\ServiceTipInvalidException;
 use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
@@ -68,20 +67,6 @@ class TipSessionController extends BaseController
             }
         }
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if ($status == $expectedStatus) {
-                $datosUI['session']                = isset($session) ? $session->toArray() : [];
-                $datosUI['session']['serviceTips'] = $serviceTips;
-                $datosUI['session']['dealerTips']  = $dealerTips;
-            }
-
-            $datosUI['breadcrumb'] = 'Tips';
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
-
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI['dealerTips']  = $dealerTips;
@@ -90,47 +75,6 @@ class TipSessionController extends BaseController
         }
 
         return $this->view->render($request, $response, $datosUI);
-    }
-
-    private function loadData($idSession, $message)
-    {
-        $data = null;
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $template = 'tipSession/listAll.html.twig';
-            $this->view->setTemplate($template);
-
-            // @codeCoverageIgnoreStart
-            try {
-                $session = $this->sessionService->fetch(array('id' => $idSession));
-            } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-            }
-            // @codeCoverageIgnoreEnd
-
-            $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
-            $datosServiceTips = $this->serviceTipService->fetchAll(array('session' => $idSession));
-
-            $dealerTips  = [];
-            $serviceTips = [];
-
-            foreach ($datosDealerTips as $dealerTip) {
-                $dealerTips[] = $dealerTip->toArray();
-            }
-
-            foreach ($datosServiceTips as $serviceTip) {
-                $serviceTips[] = $serviceTip->toArray();
-            }
-
-            $data['session']                = isset($session) ? $session->toArray() : [];
-            $data['session']['dealerTips']  = $dealerTips;
-            $data['session']['serviceTips'] = $serviceTips;
-            $data['message']                = $message;
-            $data['breadcrumb']             = 'Tips';
-        }
-
-        return $data;
     }
 
     public function list($request, $response, $args)
@@ -152,22 +96,6 @@ class TipSessionController extends BaseController
                 $status  = parent::STATUS_CODE_404;
             }
 
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $template = 'tipSession/listDealerTip.html.twig';
-                $this->view->setTemplate($template);
-
-                if ($status == $expectedStatus) {
-                    $session   = $this->sessionService->fetch(array('id' => $idSession));
-                    $datosUI['session']              = isset($session) ? $session->toArray() : [];
-                    $datosUI['session']['dealerTip'] = isset($tip) ? $tip->toArray() : [];
-                }
-
-                $datosUI['breadcrumb'] = 'Editar DealerTip';
-                if (isset($message)) {
-                    $datosUI['message'] = $message;
-                }
-            }
         } elseif (isset($args['idServiceTip'])) {
             $id = $args['idServiceTip'];
 
@@ -177,22 +105,6 @@ class TipSessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_404;
-            }
-
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $template = 'tipSession/listServiceTip.html.twig';
-
-                if ($status == $expectedStatus) {
-                    $session   = $this->sessionService->fetch(array('id' => $idSession));
-                    $datosUI['session']               = isset($session) ? $session->toArray() : [];
-                    $datosUI['session']['serviceTip'] = isset($tip) ? $tip->toArray() : [];
-                }
-
-                $datosUI['breadcrumb'] = 'Editar ServiceTip';
-                if (isset($message)) {
-                    $datosUI['message'] = $message;
-                }
             }
         }
 
@@ -218,7 +130,6 @@ class TipSessionController extends BaseController
 
         return $status;
     }
-
 
     public function add($request, $response, $args)
     {
@@ -277,36 +188,6 @@ class TipSessionController extends BaseController
                     $this->setStatusForResponse($statusDealerTip, $statusServiceTip, $expectedStatus)
                 );
             }
-
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI = $this->loadData($idSession, $message);
-            }
-        }
-
-        return $this->view->render($request, $response, $datosUI);
-    }
-
-
-    public function form($request, $response, $args)
-    {
-        $idSession = $args['idSession'];
-        $datosUI   = [];
-        $message   = null;
-
-        try {
-            $session   = $this->sessionService->fetch(array('id' => $idSession));
-        } catch (\Exception $e) {
-            $message[] = $e->getMessage();
-        }
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI['session']    = isset($session) ? $session->toArray() : [];
-            $datosUI['breadcrumb'] = 'Nuevo Tip';
-
-            if (isset($message)) {
-                $datosUI['message']    = $message;
-            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -356,12 +237,6 @@ class TipSessionController extends BaseController
                 $datosUI[$keyTip]  = isset($tip) ? $tip->toArray() : [];
                 $response = $response->withStatus($status);
             }
-
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI = isset($post['idSession']) ?
-                    $this->loadData($post['idSession'], $message) :
-                    ['message' => $message];
-            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -400,13 +275,6 @@ class TipSessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-            }
-        }
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if (isset($get['idSession'])) {
-                $datosUI = $this->loadData($get['idSession'], $message);
             }
         }
 
