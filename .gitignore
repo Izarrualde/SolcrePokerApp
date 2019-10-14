@@ -4,3 +4,4 @@
 .phpunit.result.cache
 .env
 sftp-config.json
+.phpunit.result.cache
