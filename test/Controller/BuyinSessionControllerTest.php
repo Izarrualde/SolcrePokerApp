@@ -64,6 +64,7 @@ class BuyinSessionControllerTest extends TestCase
             0,
             null,
             null,
+            null,
             $user1
         );
 
@@ -74,6 +75,7 @@ class BuyinSessionControllerTest extends TestCase
             1,
             0,
             0,
+            null,
             null,
             null,
             $user2
@@ -97,16 +99,18 @@ class BuyinSessionControllerTest extends TestCase
             0,
             null,
             null,
+            null,
             $user1
         );
 
         $userSession2 = new UserSessionEntity(
             2,
             $session,
-            1,
+            2,
             1,
             0,
             0,
+            null,
             null,
             null,
             $user2
@@ -348,6 +352,7 @@ class BuyinSessionControllerTest extends TestCase
             1,
             0,
             0,
+            null,
             null,
             null,
             $user1
@@ -638,6 +643,7 @@ class BuyinSessionControllerTest extends TestCase
             0,
             null,
             null,
+            null,
             $user1
         );
 
@@ -648,6 +654,7 @@ class BuyinSessionControllerTest extends TestCase
             1,
             0,
             0,
+            null,
             null,
             null,
             $user2
@@ -1107,6 +1114,7 @@ class BuyinSessionControllerTest extends TestCase
                 1,
                 0,
                 0,
+                null,
                 null,
                 null,
                 new UserEntity(2)

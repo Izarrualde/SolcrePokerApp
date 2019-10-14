@@ -92,41 +92,6 @@ class ComissionSessionController extends BaseController
         return $this->view->render($request, $response, $datosUI);
     }
 
-    public function loadData($idSession, $message)
-    {
-        $data = null;
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $template = 'comissionSession/listAll.html.twig';
-            $this->view->setTemplate($template);
-
-            $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
-            // @codeCoverageIgnoreStart
-            try {
-                $session         = $this->sessionService->fetch(array('id' => $idSession));
-            } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-            }
-            // @codeCoverageIgnoreEnd
-            
-            $comissions = [];
-
-            if (is_array($datosComissions)) {
-                foreach ($datosComissions as $comission) {
-                    $comissions[] = $comission->toArray();
-                }
-            }
-            
-            $data['session']               = isset($session) ? $session->toArray() : [];
-            $data['session']['comissions'] = $comissions;
-            $data['breadcrumb']            = 'Comisiones';
-            $data['message']               = $message;
-        }
-
-        return $data;
-    }
-
     public function add($request, $response, $args)
     {
         $post           = $request->getParsedBody();
@@ -147,30 +112,11 @@ class ComissionSessionController extends BaseController
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
             }
-        }
 
-        return $this->view->render($request, $response, $datosUI);
-    }
-
-    public function form($request, $response, $args)
-    {
-        $idSession = $args['idSession'];
-        $datosUI  = [];
-        $message = null;
-
-        try {
-            $session   = $this->sessionService->fetch(array('id' => $idSession));
-        } catch (\Exception $e) {
-            $message[] = $e->getMessage();
-        }
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI['session']    = isset($session) ? $session->toArray() : [];
-            $datosUI['breadcrumb'] = 'Nueva Comision';
-
-            if (isset($message)) {
-                $datosUI['message']    = $message;
+            // JsonView
+            if ($this->view instanceof JsonView) {
+                $datosUI  = isset($comission) ? $comission->toArray() : [];
+                $response = $response->withStatus($status);
             }
         }
 
@@ -199,10 +145,6 @@ class ComissionSessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-            }
-
-            if ($this->view instanceof JsonView) {
-                $response = $response->withStatus($status);
             }
 
             // JsonView
@@ -238,7 +180,7 @@ class ComissionSessionController extends BaseController
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus($status);
         }
-        
+
         return $this->view->render($request, $response, $datosUI);
     }
 }
