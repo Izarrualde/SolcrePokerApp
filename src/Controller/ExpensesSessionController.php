@@ -5,10 +5,8 @@ use Solcre\Pokerclub\Service\ExpensesSessionService;
 use Solcre\Pokerclub\Service\SessionService;
 use Solcre\Pokerclub\Entity\ExpensesSessionEntity;
 use Doctrine\ORM\EntityManager;
-use Slim\Views\Twig;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\Pokerclub\Exception\ExpensesInvalidException;
 use Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
 use Exception;
@@ -51,20 +49,6 @@ class ExpensesSessionController extends BaseController
             }
         }
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if ($status == $expectedStatus) {
-                $datosUI['session']             = isset($session) ? $session->toArray() : [];
-                $datosUI['session']['expenses'] = $expenses;
-            }
-
-            $datosUI['breadcrumb'] = 'Gastos';
-            
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
-
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = $expenses;
@@ -96,21 +80,6 @@ class ExpensesSessionController extends BaseController
             $status  = parent::STATUS_CODE_500;
         }
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if ($status == $expectedStatus) {
-                $session     = $this->sessionService->fetch(array('id' => $idSession));
-                $datosUI['session']                = isset($session) ?  $session->toArray() : [];
-                $datosUI['session']['expenditure'] = isset($expenditure) ? $expenditure->toArray() : [];
-            }
-
-            $datosUI['breadcrumb'] = 'Editar item';
-            
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
-
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($expenditure) ? $expenditure->toArray() : [];
@@ -118,42 +87,6 @@ class ExpensesSessionController extends BaseController
         }
 
         return $this->view->render($request, $response, $datosUI);
-    }
-
-    public function loadData($idSession, $message)
-    {
-        $data = null;
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $template = 'expensesSession/listAll.html.twig';
-            $this->view->setTemplate($template);
-
-
-            $datosExpenses = $this->expensesService->fetchAll(array('session' => $idSession));
-            // @codeCoverageIgnoreStart
-            try {
-                $session = $this->sessionService->fetch(array('id' => $idSession));
-            } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-            }
-            // @codeCoverageIgnoreEnd
-
-            $expenses = [];
-                
-            if (is_array($datosExpenses)) {
-                foreach ($datosExpenses as $expensesObject) {
-                    $expenses[] = $expensesObject->toArray();
-                }
-            }
-
-            $data['session']             = isset($session) ? $session->toArray() : [];
-            $data['session']['expenses'] = $expenses;
-            $data['breadcrumb']          = 'Gastos de Sesión';
-            $data['message']             = $message;
-        }
-
-        return $data;
     }
 
     public function add($request, $response, $args)
@@ -176,11 +109,6 @@ class ExpensesSessionController extends BaseController
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
             }
-            
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI  =  $this->loadData($idSession, $message);
-            }
 
             // JsonView
             if ($this->view instanceof JsonView) {
@@ -202,16 +130,6 @@ class ExpensesSessionController extends BaseController
             $session   = $this->sessionService->fetch(array('id' => $idSession));
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
-        }
-        
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI['session']    = isset($session) ? $session->toArray() : null;
-            $datosUI['breadcrumb'] = 'Nuevo item';
-            
-            if (isset($message)) {
-                $datosUI['message']    = $message;
-            }
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -240,11 +158,6 @@ class ExpensesSessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-            }
-
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI  =  $this->loadData($idSession, $message);
             }
 
             // JsonView
@@ -276,10 +189,6 @@ class ExpensesSessionController extends BaseController
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_500;
-        }
-
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI = $this->loadData($idSession, $message);
         }
 
         if ($this->view instanceof JsonView) {

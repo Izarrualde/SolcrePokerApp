@@ -7,7 +7,6 @@ use \Solcre\Pokerclub\Service\SessionService;
 use \Solcre\Pokerclub\Entity\ComissionSessionEntity;
 use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Exception\ComissionInvalidException;

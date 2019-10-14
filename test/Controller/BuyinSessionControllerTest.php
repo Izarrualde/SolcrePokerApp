@@ -15,7 +15,6 @@ use Solcre\Pokerclub\Exception\BuyinInvalidException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 use Test\AppWrapper;
 use Solcre\lmsuy\Controller\BuyinSessionController;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use Doctrine\Common\Collections\ArrayCollection;

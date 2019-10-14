@@ -11,8 +11,6 @@ use Solcre\Pokerclub\Exception\BuyinInvalidException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 use Exception;
 use Doctrine\ORM\EntityManager;
-use Slim\Views\Twig;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 
