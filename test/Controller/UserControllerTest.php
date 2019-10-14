@@ -6,7 +6,6 @@ use \Solcre\Pokerclub\Entity\UserEntity;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Solcre\lmsuy\Controller\UserController;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use Test\AppWrapper;
@@ -86,45 +85,14 @@ class UserControllerTest extends TestCase
           $expectedUsersArray[] = $user->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['users']      = $expectedUsersArray;
-            $expectedDatosUI['breadcrumb'] = 'Usuarios';
+        if ($view instanceof JsonView) {
+            $expectedDatosUI = $expectedUsersArray;
         }
 
-          if ($view instanceof JsonView) {
-              $expectedDatosUI = $expectedUsersArray;
-          }
-
-          return [ 
-              'controller'      => $controller, 
-              'expectedDatosUI' => $expectedDatosUI 
-          ];
-    }
-
-    public function testListAll()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $request  = $this->createMock(Slim\Psr7\Request::class);
-        
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $setup           = $this->listAllSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $args = [];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->listAll($request, $response, $args);
+        return [ 
+            'controller'      => $controller, 
+            'expectedDatosUI' => $expectedDatosUI 
+        ];
     }
 
     public function testListAllWithJsonView()
@@ -180,11 +148,6 @@ class UserControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['user']       = $expectedUser->toArray();
-            $expectedDatosUI['breadcrumb'] = 'Editar Usuario';
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedUser->toArray();
         }
@@ -210,11 +173,6 @@ class UserControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['breadcrumb'] = 'Editar Usuario';
-            $expectedDatosUI['message']    = [$exception->getMessage()];
-        }
-
         return [ 
             'controller'      => $controller, 
             'expectedDatosUI' => $expectedDatosUI, 
@@ -222,34 +180,6 @@ class UserControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse 
         ];
-    }
-
-    public function testList()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $request          = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $setup           = $this->listSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->list($request, $response, $args);
     }
 
     public function testListWithJsonView()
@@ -280,34 +210,6 @@ class UserControllerTest extends TestCase
         $controller->list($request, $response, $args);
     }
 
-    public function testListUserNotFound()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $exception = new UserNotFoundException();
-        
-        $setup            = $this->listWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $controller->list($request, $response, $args);
-    }
-
     public function testListUserNotFoundWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -331,34 +233,6 @@ class UserControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->list($request, $response, $args);
-    }
-
-    public function testListWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404);
-        
-        $setup            = $this->listWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
         );
 
         $controller->list($request, $response, $args);
@@ -470,12 +344,6 @@ class UserControllerTest extends TestCase
           $expectedUsersArray[] = $user->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['users']      = $expectedUsersArray;
-            $expectedDatosUI['breadcrumb'] = 'Usuarios';
-            $expectedDatosUI['message']    = ['El usuario se agregó exitosamente.'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedUserAdded->toArray();
         }
@@ -533,12 +401,6 @@ class UserControllerTest extends TestCase
           $expectedUsersArray[] = $user->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['users']      = $expectedUsersArray;
-            $expectedDatosUI['breadcrumb'] = 'Usuarios';
-            $expectedDatosUI['message']    = [$exception->getMessage()];
-        }
-
         return [ 
             'controller'      => $controller, 
             'expectedDatosUI' => $expectedDatosUI,
@@ -546,36 +408,6 @@ class UserControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testAdd()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $setup           = $this->addSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->add($request, $response, $args);
     }
 
     public function testAddWithJsonView()
@@ -597,38 +429,6 @@ class UserControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->add($request, $response, $args);
-    }
-
-    public function testAddUserInvalid()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new UserInvalidException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
         );
 
         $controller->add($request, $response, $args);
@@ -661,39 +461,6 @@ class UserControllerTest extends TestCase
         $controller->add($request, $response, $args);
     }
 
-    public function testAddUserWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\UserSessionEntity' . " Entity not found", 404); 
-
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->add($request, $response, $args);
-    }
-
     public function testAddUserWithExceptionWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -720,35 +487,6 @@ class UserControllerTest extends TestCase
         );
 
         $controller->add($request, $response, $args);
-    }
-
-    public function testForm()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-        $userService = $this->createMock(UserService::class);
-
-        $args = [];
-
-        $controller = $this->createController($view, $userService);
-
-        $request    = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-        
-        $expectedDatosUI = [];
-
-        $expectedDatosUI['breadcrumb'] = 'Nuevo Usuario';
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->form($request, $response, $args);
     }
 
     public function updateSetup($view)
@@ -830,12 +568,6 @@ class UserControllerTest extends TestCase
           $expectedUsersArray[] = $user->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['users']      = $expectedUsersArray;
-            $expectedDatosUI['breadcrumb'] = 'Usuarios';
-            $expectedDatosUI['message']    = ['El usuario se actualizó exitosamente'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI  = $expectedUserUpdated->toArray();
             $expectedResponse = $expectedResponse->withStatus(200);
@@ -848,36 +580,6 @@ class UserControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testUpdate()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $setup            = $this->updateSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->update($request, $response, $args);
     }
 
     public function testUpdateWithJsonView()
@@ -899,39 +601,6 @@ class UserControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->update($request, $response, $args);
-    }
-
-
-    public function testUpdateUserInvalid()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new UserInvalidException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
         );
 
         $controller->update($request, $response, $args);
@@ -964,38 +633,6 @@ class UserControllerTest extends TestCase
         $controller->update($request, $response, $args);
     }
 
-    public function testUpdateUserNotFound()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new UserNotFoundException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->update($request, $response, $args);
-    }
-
     public function testUpdateUserNotFoundWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -1018,38 +655,6 @@ class UserControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->update($request, $response, $args);
-    }
-
-    public function testUpdateWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
         );
 
         $controller->update($request, $response, $args);
@@ -1104,12 +709,6 @@ class UserControllerTest extends TestCase
           $expectedUsersArray[] = $user->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-          $expectedDatosUI['users']      = $expectedUsersArray;
-          $expectedDatosUI['breadcrumb'] = 'Usuarios';
-          $expectedDatosUI['message']    = ['El usuario se eliminó exitosamente'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedResponse = $expectedResponse->withStatus(204);
         }
@@ -1145,11 +744,6 @@ class UserControllerTest extends TestCase
           $expectedUsersArray[] = $user->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $expectedUsersArray;
-            $expectedDatosUI['message']  = [$exception->getMessage()];
-        }
-
         if ($view instanceof JsonView) {
             $expectedResponse = $expectedResponse->withStatus(204);
         }
@@ -1161,38 +755,6 @@ class UserControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testDelete()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $setup            = $this->deleteSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
     }
 
     public function testDeleteWithJsonView()
@@ -1216,77 +778,6 @@ class UserControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
-
-
-    public function testDeleteUserHadAction()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $exception = new UserHadActionException();
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
-
-    public function testDeleteUserNotFound()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $exception = new UserNotFoundException();
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
         );
 
         $controller->delete($request, $response, $args);
@@ -1320,40 +811,6 @@ class UserControllerTest extends TestCase
         $controller->delete($request, $response, $args);
     }
 
-    public function testDeleteWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'iduser' => 1
-        ];
-
-        $exception = new \Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404); 
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('user/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
     public function testDeleteWithExceptionWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -1381,5 +838,4 @@ class UserControllerTest extends TestCase
 
         $controller->delete($request, $response, $args);
     }
-
 }
