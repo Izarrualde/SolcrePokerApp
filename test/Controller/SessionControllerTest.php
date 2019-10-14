@@ -6,7 +6,6 @@ use Solcre\Pokerclub\Service\SessionService;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\lmsuy\Controller\SessionController;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use Test\AppWrapper;
@@ -88,45 +87,16 @@ class SessionControllerTest extends TestCase
           $expectedSessionsArray[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions']      = $expectedSessionsArray;
+        if ($view instanceof JsonView) {
+            $expectedDatosUI = $expectedSessionsArray;
         }
 
-          if ($view instanceof JsonView) {
-              $expectedDatosUI = $expectedSessionsArray;
-          }
-
-          return [ 
-              'controller'      => $controller, 
-              'expectedDatosUI' => $expectedDatosUI 
-          ];
+        return [ 
+            'controller'      => $controller, 
+            'expectedDatosUI' => $expectedDatosUI 
+        ];
     }
 
-    public function testListAll()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $request  = $this->createMock(Slim\Psr7\Request::class);
-        
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $setup           = $this->listAllSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $args = [];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->listAll($request, $response, $args);
-    }
 
     public function testListAllWithJsonView()
     {
@@ -176,11 +146,6 @@ class SessionControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session'] = $expectedSession->toArray();
-            $expectedDatosUI['breadcrumb'] = 'Editar Sesión';
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedSession->toArray();
         }
@@ -194,7 +159,7 @@ class SessionControllerTest extends TestCase
 
     public function listWithExceptionSetup($view, $exception)
     {
-        $request          = $this->createMock(Slim\Psr7\Request::class);
+        $request = $this->createMock(Slim\Psr7\Request::class);
 
         $response         = new Slim\Psr7\Response();
         $expectedResponse = $response;
@@ -207,11 +172,6 @@ class SessionControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['breadcrumb'] = 'Editar Sesión';
-            $expectedDatosUI['message']    = [$exception->getMessage()];
-        }
-
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI,
@@ -219,34 +179,6 @@ class SessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse 
         ];
-    }
-
-    public function testList()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-    
-        $request          = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $setup           = $this->listSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->list($request, $response, $args);
     }
 
     public function testListWithJsonView()
@@ -277,34 +209,6 @@ class SessionControllerTest extends TestCase
         $controller->list($request, $response, $args);
     }
 
-    public function testListWithSessionNotFound()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $exception = new SessionNotFoundException();
-
-        $setup            = $this->listWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $controller->list($request, $response, $args);
-    }
-
     public function testListWithSessionNotFoundWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -329,34 +233,6 @@ class SessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->list($request, $response, $args);
-    }
-
-    public function testListWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
-
-        $setup            = $this->listWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
         );
 
         $controller->list($request, $response, $args);
@@ -452,12 +328,6 @@ class SessionControllerTest extends TestCase
           $expectedSessionsArray[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $expectedSessionsArray;
-            $expectedDatosUI['message']  = ['La sesión se agregó exitosamente.'];
-            $expectedResponse = $response;
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedSessionAdded->toArray();
              $expectedResponse = $response->withStatus(201);
@@ -508,11 +378,6 @@ class SessionControllerTest extends TestCase
           $expectedSessionsArray[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $expectedSessionsArray;
-            $expectedDatosUI['message']  = [$exception->getMessage()];
-        }
-
         return [ 
             'controller'      => $controller, 
             'expectedDatosUI' => $expectedDatosUI,
@@ -520,37 +385,6 @@ class SessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testAdd()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        // metthod with data post use 2 parameters in addSetup
-        $setup            = $this->addSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->add($request, $response, $args);
     }
 
     public function testAddWithJsonView()
@@ -573,38 +407,6 @@ class SessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->add($request, $response, $args);
-    }
-
-    public function testAddWithInvalidSession()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new SessionInvalidException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
         );
 
         $controller->add($request, $response, $args);
@@ -637,38 +439,6 @@ class SessionControllerTest extends TestCase
         $controller->add($request, $response, $args);
     }   
 
-    public function testAddWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->add($request, $response, $args);
-    }
-
     public function testAddWithExceptionWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -694,36 +464,7 @@ class SessionControllerTest extends TestCase
         );
 
         $controller->add($request, $response, $args);
-    }      
-      public function testForm()
-      {
-          $view = $this->createMock(TwigWrapperView::class);
-     
-          $sessionService = $this->createMock(SessionService::class);
-
-          $args = [];
-
-          $controller = $this->createController($view, $sessionService);
-
-          $request    = $this->createMock(Slim\Psr7\Request::class);
-
-          $response         = new Slim\Psr7\Response();
-          $expectedResponse = $response;
-
-          $expectedDatosUI = [];
-
-          $expectedDatosUI['breadcrumb'] = 'Nueva Sesión';
-
-          $view->expects($this->once())
-          ->method('render')
-          ->with(
-              $this->equalTo($request),
-              $this->equalTo($expectedResponse),
-              $this->equalTo($expectedDatosUI),
-          );
-
-          $controller->form($request, $response, $args);
-    }
+    }    
 
     public function updateSetup($view)
     {
@@ -787,11 +528,6 @@ class SessionControllerTest extends TestCase
           $expectedSessionsArray[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions']   = $expectedSessionsArray;
-            $expectedDatosUI['message']    = ['La sesión se actualizó exitosamente.'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI  = $expectedSessionUpdated->toArray();
             $expectedResponse = $expectedResponse->withStatus(200);
@@ -804,36 +540,6 @@ class SessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testUpdate()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-
-        $setup            = $this->updateSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->update($request, $response, $args);
     }
 
     public function testUpdateWithJsonView()
@@ -855,38 +561,6 @@ class SessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->update($request, $response, $args);
-    }
-
-    public function testUpdateWithInvalidSession()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-        
-        $exception = new SessionInvalidException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
         );
 
         $controller->update($request, $response, $args);
@@ -919,37 +593,6 @@ class SessionControllerTest extends TestCase
         $controller->update($request, $response, $args);
     }
 
-    public function testUpdateWithSessionNotFound()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-        
-        $exception = new SessionNotFoundException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->update($request, $response, $args);
-    }
 
     public function testUpdateWithSessionNotFoundWithJsonView()
     {
@@ -973,38 +616,6 @@ class SessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->update($request, $response, $args);
-    }
-
-    public function testUpdateWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [];
-        
-        $exception = new Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404); 
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
         );
 
         $controller->update($request, $response, $args);
@@ -1059,11 +670,6 @@ class SessionControllerTest extends TestCase
           $sessions[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $sessions;
-            $expectedDatosUI['message'] = ['La Sesión se eliminó exitosamente'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedResponse = $expectedResponse->withStatus(204);
         }
@@ -1100,11 +706,6 @@ class SessionControllerTest extends TestCase
           $sessions[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $sessions;
-            $expectedDatosUI['message']  = [$exception->getMessage()];
-        }
-
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI,
@@ -1112,38 +713,6 @@ class SessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testDelete()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $setup            = $this->deleteSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
     }
 
     public function testDeleteWithJsonView()
@@ -1167,40 +736,6 @@ class SessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
-    public function testDeleteSessionNotFound()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $exception = new SessionNotFoundException();
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
         );
 
         $controller->delete($request, $response, $args);
@@ -1234,40 +769,7 @@ class SessionControllerTest extends TestCase
 
         $controller->delete($request, $response, $args);
     }
-    public function testDeleteWithException()
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $exception = new \Exception('Solcre\Pokerclub\Entity\essionEntity' . " Entity not found", 404); 
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
+   
     public function testDeleteWithExceptionWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
@@ -1319,11 +821,6 @@ class SessionControllerTest extends TestCase
           $sessions[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $sessions;
-            $expectedDatosUI['message'] = ['Puntos asignados exitosamente.'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedResponse = $response->withStatus(200);
         }
@@ -1359,11 +856,6 @@ class SessionControllerTest extends TestCase
           $sessions[] = $session->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['sessions'] = $sessions;
-            $expectedDatosUI['message']  = [$exception->getMessage()];
-        }
-
         if ($view instanceof JsonView) {
             $expectedResponse = $response->withStatus(200);
         }
@@ -1375,40 +867,6 @@ class SessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testCalcuatePoints()
-    {
-        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
-
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $setup            = $this->calculatePointsSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->calculatePoints($request, $response, $args);
     }
 
     public function testCalcuatePointsWithJsonView()
@@ -1434,42 +892,6 @@ class SessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->calculatePoints($request, $response, $args);
-    }
-
-    public function testCalcuatePointsWithSessionNotFound()
-    {
-        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
-
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $exception = new SessionNotFoundException();
-
-        $setup            = $this->calculatePointsWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
         );
 
         $controller->calculatePoints($request, $response, $args);
@@ -1505,42 +927,6 @@ class SessionControllerTest extends TestCase
         $controller->calculatePoints($request, $response, $args);
     }
 
-    public function testCalcuatePointsWithException()
-    {
-        // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null
-
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 1
-        ];
-
-        $exception = new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
-
-        $setup            = $this->calculatePointsWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('session/listAll.html.twig'),
-        );
-
-        $controller->calculatePoints($request, $response, $args);
-    }
-
     public function testCalcuatePointsWithExceptionWithJsonView()
     {
         // en principio testeo que devuelva el correcto datosUI y por consiguiente el msj correcto, y para json que de el correcto statusCode y datosUI null. y que haya llamado a calcuateRakeback
@@ -1571,5 +957,4 @@ class SessionControllerTest extends TestCase
 
         $controller->calculatePoints($request, $response, $args);
     }
-
 }

@@ -3,7 +3,6 @@ namespace Solcre\lmsuy\Controller;
 
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\View\TwigWrapperView;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Service\SessionService;
@@ -41,11 +40,6 @@ class SessionController extends BaseController
             }
         }
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI['sessions'] = $sessions;
-        }
-
         // JsonView
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus(parent::STATUS_CODE_200);
@@ -74,19 +68,6 @@ class SessionController extends BaseController
             $message[] = $e->getMessage();
             $status  = ($e->getCode() == parent::STATUS_CODE_404) ? parent::STATUS_CODE_404 : parent::STATUS_CODE_500;
         }
- 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if ($status == $expectedStatus) {
-                $datosUI['session'] = isset($session) ? $session->toArray() : [];
-            }
-            
-            $datosUI['breadcrumb'] = 'Editar Sesión';
-            
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
 
         // JsonView
         if ($this->view instanceof JsonView) {
@@ -95,31 +76,6 @@ class SessionController extends BaseController
         }
 
         return $this->view->render($request, $response, $datosUI);
-    }
-
-    public function loadData($message)
-    {
-        $data = null;
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $template = 'session/listAll.html.twig';
-            $this->view->setTemplate($template);
-
-            $datosSessions = $this->sessionService->fetchAll();
-            $sessions = [];
-
-            if (is_array($datosSessions)) {
-                foreach ($datosSessions as $sessionObject) {
-                    $sessions[] = $sessionObject->toArray();
-                }
-            }
-
-            $data['sessions']   = $sessions;
-            $data['message']    = $message;
-        }
-
-        return $data;
     }
 
     public function add($request, $response, $args)
@@ -145,29 +101,12 @@ class SessionController extends BaseController
                 $status    = parent::STATUS_CODE_500;
                 var_dump($e->getMessage());
             }
-            
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI  =  $this->loadData($message);
-            }
 
             // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($session) ? $session->toArray() : [];
                 $response = $response->withStatus($status);
             }
-        }
-
-        return $this->view->render($request, $response, $datosUI);
-    }
-
-    public function form($request, $response, $args)
-    {
-        $datosUI = [];
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI['breadcrumb'] = 'Nueva Sesión';
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -194,11 +133,6 @@ class SessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-            }
-
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI  =  $this->loadData($message);
             }
 
             // JsonView
@@ -229,11 +163,7 @@ class SessionController extends BaseController
             $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_500;
         }
-        
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI  = $this->loadData($message);
-        }
-        
+
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus($status);
         }
@@ -265,10 +195,6 @@ class SessionController extends BaseController
 
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus($status);
-        }
-
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI = $this->loadData($message);
         }
 
         return $this->view->render($request, $response, $datosUI);
