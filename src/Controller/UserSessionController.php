@@ -136,7 +136,6 @@ class UserSessionController extends BaseController
 
             // JsonView
             if ($this->view instanceof JsonView) {
-
                 if (!empty($usersAdded)) {
                     $usersAddedToArray = [];
                     foreach ($usersAdded as $userSession) {

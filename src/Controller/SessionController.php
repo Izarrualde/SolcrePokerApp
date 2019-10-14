@@ -9,6 +9,7 @@ use Solcre\Pokerclub\Service\SessionService;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\SessionInvalidException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
 use Solcre\lmsuy\Service\RakebackService;
@@ -92,9 +93,13 @@ class SessionController extends BaseController
             } catch (SessionInvalidException $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $message[] = $e->getMessage();
+                $status    = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
+                var_dump($e->getMessage());
             }
 
             // JsonView

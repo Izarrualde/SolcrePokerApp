@@ -88,12 +88,6 @@ class ComissionSessionControllerTest extends TestCase
             $expectedComissionsArray[] = $comission->toArray();
           }
 
-          if ($view instanceof TwigWrapperView) {
-              $expectedDatosUI['session']               = $expectedSession->toArray();
-              $expectedDatosUI['session']['comissions'] = $expectedComissionsArray;
-              $expectedDatosUI['breadcrumb']            = 'Comisiones';
-          }
-
           if ($view instanceof JsonView) {
               $expectedDatosUI = $expectedComissionsArray;
           }
@@ -103,33 +97,6 @@ class ComissionSessionControllerTest extends TestCase
               'expectedDatosUI' => $expectedDatosUI 
           ];
       }
-
-    public function testListAll()
-    {
-        $view     = $this->createMock(TwigWrapperView::class);
-        $request  = $this->createMock(Slim\Psr7\Request::class);
-        
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $setup           = $this->listAllSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $args = [
-            'idSession' => 2
-        ];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->listAll($request, $response, $args);
-    }
 
     public function testListAllWithJsonView()
     {
@@ -175,46 +142,11 @@ class ComissionSessionControllerTest extends TestCase
           
           $expectedDatosUI = [];
 
-          if ($view instanceof TwigWrapperView) {
-              $expectedDatosUI['message']    = [$exception->getMessage()];
-              $expectedDatosUI['breadcrumb'] = 'Comisiones';
-          }
-
           return [ 
               'controller'      => $controller, 
               'expectedDatosUI' => $expectedDatosUI 
           ];
       }
-
-    public function testListAllWithException()
-    {
-        $view     = $this->createMock(TwigWrapperView::class);
-        $request  = $this->createMock(Slim\Psr7\Request::class);
-        
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $exception = new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
-
-        $setup           = $this->listAllWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $args = [
-            'idSession' => 2
-        ];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            //$this->equalTo($expectedDatosUI),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $controller->listAll($request, $response, $args);
-    }
 
     public function testListAllWithExceptionWithJsonView()
     {
@@ -276,12 +208,6 @@ class ComissionSessionControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']              = $expectedSession->toArray();
-            $expectedDatosUI['session']['comission'] = $expectedComission->toArray();
-            $expectedDatosUI['breadcrumb']           = 'Editar Comision';
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedComission->toArray();
         }
@@ -304,43 +230,10 @@ class ComissionSessionControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['message']    = [$exception->getMessage()];
-            $expectedDatosUI['breadcrumb'] = 'Editar Comision';
-        }
-
         return [ 
             'controller'      => $controller, 
             'expectedDatosUI' => $expectedDatosUI 
         ];
-    }
-
-    public function testList()
-    {
-        $view             = $this->createMock(TwigWrapperView::class);
-        $request          = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $setup           = $this->listSetup($view);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->list($request, $response, $args);
     }
 
     public function testListWithJsonView()
@@ -375,37 +268,6 @@ class ComissionSessionControllerTest extends TestCase
         $controller->list($request, $response, $args);
     }
 
-    public function testListWithComissionNotFoundException()
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $exception = New ComissionNotFoundException();
-
-        $setup           = $this->listWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            //$this->equalTo($expectedDatosUI),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $controller->list($request, $response, $args);
-    }
-
     public function testListWithComissionNotFoundExceptionWithJsonView()
     {
         $view    = $this->createMock(JsonView::class);
@@ -431,38 +293,6 @@ class ComissionSessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->list($request, $response, $args);
-    }
-
-
-    public function testListWithException()
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-        $request = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404);
-
-        $setup           = $this->listWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            //$this->equalTo($expectedDatosUI),
-            $this->contains([$exception->getMessage()]),
         );
 
         $controller->list($request, $response, $args);
@@ -560,13 +390,6 @@ class ComissionSessionControllerTest extends TestCase
             $expectedComissionsArray[] = $comission->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']               = $expectedSession->toArray();
-            $expectedDatosUI['session']['comissions'] = $expectedComissionsArray;
-            $expectedDatosUI['breadcrumb']            = 'Comisiones';
-            $expectedDatosUI['message']               = ['la comission se ingresó exitosamente.'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedDatosUI = $expectedComissionAdded->toArray();
         }
@@ -579,40 +402,6 @@ class ComissionSessionControllerTest extends TestCase
             'expectedResponse' => $expectedResponse
         ];
     }
-
-    public function testAdd()
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 2
-        ];
-
-        // metthod with data post use 2 parameters in addSetup
-        $setup            = $this->addSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-        $controller->add($request, $response, $args);
-    }
-
 
     public function testAddWithJsonView()
     {
@@ -640,7 +429,6 @@ class ComissionSessionControllerTest extends TestCase
 
         $controller->add($request, $response, $args);
     }
-
 
     public function addAndUpdateWithExceptionSetup($view, $exception)
     {
@@ -678,7 +466,6 @@ class ComissionSessionControllerTest extends TestCase
             }           
         }
 
-
         if ($view instanceof TwigWrapperView) {
             $expectedDatosUI['session']               = $expectedSession->toArray();
             $expectedDatosUI['session']['comissions'] = $expectedComissionsArray;
@@ -693,41 +480,6 @@ class ComissionSessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' => $expectedResponse
         ];
-    }
-
-    public function testAddWithInvalidComission() 
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 2
-        ];
-
-        $exception = new ComissionInvalidException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-      $controller->add($request, $response, $args);
     }
 
     public function testAddWithInvalidComissionWithJsonView() 
@@ -754,41 +506,6 @@ class ComissionSessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-      $controller->add($request, $response, $args);
-    }
-
-
-    public function testAddWithException() 
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 2
-        ];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
-        
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
         );
 
       $controller->add($request, $response, $args);
@@ -851,90 +568,6 @@ class ComissionSessionControllerTest extends TestCase
   }
 */
 
-    public function testForm()
-    {
-        $view             = $this->createMock(TwigWrapperView::class);
-        $comissionService = $this->createMock(ComissionSessionService::class);
-        $sessionService   = $this->createMock(SessionService::class);
-
-        $args = [
-          'idSession'  => 2
-        ];
-
-        $expectedSession = new SessionEntity(
-          $args['idSession'],
-          date_create('2019-06-27 15:00:00'),
-          'another test session',
-          'another test description',
-          'another test photo',
-          10,
-          date_create('2019-06-27 19:00:00'),
-          date_create('2019-06-27 19:30:00'),
-          date_create('2019-06-27 23:30:00')
-        );
-
-        $sessionService->method('fetch')->willReturn($expectedSession);
-
-        $controller = $this->createController($view, $comissionService, $sessionService);
-        $request    = $this->createMock(Slim\Psr7\Request::class);
-
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $expectedDatosUI = [];
-
-        $expectedDatosUI['session']    = $expectedSession->toArray();
-        $expectedDatosUI['breadcrumb'] = 'Nueva Comision';
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->form($request, $response, $args);
-    }
-
-    public function testFormWithException()
-    {
-        $view             = $this->createMock(TwigWrapperView::class);
-
-        $request          = $this->createMock(Slim\Psr7\Request::class);
-        $response         = new Slim\Psr7\Response();
-        $expectedResponse = $response;
-
-        $comissionService = $this->createMock(ComissionSessionService::class);
-        $sessionService   = $this->createMock(SessionService::class);
-
-        $args = [
-          'idSession'  => 2
-        ];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
-        $sessionService->method('fetch')->will($this->throwException($exception));
-
-        $controller = $this->createController($view, $comissionService, $sessionService);
-
-
-        $expectedDatosUI = [];
-
-        $expectedDatosUI['session']    = [];
-        $expectedDatosUI['message']    = [$exception->getMessage()];
-        $expectedDatosUI['breadcrumb'] = 'Nueva Comision';
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $controller->form($request, $response, $args);
-    }
-
     public function updateSetup($view)
     {
         $request = $this->createMock(Slim\Psr7\Request::class);
@@ -995,13 +628,6 @@ class ComissionSessionControllerTest extends TestCase
         foreach ($expectedComissions as $comission) {
             $expectedComissionsArray[] = $comission->toArray();
         }
-        
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']               = $expectedSession->toArray();
-            $expectedDatosUI['session']['comissions'] = $expectedComissionsArray;
-            $expectedDatosUI['breadcrumb']            = 'Comisiones';
-            $expectedDatosUI['message']               = ['la comisión se actualizó exitosamente.'];
-        }
 
         if ($view instanceof JsonView) {
             $expectedDatosUI  = $expectedComissionUpdated->toArray();
@@ -1016,39 +642,6 @@ class ComissionSessionControllerTest extends TestCase
             'expectedResponse' => $expectedResponse
         ];
 
-    }
-
-    public function testUpdate() 
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $setup            = $this->updateSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-        $controller->update($request, $response, $args);
     }
 
     public function testUpdateWithJsonView() 
@@ -1076,42 +669,6 @@ class ComissionSessionControllerTest extends TestCase
         );
 
         $controller->update($request, $response, $args);
-    }
-
-
-    public function testUpdateWithInvalidComission() 
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 2
-        ];
-
-        $exception = new ComissionInvalidException();
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-      $controller->update($request, $response, $args);
     }
 
     public function testUpdateWithInvalidComissionWithJsonView() 
@@ -1142,41 +699,6 @@ class ComissionSessionControllerTest extends TestCase
       $controller->update($request, $response, $args);
     }
 
-    public function testUpdateWithComissionNotFound() 
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 2
-        ];
-
-        $exception = new ComissionNotFoundException();
-
-        $setup           = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller      = $setup['controller'];
-        $expectedDatosUI = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse         = $setup['expectedResponse'];
-
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-      $controller->update($request, $response, $args);
-    }
-
     public function testUpdateWithComissionNotFoundWithJsonView() 
     {
         $view    = $this->createMock(JsonView::class);
@@ -1200,40 +722,6 @@ class ComissionSessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             //$this->equalTo($expectedDatosUI),
-        );
-
-      $controller->update($request, $response, $args);
-    }
-
-    public function testUpdateWithException() 
-    {
-        $view    = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession' => 2
-        ];
-
-        $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
-
-        $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
         );
 
       $controller->update($request, $response, $args);
@@ -1303,13 +791,6 @@ class ComissionSessionControllerTest extends TestCase
             $comissions[] = $comission->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']               = $expectedSession->toArray();
-            $expectedDatosUI['session']['comissions'] = $comissions;
-            $expectedDatosUI['breadcrumb']            = 'Comisiones';
-            $expectedDatosUI['message']               = ['La comisión se eliminó exitosamente'];
-        }
-
         if ($view instanceof JsonView) {
             $expectedResponse = $expectedResponse->withStatus(204);
         }
@@ -1359,13 +840,6 @@ class ComissionSessionControllerTest extends TestCase
             $comissions[] = $comission->toArray();
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']               = $expectedSession->toArray();
-            $expectedDatosUI['session']['comissions'] = $comissions;
-            $expectedDatosUI['breadcrumb']            = 'Comisiones';
-            $expectedDatosUI['message']               = [$exception->getMessage()];
-        }
-
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI,
@@ -1373,39 +847,6 @@ class ComissionSessionControllerTest extends TestCase
             'response'         => $response,
             'expectedResponse' =>  $expectedResponse
         ];
-    }
-
-    public function testDelete() 
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $setup            = $this->deleteSetup($view);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->equalTo($expectedDatosUI),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
     }
 
     public function testDeleteWithJsonView() 
@@ -1436,41 +877,6 @@ class ComissionSessionControllerTest extends TestCase
     }
 
 
-    public function testDeleteWithComissionNotFound() 
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $exception = new ComissionNotFoundException();
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
     public function testDeleteWithComissionNotFoundWithJsonView() 
     {
         $view = $this->createMock(JsonView::class);
@@ -1495,41 +901,6 @@ class ComissionSessionControllerTest extends TestCase
             $this->equalTo($request),
             $this->equalTo($expectedResponse),
             $this->equalTo($expectedDatosUI),
-        );
-
-        $controller->delete($request, $response, $args);
-    }
-
-    public function testDeleteWithException() 
-    {
-        $view = $this->createMock(TwigWrapperView::class);
-
-        $args = [
-          'idSession'   => 2,
-          'idcomission' => 1
-        ];
-
-        $exception = new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404); 
-
-        $setup            = $this->deleteWithExceptionSetup($view, $exception);
-        $controller       = $setup['controller'];
-        $expectedDatosUI  = $setup['expectedDatosUI'];
-        $request          = $setup['request'];
-        $response         = $setup['response'];
-        $expectedResponse = $setup['expectedResponse'];
-
-        $view->expects($this->once())
-        ->method('render')
-        ->with(
-            $this->equalTo($request),
-            $this->equalTo($expectedResponse),
-            $this->contains([$exception->getMessage()]),
-        );
-
-        $view->expects($this->once())
-        ->method('setTemplate')
-        ->with(
-            $this->equalTo('comissionSession/listAll.html.twig'),
         );
 
         $controller->delete($request, $response, $args);
@@ -1563,5 +934,4 @@ class ComissionSessionControllerTest extends TestCase
 
         $controller->delete($request, $response, $args);
     }
-
 }
