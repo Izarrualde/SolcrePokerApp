@@ -135,8 +135,7 @@ return function (App $app) {
         'RakebackController',
         function ($c) {
             $view = $c->get("view"); // retrieve the 'view' from the container
-            $em = $c->get(EntityManager::class);
-            return new RakebackController($view, $em);
+            return new RakebackController($view);
         }
     );
 };
