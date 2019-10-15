@@ -40,16 +40,16 @@ class UserSessionController extends BaseController
 
     public function listAll($request, $response, $args)
     {
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $usersSession   = null;
-        $status         = null;
+        $idSession    = $args['idSession'];
+        $datosUI      = [];
+        $usersSession = null;
+        $status       = null;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
         }
 
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
@@ -110,11 +110,11 @@ class UserSessionController extends BaseController
 
                 try {
                     $usersAdded[] = $this->userSessionService->add($data);
-                    // $status       = parent::STATUS_CODE_201;
+                    // $status = parent::STATUS_CODE_201;
                 } catch (UserSessionAlreadyAddedException $e) {
-                    // $status    = parent::STATUS_CODE_400;
+                    // $status = parent::STATUS_CODE_400;
                 } catch (TableIsFullException $e) {
-                    // $status    = parent::STATUS_CODE_400;
+                    // $status = parent::STATUS_CODE_400;
                 } catch (\Exception $e) {
                     $status    = parent::STATUS_CODE_500;
                 }

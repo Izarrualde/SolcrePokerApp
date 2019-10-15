@@ -52,11 +52,10 @@ class UserController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $idUser         = $args['iduser'];
-        $datosUI        = [];
-        $user           = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $idUser  = $args['iduser'];
+        $datosUI = [];
+        $user    = null;
+        $status  = null;
 
         try {
             $user   = $this->userService->fetch(array('id' => $idUser));
@@ -83,12 +82,12 @@ class UserController extends BaseController
         
         if (is_array($post)) {
             try {
-                $user      = $this->userService->add($post);
-                $status    = parent::STATUS_CODE_201;
+                $user   = $this->userService->add($post);
+                $status = parent::STATUS_CODE_201;
             } catch (UserInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -108,14 +107,14 @@ class UserController extends BaseController
 
         if (is_array($post)) {
             try {
-                $user      = $this->userService->update($post);
-                $status    = parent::STATUS_CODE_200;
+                $user   = $this->userService->update($post);
+                $status = parent::STATUS_CODE_200;
             } catch (UserInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (UserNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -134,14 +133,14 @@ class UserController extends BaseController
         $status  = null;
         
         try {
-            $delete    = $this->userService->delete($idUser);
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->userService->delete($idUser);
+            $status = parent::STATUS_CODE_204;
         } catch (UserHadActionException $e) {
-            $status    = parent::STATUS_CODE_400;
+            $status = parent::STATUS_CODE_400;
         } catch (UserNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
         
         if ($this->view instanceof JsonView) {
