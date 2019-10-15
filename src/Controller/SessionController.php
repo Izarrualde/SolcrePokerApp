@@ -29,7 +29,6 @@ class SessionController extends BaseController
     {
         $sessions       = [];
         $datosUI        = [];
-        $message        = null;
         $status         = null;
 
         $datosSessions = $this->sessionService->fetchAll();
@@ -40,7 +39,6 @@ class SessionController extends BaseController
             }
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus(parent::STATUS_CODE_200);
             $datosUI = $sessions;
@@ -52,7 +50,6 @@ class SessionController extends BaseController
     public function list($request, $response, $args)
     {
         $idSession      = $args['idSession'];
-        $message        = null;
         $datosUI        = [];
         $session        = null;
         $status         = null;
@@ -62,14 +59,11 @@ class SessionController extends BaseController
             $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (SessionNotFoundException $e) {
-            $message[] = $e->getMessage();
             $status  = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
             $status  = ($e->getCode() == parent::STATUS_CODE_404) ? parent::STATUS_CODE_404 : parent::STATUS_CODE_500;
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI = is_null($session) ? [] : $session->toArray();
             $response = $response->withStatus($status);
@@ -82,26 +76,20 @@ class SessionController extends BaseController
     {
         $post    = $request->getParsedBody();
         $datosUI = [];
-        $message = null;
         $status  = null;
 
         if (is_array($post)) {
             try {
                 $session = $this->sessionService->add($post);
-                $message[] = 'La sesión se agregó exitosamente.';
                 $status = parent::STATUS_CODE_201;
             } catch (SessionInvalidException $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_400;
             } catch (IncompleteDataException $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($session) ? $session->toArray() : [];
                 $response = $response->withStatus($status);
@@ -115,26 +103,20 @@ class SessionController extends BaseController
     {
         $post    = $request->getParsedBody();
         $datosUI = [];
-        $message = null;
         $status  = null;
         
         if (is_array($post)) {
             try {
                 $session = $this->sessionService->update($post);
-                $message[] = 'La sesión se actualizó exitosamente.';
                 $status    = parent::STATUS_CODE_200;
             } catch (SessionInvalidException $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_400;
             } catch (SessionNotFoundException $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($session) ? $session->toArray() : [];
                 $response = $response->withStatus($status);
@@ -148,18 +130,14 @@ class SessionController extends BaseController
     {
         $idSession = $args['idSession'];
         $datosUI   = null;
-        $message   = null;
         $status    = null;
 
         try {
             $delete    = $this->sessionService->delete($idSession);
-            $message[] = 'La Sesión se eliminó exitosamente';
             $status    = parent::STATUS_CODE_204;
         } catch (SessionNotFoundException $e) {
-            $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_500;
         }
 
@@ -175,20 +153,15 @@ class SessionController extends BaseController
         $idSession = $args['idSession'];
         $datosUI   = null;
         $sessions  = null;
-        $message   = null;
         
         try {
             $this->sessionService->calculateRakeback($idSession);
-            $message[] = 'Puntos asignados exitosamente.';
             $status    = parent::STATUS_CODE_200;
         } catch (SessionNotFoundException $e) {
-            $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_404;
         } catch (ClassNotExistingException $e) {
-            $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_400;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_500;
         }
 
