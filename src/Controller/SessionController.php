@@ -170,4 +170,39 @@ class SessionController extends BaseController
 
         return $this->view->render($request, $response, $datosUI);
     }
+
+    public function playSession($request, $response, $args)
+    {
+        $post    = $request->getParsedBody();
+        $datosUI = [];
+        $status  = null;
+        $idSession = $args['idSession'];
+
+        try {
+            $session = $this->sessionService->fetch(array('id' => $idSession));   
+        } catch (SessionInvalidException $e) {
+            $status = parent::STATUS_CODE_400;
+        } catch (SessionNotFoundException $e) {
+            $status = parent::STATUS_CODE_404;
+        } catch (\Exception $e) {
+            $status = parent::STATUS_CODE_500;
+        }
+        
+        
+        if ($session instanceof SessionEntity) {
+            $currenTime = New \DateTime();
+            // pasar dateTime a string fecha.T.hora
+            $session->setStartTimeReal($currenteTimeString)
+            $sessionArray = $session->toArray()
+            $session = $this->sessionService->update($sessionArray);
+            $status  = parent::STATUS_CODE_200;
+
+            if ($this->view instanceof JsonView) {
+                $datosUI  = isset($session) ? $sessionArray: [];
+                $response = $response->withStatus($status);
+            }
+        }
+
+        return $this->view->render($request, $response, $datosUI);
+    }
 }

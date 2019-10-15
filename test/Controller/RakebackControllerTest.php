@@ -123,5 +123,4 @@ class RakebackControllerTest extends TestCase
 
         $controller->listAll($request, $response, $args);
     }
-
 }
