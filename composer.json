@@ -21,7 +21,6 @@
         "slim/psr7": "^0.3.0",
         "slim/slim": "^4.0@beta",
         "slim/twig-view": "^2.5",
-        "twig/twig": "^2.10",
         "vlucas/phpdotenv": "^3.4@dev"
     },
     "require-dev": {

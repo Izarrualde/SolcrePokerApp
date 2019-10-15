@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82c80ddc3211f2f3b5cfa3c9862bfb36",
+    "content-hash": "4eb51f0e4d0cca47d28baea154189ab1",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -3488,12 +3488,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-http.git",
-                "reference": "2cf317aebf069b10fb918af7be9a980cde51da9a"
+                "reference": "cd002e8c3f19d17c9f14891b9ebc2a87293268dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-http/zipball/2cf317aebf069b10fb918af7be9a980cde51da9a",
-                "reference": "2cf317aebf069b10fb918af7be9a980cde51da9a",
+                "url": "https://api.github.com/repos/zendframework/zend-http/zipball/cd002e8c3f19d17c9f14891b9ebc2a87293268dd",
+                "reference": "cd002e8c3f19d17c9f14891b9ebc2a87293268dd",
                 "shasum": ""
             },
             "require": {
@@ -3535,7 +3535,7 @@
                 "zend",
                 "zf"
             ],
-            "time": "2019-10-01T14:35:57+00:00"
+            "time": "2019-10-15T19:04:27+00:00"
         },
         {
             "name": "zendframework/zend-hydrator",
@@ -5005,12 +5005,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/localheinz/composer-normalize.git",
-                "reference": "02a835bf1f476c92855b2cd60b49f53ecb8cd96a"
+                "reference": "ceed6758ae2dfa5fd3ef1597ef5da1e5e1426ddf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/localheinz/composer-normalize/zipball/02a835bf1f476c92855b2cd60b49f53ecb8cd96a",
-                "reference": "02a835bf1f476c92855b2cd60b49f53ecb8cd96a",
+                "url": "https://api.github.com/repos/localheinz/composer-normalize/zipball/ceed6758ae2dfa5fd3ef1597ef5da1e5e1426ddf",
+                "reference": "ceed6758ae2dfa5fd3ef1597ef5da1e5e1426ddf",
                 "shasum": ""
             },
             "require": {
@@ -5024,7 +5024,7 @@
                 "composer/composer": "^1.7.0",
                 "jangregor/phpstan-prophecy": "~0.4.2",
                 "localheinz/php-cs-fixer-config": "~1.23.0",
-                "localheinz/phpstan-rules": "~0.12.2",
+                "localheinz/phpstan-rules": "~0.13.0",
                 "localheinz/test-util": "~0.7.0",
                 "phpstan/phpstan": "~0.11.16",
                 "phpstan/phpstan-deprecation-rules": "~0.11.2",
@@ -5062,7 +5062,7 @@
                 "normalizer",
                 "plugin"
             ],
-            "time": "2019-10-13T06:54:05+00:00"
+            "time": "2019-10-15T13:08:23+00:00"
         },
         {
             "name": "localheinz/diff",
@@ -6671,12 +6671,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "61008719af041aa5928b54aa7594bafd5fa3e5fa"
+                "reference": "a07d6ce5d21ecdfe7edeedaf5efb3be85c4f2046"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/61008719af041aa5928b54aa7594bafd5fa3e5fa",
-                "reference": "61008719af041aa5928b54aa7594bafd5fa3e5fa",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a07d6ce5d21ecdfe7edeedaf5efb3be85c4f2046",
+                "reference": "a07d6ce5d21ecdfe7edeedaf5efb3be85c4f2046",
                 "shasum": ""
             },
             "require": {
@@ -6746,7 +6746,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-10-14T04:33:01+00:00"
+            "time": "2019-10-15T08:26:12+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -8024,12 +8024,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "3e15267bbfaf71df8c46e3a8ced0c7d3608eae9d"
+                "reference": "11e2eb654b9ff09ccb3e6ad7daa93de83f72055a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/3e15267bbfaf71df8c46e3a8ced0c7d3608eae9d",
-                "reference": "3e15267bbfaf71df8c46e3a8ced0c7d3608eae9d",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/11e2eb654b9ff09ccb3e6ad7daa93de83f72055a",
+                "reference": "11e2eb654b9ff09ccb3e6ad7daa93de83f72055a",
                 "shasum": ""
             },
             "require": {
@@ -8084,7 +8084,7 @@
             ],
             "description": "Symfony HttpClient component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-14T14:15:04+00:00"
+            "time": "2019-10-15T12:38:35+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -8092,12 +8092,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "353b2a3e907e5c34cf8f74827a4b21eb745aab1d"
+                "reference": "b0a78f054626b3a5ea1964a76f460170d1529007"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/353b2a3e907e5c34cf8f74827a4b21eb745aab1d",
-                "reference": "353b2a3e907e5c34cf8f74827a4b21eb745aab1d",
+                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/b0a78f054626b3a5ea1964a76f460170d1529007",
+                "reference": "b0a78f054626b3a5ea1964a76f460170d1529007",
                 "shasum": ""
             },
             "require": {
@@ -8141,7 +8141,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-09-26T22:09:58+00:00"
+            "time": "2019-10-15T12:38:35+00:00"
         },
         {
             "name": "symfony/mime",

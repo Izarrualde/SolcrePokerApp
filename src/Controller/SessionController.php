@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\View\JsonView;
 use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\SessionInvalidException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
@@ -170,4 +171,49 @@ class SessionController extends BaseController
 
         return $this->view->render($request, $response, $datosUI);
     }
+
+    public function playSession($request, $response, $args)
+    {
+        $idSession = $args['idSession'];
+        $datosUI   = null;
+
+        try {
+            $session = $this->sessionService->play($idSession);
+            $status  = parent::STATUS_CODE_200;
+        } catch (SessionNotFoundException $e) {
+            $status = parent::STATUS_CODE_404;
+        } catch (\Exception $e) {
+            $status = parent::STATUS_CODE_500;
+        }
+
+        if ($this->view instanceof JsonView) {
+            $datosUI  = isset($session) ? $sessionArray: [];
+            $response = $response->withStatus($status);
+        }
+
+        return $this->view->render($request, $response, $datosUI);
+    }
+
+    public function stopSession($request, $response, $args)
+    {
+        $idSession = $args['idSession'];
+        $datosUI = null;
+
+        try {
+            $session = $this->sessionService->stop($idSession);
+            $status  = parent::STATUS_CODE_200;
+        } catch (SessionNotFoundException $e) {
+            $status = parent::STATUS_CODE_404;
+        } catch (\Exception $e) {
+            $status = parent::STATUS_CODE_500;
+        }
+
+        if ($this->view instanceof JsonView) {
+            $datosUI  = isset($session) ? $sessionArray: [];
+            $response = $response->withStatus($status);
+        }
+
+        return $this->view->render($request, $response, $datosUI);
+    }
+
 }
