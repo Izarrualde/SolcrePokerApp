@@ -55,20 +55,6 @@ class BuyinSessionController extends BaseController
             }
         }
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if ($status == $expectedStatus) {
-                $datosUI['session']           = is_null($session) ? [] : $session->toArray();
-                $datosUI['session']['buyins'] = $buyins;
-            }
-
-            $datosUI['breadcrumb'] = 'Buyins';
-
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
-
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($buyins) ? $buyins : [];
@@ -99,21 +85,6 @@ class BuyinSessionController extends BaseController
             $status    = parent::STATUS_CODE_500;
         }
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if ($status == $expectedStatus) {
-                $session = $this->sessionService->fetch(array('id' => $idSession));
-                $datosUI['session']          = is_null($session) ? [] : $session->toArray();
-                $datosUI['session']['buyin'] = is_null($buyin) ? [] : $buyin->toArray();
-            }
-
-            $datosUI['breadcrumb'] = 'Editar Buyin';
-            
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
-
         // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($buyin) ? $buyin->toArray() : [];
@@ -121,42 +92,6 @@ class BuyinSessionController extends BaseController
         }
 
         return $this->view->render($request, $response, $datosUI);
-    }
-
-
-    public function loadData($idSession, $message)
-    {
-        $data = null;
-
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            $template = 'buyinSession/listAll.html.twig';
-            $this->view->setTemplate($template);
-                
-            try {
-                $session = $this->sessionService->fetch(array('id' => $idSession));
-            // @codeCoverageIgnoreStart
-            } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-            }
-            // @codeCoverageIgnoreEnd
-            
-            $datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
-            $buyins = [];
-
-            if (is_array($datosBuyins)) {
-                foreach ($datosBuyins as $buyin) {
-                    $buyins[] = $buyin->toArray();
-                }
-            }
-
-            $data['session']           = isset($session) ? $session->toArray() : [];
-            $data['session']['buyins'] = $buyins;
-            $data['breadcrumb']        = 'Buyins';
-            $data['message']           = $message;
-        }
-
-        return $data;
     }
 
     public function add($request, $response, $args)
@@ -178,11 +113,6 @@ class BuyinSessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-            }
-            
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI  =  $this->loadData($idSession, $message);
             }
 
             // JsonView
@@ -213,23 +143,6 @@ class BuyinSessionController extends BaseController
         
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
 
-        // TwigWrapperView
-        if ($this->view instanceof TwigWrapperView) {
-            if (isset($datosUsersSession)) {
-                foreach ($datosUsersSession as $userSessionObject) {
-                    $usersSession[] = $userSessionObject->toArray();
-                }
-            }
-
-            $datosUI['session']                 = isset($session) ? $session->toArray() : [];
-            $datosUI['session']['usersSession'] = $usersSession;
-            $datosUI['breadcrumb']              = 'Nuevo Buyin';
-            
-            if (isset($message)) {
-                $datosUI['message'] = $message;
-            }
-        }
-
         return $this->view->render($request, $response, $datosUI);
     }
 
@@ -255,11 +168,6 @@ class BuyinSessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-            }
-            
-            // TwigWrapperView
-            if ($this->view instanceof TwigWrapperView) {
-                $datosUI  =  $this->loadData($idSession, $message);
             }
 
             // JsonView
@@ -291,10 +199,6 @@ class BuyinSessionController extends BaseController
         } catch (\Exception $e) {
             $message[] = $e->getMessage();
             $status    = parent::STATUS_CODE_500;
-        }
-        
-        if ($this->view instanceof TwigWrapperView) {
-            $datosUI  = $this->loadData($idSession, $message);
         }
         
         if ($this->view instanceof JsonView) {

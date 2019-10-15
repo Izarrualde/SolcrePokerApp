@@ -107,11 +107,6 @@ class ExpensesSessionControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-            if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['message']    = [$exception->getMessage()];
-            $expectedDatosUI['breadcrumb'] = 'Gastos';
-        }
-
         return [ 
             'controller'      => $controller, 
             'expectedDatosUI' => $expectedDatosUI 
