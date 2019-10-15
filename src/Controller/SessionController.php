@@ -175,11 +175,11 @@ class SessionController extends BaseController
     public function playSession($request, $response, $args)
     {
         $idSession = $args['idSession'];
-        $datosUI = null;
+        $datosUI   = null;
 
         try {
-            $session = $this->sessionService->playSession($idSession);
-            $status = parent::STATUS_CODE_200;
+            $session = $this->sessionService->play($idSession);
+            $status  = parent::STATUS_CODE_200;
         } catch (SessionNotFoundException $e) {
             $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
@@ -193,4 +193,27 @@ class SessionController extends BaseController
 
         return $this->view->render($request, $response, $datosUI);
     }
+
+    public function stopSession($request, $response, $args)
+    {
+        $idSession = $args['idSession'];
+        $datosUI = null;
+
+        try {
+            $session = $this->sessionService->stop($idSession);
+            $status  = parent::STATUS_CODE_200;
+        } catch (SessionNotFoundException $e) {
+            $status = parent::STATUS_CODE_404;
+        } catch (\Exception $e) {
+            $status = parent::STATUS_CODE_500;
+        }
+
+        if ($this->view instanceof JsonView) {
+            $datosUI  = isset($session) ? $sessionArray: [];
+            $response = $response->withStatus($status);
+        }
+
+        return $this->view->render($request, $response, $datosUI);
+    }
+
 }
