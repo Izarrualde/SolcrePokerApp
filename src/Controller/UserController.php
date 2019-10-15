@@ -24,14 +24,14 @@ class UserController extends BaseController
     
     public function listAll($request, $response, $args)
     {
-        $users          = null;
-        $datosUI        = [];
+        $users   = null;
+        $datosUI = [];
 
         $datosUsers = $this->userService->fetchAll(
             array(
             ),
             array(
-                'name' => 'ASC',
+                'name'     => 'ASC',
                 'lastname' => 'ASC'
             )
         );
@@ -44,7 +44,7 @@ class UserController extends BaseController
 
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus(parent::STATUS_CODE_200);
-            $datosUI = $users;
+            $datosUI  = $users;
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -59,12 +59,12 @@ class UserController extends BaseController
         $expectedStatus = parent::STATUS_CODE_200;
 
         try {
-            $user = $this->userService->fetch(array('id' => $idUser));
-            $status  = parent::STATUS_CODE_200;
+            $user   = $this->userService->fetch(array('id' => $idUser));
+            $status = parent::STATUS_CODE_200;
         } catch (UserNotFoundException $e) {
-            $status  = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status  = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {

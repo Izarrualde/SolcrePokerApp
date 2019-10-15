@@ -41,13 +41,12 @@ class TipSessionController extends BaseController
         $dealerTips     = [];
         $datosUI        = [];
         $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
-                $status  = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
         }
 
         $datosDealerTips  = $this->dealerTipService->fetchAll(array('session' => $idSession));
@@ -76,34 +75,33 @@ class TipSessionController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $idSession = $args['idSession'];
+        $datosUI   = [];
+        $status    = null;
 
         if (isset($args['idDealerTip'])) {
             $id = $args['idDealerTip'];
 
             try {
-                $tip = $this->dealerTipService->fetch(array('id' => $id));
-                $status    = parent::STATUS_CODE_200;
+                $tip    = $this->dealerTipService->fetch(array('id' => $id));
+                $status = parent::STATUS_CODE_200;
             } catch (\Exception $e) {
-                $status  = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             }
         } elseif (isset($args['idServiceTip'])) {
             $id = $args['idServiceTip'];
 
             try {
                 $tip = $this->serviceTipService->fetch(array('id' => $id));
-                $status     = parent::STATUS_CODE_200;
+                $status = parent::STATUS_CODE_200;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             }
         }
 
         if ($this->view instanceof JsonView) {
-            $datosUI          = isset($tip) ? $tip->toArray() : [];
-            $response         = $response->withStatus($status);
+            $datosUI  = isset($tip) ? $tip->toArray() : [];
+            $response = $response->withStatus($status);
         }
 
 
@@ -182,7 +180,6 @@ class TipSessionController extends BaseController
     {
         $datosUI        = [];
         $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
 
         $post = $request->getParsedBody();
 
@@ -190,24 +187,24 @@ class TipSessionController extends BaseController
             if (isset($args['idDealerTip'])) {
                 $keyTip = 'dealerTip';
                 try {
-                    $tip       = $this->dealerTipService->update($post);
-                    $status    = parent::STATUS_CODE_200;
+                    $tip    = $this->dealerTipService->update($post);
+                    $status = parent::STATUS_CODE_200;
                 } catch (DealerTipInvalidException $e) {
-                    $status    = parent::STATUS_CODE_400;
+                    $status = parent::STATUS_CODE_400;
                 } catch (\Exception $e) {
-                    $status    = parent::STATUS_CODE_500;
+                    $status = parent::STATUS_CODE_500;
                 }
             }
 
             if (isset($args['idServiceTip'])) {
                 $keyTip = 'serviceTip';
                 try {
-                    $tip       = $this->serviceTipService->update($post);
-                    $status    = parent::STATUS_CODE_200;
+                    $tip    = $this->serviceTipService->update($post);
+                    $status = parent::STATUS_CODE_200;
                 } catch (ServiceTipInvalidException $e) {
-                    $status    = parent::STATUS_CODE_400;
+                    $status = parent::STATUS_CODE_400;
                 } catch (\Exception $e) {
-                    $status    = parent::STATUS_CODE_500;
+                    $status = parent::STATUS_CODE_500;
                 }
             }
 
@@ -222,30 +219,30 @@ class TipSessionController extends BaseController
 
     public function delete($request, $response, $args)
     {
-        $datosUI        = null;
-        $status         = null;
-        $get = $request->getQueryParams();
+        $datosUI = null;
+        $status  = null;
+        $get     = $request->getQueryParams();
 
         if (isset($args['idDealerTip'])) {
             $idTip =  $args['idDealerTip'];
             try {
-                $delete    = $this->dealerTipService->delete($idTip);
-                $status    = parent::STATUS_CODE_204;
+                $delete = $this->dealerTipService->delete($idTip);
+                $status = parent::STATUS_CODE_204;
             } catch (DealerTipNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
         } elseif (isset($args['idServiceTip'])) {
-            $idTip =  $args['idServiceTip'];
+            $idTip  =  $args['idServiceTip'];
             $delete = $idServiceTip =  $idTip;
             try {
                 $delete = $this->serviceTipService->delete($idServiceTip);
-                $status    = parent::STATUS_CODE_204;
+                $status = parent::STATUS_CODE_204;
             } catch (ServiceTipNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
         }
 

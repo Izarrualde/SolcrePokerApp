@@ -44,7 +44,6 @@ class UserSessionController extends BaseController
         $datosUI        = [];
         $usersSession   = null;
         $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
@@ -71,12 +70,11 @@ class UserSessionController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $id          = $args['idusersession'];
-        // $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $comission      = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $id        = $args['idusersession'];
+        $datosUI   = [];
+        $comission = null;
+        $status    = null;
+ 
 
         try {
             $userSession = $this->userSessionService->fetch(array('id' => $id));
@@ -85,7 +83,6 @@ class UserSessionController extends BaseController
             $status  = parent::STATUS_CODE_404;
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($userSession) ? $userSession->toArray() : [];
             $response = $response->withStatus($status);
@@ -96,11 +93,11 @@ class UserSessionController extends BaseController
 
     public function add($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $post['idSession'];
-        $usersAdded     = [];
-        $datosUI        = [];
-        $status         = null;
+        $post       = $request->getParsedBody();
+        $idSession  = $post['idSession'];
+        $usersAdded = [];
+        $datosUI    = [];
+        $status     = null;
 
         if (is_array($post)) {
             foreach ($post['user_id'] as $userId) {
@@ -123,7 +120,6 @@ class UserSessionController extends BaseController
                 }
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 if (!empty($usersAdded)) {
                     $usersAddedToArray = [];
@@ -141,10 +137,10 @@ class UserSessionController extends BaseController
 
     public function update($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $post['idSession'];
-        $datosUI        = [];
-        $status         = null;
+        $post      = $request->getParsedBody();
+        $idSession = $post['idSession'];
+        $datosUI   = [];
+        $status    = null;
 
         if (is_array($post)) {
             try {
@@ -173,12 +169,12 @@ class UserSessionController extends BaseController
         $status    = null;
         
         try {
-            $delete    = $this->userSessionService->delete($id);
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->userSessionService->delete($id);
+            $status = parent::STATUS_CODE_204;
         } catch (UserSessionNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
         
         if ($this->view instanceof JsonView) {
@@ -201,13 +197,13 @@ class UserSessionController extends BaseController
                 $userSession = $this->userSessionService->close($post);
                 $status      = parent::STATUS_CODE_200;
             } catch (InsufficientUserSessionTimeException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
             
             if ($this->view instanceof JsonView) {
-                $datosUI = isset($userSession) ? $userSession->toArray() : [];
+                $datosUI  = isset($userSession) ? $userSession->toArray() : [];
                 $response = $response->withStatus($status);
             }
         }

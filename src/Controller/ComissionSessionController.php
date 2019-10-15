@@ -32,13 +32,12 @@ class ComissionSessionController extends BaseController
         $comissions     = null;
         $datosUI        = [];
         $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
-                $status  = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
         }
 
         $datosComissions = $this->comissionService->fetchAll(array('session' => $idSession));
@@ -59,24 +58,23 @@ class ComissionSessionController extends BaseController
  
     public function list($request, $response, $args)
     {
-        $id             = $args['idcomission'];
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $comission      = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $id        = $args['idcomission'];
+        $idSession = $args['idSession'];
+        $datosUI   = [];
+        $comission = null;
+        $status    = null;
 
         try {
             $comission = $this->comissionService->fetch(array('id' => $id));
             $status    = parent::STATUS_CODE_200;
         } catch (ComissionNotFoundException $e) {
-            $status  = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status  = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {
-            $datosUI = isset($comission) ? $comission->toArray() : [];
+            $datosUI  = isset($comission) ? $comission->toArray() : [];
             $response = $response->withStatus($status);
         }
 
@@ -85,19 +83,19 @@ class ComissionSessionController extends BaseController
 
     public function add($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $status         = null;
+        $post      = $request->getParsedBody();
+        $idSession = $args['idSession'];
+        $datosUI   = [];
+        $status    = null;
 
         if (is_array($post)) {
             try {
                 $comission = $this->comissionService->add($post);
-                $status = parent::STATUS_CODE_201;
+                $status    = parent::STATUS_CODE_201;
             } catch (ComissionInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -111,21 +109,21 @@ class ComissionSessionController extends BaseController
 
     public function update($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $post['idSession'];
-        $datosUI        = [];
-        $status         = null;
+        $post      = $request->getParsedBody();
+        $idSession = $post['idSession'];
+        $datosUI   = [];
+        $status    = null;
 
         if (is_array($post)) {
             try {
                 $comission = $this->comissionService->update($post);
                 $status    = parent::STATUS_CODE_200;
             } catch (ComissionInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (ComissionNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -139,18 +137,18 @@ class ComissionSessionController extends BaseController
 
     public function delete($request, $response, $args)
     {
-        $id             = $args['idcomission'];
-        $idSession      = $args['idSession'];
-        $datosUI        = null;
-        $status         = null;
+        $id        = $args['idcomission'];
+        $idSession = $args['idSession'];
+        $datosUI   = null;
+        $status    = null;
 
         try {
-            $delete    = $this->comissionService->delete($id);
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->comissionService->delete($id);
+            $status = parent::STATUS_CODE_204;
         } catch (ComissionNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
         
         if ($this->view instanceof JsonView) {

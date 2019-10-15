@@ -33,17 +33,16 @@ class BuyinSessionController extends BaseController
 
     public function listAll($request, $response, $args)
     {
-        $idSession      = $args['idSession'];
-        $buyins         = null;
-        $datosUI        = [];
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $idSession = $args['idSession'];
+        $buyins    = null;
+        $datosUI   = [];
+        $status    = null;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
         }
         
         $datosBuyins = $this->buyinSessionService->fetchAllBuyins($idSession);
@@ -63,20 +62,19 @@ class BuyinSessionController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $id             = $args['idbuyin'];
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $comission      = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $id        = $args['idbuyin'];
+        $idSession = $args['idSession'];
+        $datosUI   = [];
+        $comission = null;
+        $status    = null;
 
         try {
             $buyin  = $this->buyinSessionService->fetch(array('id' => $id));
             $status = parent::STATUS_CODE_200;
         } catch (BuyinNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {
@@ -96,12 +94,12 @@ class BuyinSessionController extends BaseController
 
         if (is_array($post)) {
             try {
-                $buyin = $this->buyinSessionService->add($post);
+                $buyin  = $this->buyinSessionService->add($post);
                 $status = parent::STATUS_CODE_201;
             } catch (BuyinInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -109,24 +107,6 @@ class BuyinSessionController extends BaseController
                 $response = $response->withStatus($status);
             }
         }
-
-        return $this->view->render($request, $response, $datosUI);
-    }
-
-    public function form($request, $response, $args)
-    {
-        $idSession    = $args['idSession'];
-        $datosUI      = [];
-        $usersSession = [];
-
-        try {
-            $session = $this->sessionService->fetch(array('id' => $idSession));
-            $status  = parent::STATUS_CODE_200;
-        } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_404;
-        }
-        
-        $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
 
         return $this->view->render($request, $response, $datosUI);
     }
@@ -140,14 +120,14 @@ class BuyinSessionController extends BaseController
 
         if (is_array($post)) {
             try {
-                $buyin     = $this->buyinSessionService->update($post);
-                $status    = parent::STATUS_CODE_200;
+                $buyin  = $this->buyinSessionService->update($post);
+                $status = parent::STATUS_CODE_200;
             } catch (BuyinInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (BuyinNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -167,12 +147,12 @@ class BuyinSessionController extends BaseController
         $status    = null;
 
         try {
-            $delete    = $this->buyinSessionService->delete($id);
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->buyinSessionService->delete($id);
+            $status = parent::STATUS_CODE_204;
         } catch (BuyinNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
         
         if ($this->view instanceof JsonView) {

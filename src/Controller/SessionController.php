@@ -27,9 +27,9 @@ class SessionController extends BaseController
 
     public function listAll($request, $response, $args)
     {
-        $sessions       = [];
-        $datosUI        = [];
-        $status         = null;
+        $sessions = [];
+        $datosUI  = [];
+        $status   = null;
 
         $datosSessions = $this->sessionService->fetchAll();
 
@@ -41,7 +41,7 @@ class SessionController extends BaseController
 
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus(parent::STATUS_CODE_200);
-            $datosUI = $sessions;
+            $datosUI  = $sessions;
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -49,11 +49,10 @@ class SessionController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $session        = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $idSession = $args['idSession'];
+        $datosUI   = [];
+        $session   = null;
+        $status    = null;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
@@ -65,7 +64,7 @@ class SessionController extends BaseController
         }
 
         if ($this->view instanceof JsonView) {
-            $datosUI = is_null($session) ? [] : $session->toArray();
+            $datosUI  = is_null($session) ? [] : $session->toArray();
             $response = $response->withStatus($status);
         }
 
@@ -81,13 +80,13 @@ class SessionController extends BaseController
         if (is_array($post)) {
             try {
                 $session = $this->sessionService->add($post);
-                $status = parent::STATUS_CODE_201;
+                $status  = parent::STATUS_CODE_201;
             } catch (SessionInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (IncompleteDataException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -108,13 +107,13 @@ class SessionController extends BaseController
         if (is_array($post)) {
             try {
                 $session = $this->sessionService->update($post);
-                $status    = parent::STATUS_CODE_200;
+                $status  = parent::STATUS_CODE_200;
             } catch (SessionInvalidException $e) {
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (SessionNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
@@ -133,12 +132,12 @@ class SessionController extends BaseController
         $status    = null;
 
         try {
-            $delete    = $this->sessionService->delete($idSession);
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->sessionService->delete($idSession);
+            $status = parent::STATUS_CODE_204;
         } catch (SessionNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {
@@ -156,13 +155,13 @@ class SessionController extends BaseController
         
         try {
             $this->sessionService->calculateRakeback($idSession);
-            $status    = parent::STATUS_CODE_200;
+            $status = parent::STATUS_CODE_200;
         } catch (SessionNotFoundException $e) {
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (ClassNotExistingException $e) {
-            $status    = parent::STATUS_CODE_400;
+            $status = parent::STATUS_CODE_400;
         } catch (\Exception $e) {
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {
