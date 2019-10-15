@@ -25,7 +25,7 @@ return function (App $app) {
     $app->get('/sessions/{idSession}/remove', 'SessionController:delete');
     $app->post('/sessions/{idSession}/update', 'SessionController:update');
     $app->get('/sessions/{idSession}/calculate', 'SessionController:CalculatePoints');
-    $app->post('/sessions/{idSession}/play', 'SessionController:playSession');
+    $app->get('/sessions/{idSession}/play', 'SessionController:playSession');
 
     $app->get('/sessions/{idSession}/expenses', 'ExpensesSessionController:listAll');
     $app->get('/sessions/{idSession}/expenses/{idExpenditure}', 'ExpensesSessionController:list');
