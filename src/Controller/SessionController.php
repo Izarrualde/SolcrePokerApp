@@ -99,7 +99,6 @@ class SessionController extends BaseController
             } catch (\Exception $e) {
                 $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
-                var_dump($e->getMessage());
             }
 
             // JsonView

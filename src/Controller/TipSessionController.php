@@ -95,7 +95,6 @@ class TipSessionController extends BaseController
                 $message[] = $e->getMessage();
                 $status  = parent::STATUS_CODE_404;
             }
-
         } elseif (isset($args['idServiceTip'])) {
             $id = $args['idServiceTip'];
 
