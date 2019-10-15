@@ -274,12 +274,6 @@ class UserSessionControllerTest extends TestCase
 
         $expectedDatosUI = [];
 
-        if ($view instanceof TwigWrapperView) {
-            // $expectedDatosUI['session']               = $expectedSession->toArray();
-            $expectedDatosUI['userSession'] = $expectedUserSession->toArray();
-            $expectedDatosUI['breadcrumb']  = 'Editar Usuario';
-        }
-
         // JsonView
         if ($view instanceof JsonView) {
             $expectedDatosUI  = $expectedUserSession->toArray();
@@ -333,11 +327,6 @@ class UserSessionControllerTest extends TestCase
         $controller = $this->createController($view, $userSessionService, $userService, $sessionService);
 
         $expectedDatosUI = [];
-
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['message']    = [$exception->getMessage()];
-            $expectedDatosUI['breadcrumb']  = 'Editar Usuario';
-        }
 
         return [ 
             'controller'      => $controller, 

@@ -466,13 +466,6 @@ class ComissionSessionControllerTest extends TestCase
             }           
         }
 
-        if ($view instanceof TwigWrapperView) {
-            $expectedDatosUI['session']               = $expectedSession->toArray();
-            $expectedDatosUI['session']['comissions'] = $expectedComissionsArray;
-            $expectedDatosUI['message']               = [$exception->getMessage()];
-            $expectedDatosUI['breadcrumb']            = 'Comisiones';
-        }
-
         return [ 
             'controller'       => $controller, 
             'expectedDatosUI'  => $expectedDatosUI,
