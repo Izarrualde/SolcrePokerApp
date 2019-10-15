@@ -192,8 +192,8 @@ class SessionController extends BaseController
         if ($session instanceof SessionEntity) {
             $currenTime = New \DateTime();
             // pasar dateTime a string fecha.T.hora
-            $session->setStartTimeReal($currenteTimeString)
-            $sessionArray = $session->toArray()
+            $session->setStartTimeReal($currenteTimeString);
+            $sessionArray = $session->toArray();
             $session = $this->sessionService->update($sessionArray);
             $status  = parent::STATUS_CODE_200;
 
