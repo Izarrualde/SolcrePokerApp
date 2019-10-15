@@ -24,14 +24,14 @@ class UserController extends BaseController
     
     public function listAll($request, $response, $args)
     {
-        $users          = null;
-        $datosUI        = [];
+        $users   = null;
+        $datosUI = [];
 
         $datosUsers = $this->userService->fetchAll(
             array(
             ),
             array(
-                'name' => 'ASC',
+                'name'     => 'ASC',
                 'lastname' => 'ASC'
             )
         );
@@ -42,10 +42,9 @@ class UserController extends BaseController
             }
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $response = $response->withStatus(parent::STATUS_CODE_200);
-            $datosUI = $users;
+            $datosUI  = $users;
         }
 
         return $this->view->render($request, $response, $datosUI);
@@ -53,25 +52,20 @@ class UserController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $idUser         = $args['iduser'];
-        $datosUI        = [];
-        $user           = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
-        $message        = null;
+        $idUser  = $args['iduser'];
+        $datosUI = [];
+        $user    = null;
+        $status  = null;
 
         try {
-            $user = $this->userService->fetch(array('id' => $idUser));
-            $status  = parent::STATUS_CODE_200;
+            $user   = $this->userService->fetch(array('id' => $idUser));
+            $status = parent::STATUS_CODE_200;
         } catch (UserNotFoundException $e) {
-            $message[] = $e->getMessage();
-            $status  = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
-            $status  = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($user) ? $user->toArray() : [];
             $response = $response->withStatus($status);
@@ -84,23 +78,18 @@ class UserController extends BaseController
     {
         $post    = $request->getParsedBody();
         $datosUI = [];
-        $message = null;
         $status  = null;
         
         if (is_array($post)) {
             try {
-                $user      = $this->userService->add($post);
-                $message[] = 'El usuario se agregó exitosamente.';
-                $status    = parent::STATUS_CODE_201;
+                $user   = $this->userService->add($post);
+                $status = parent::STATUS_CODE_201;
             } catch (UserInvalidException $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($user) ? $user->toArray() : [];
                 $response = $response->withStatus($status);
@@ -114,26 +103,20 @@ class UserController extends BaseController
     {
         $post    = $request->getParsedBody();
         $datosUI = [];
-        $message = null;
         $status  = null;
 
         if (is_array($post)) {
             try {
-                $user      = $this->userService->update($post);
-                $message[] = 'El usuario se actualizó exitosamente';
-                $status    = parent::STATUS_CODE_200;
+                $user   = $this->userService->update($post);
+                $status = parent::STATUS_CODE_200;
             } catch (UserInvalidException $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (UserNotFoundException $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI  = isset($user) ? $user->toArray() : [];
                 $response = $response->withStatus($status);
@@ -147,22 +130,17 @@ class UserController extends BaseController
     {
         $idUser  = $args['iduser'];
         $datosUI = null;
-        $message = null;
         $status  = null;
         
         try {
-            $delete    = $this->userService->delete($idUser);
-            $message[] = 'El usuario se eliminó exitosamente';
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->userService->delete($idUser);
+            $status = parent::STATUS_CODE_204;
         } catch (UserHadActionException $e) {
-            $message[] = $e->getMessage();
-            $status    = parent::STATUS_CODE_400;
+            $status = parent::STATUS_CODE_400;
         } catch (UserNotFoundException $e) {
-            $message[] = $e->getMessage();
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
         
         if ($this->view instanceof JsonView) {

@@ -40,19 +40,16 @@ class UserSessionController extends BaseController
 
     public function listAll($request, $response, $args)
     {
-        $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $usersSession   = null;
-        $message        = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
+        $idSession    = $args['idSession'];
+        $datosUI      = [];
+        $usersSession = null;
+        $status       = null;
 
         try {
             $session = $this->sessionService->fetch(array('id' => $idSession));
             $status  = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
         }
 
         $datosUsersSession = $this->userSessionService->fetchAll(array('session' => $idSession));
@@ -63,7 +60,6 @@ class UserSessionController extends BaseController
             }
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($usersSession) ? $usersSession : [];
             $response = $response->withStatus($status);
@@ -74,23 +70,19 @@ class UserSessionController extends BaseController
 
     public function list($request, $response, $args)
     {
-        $id          = $args['idusersession'];
-        // $idSession      = $args['idSession'];
-        $datosUI        = [];
-        $comission      = null;
-        $status         = null;
-        $expectedStatus = parent::STATUS_CODE_200;
-        $message        = null;
+        $id        = $args['idusersession'];
+        $datosUI   = [];
+        $comission = null;
+        $status    = null;
+ 
 
         try {
             $userSession = $this->userSessionService->fetch(array('id' => $id));
             $status    = parent::STATUS_CODE_200;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
             $status  = parent::STATUS_CODE_404;
         }
 
-        // JsonView
         if ($this->view instanceof JsonView) {
             $datosUI  = isset($userSession) ? $userSession->toArray() : [];
             $response = $response->withStatus($status);
@@ -101,12 +93,11 @@ class UserSessionController extends BaseController
 
     public function add($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $post['idSession'];
-        $usersAdded     = [];
-        $datosUI        = [];
-        $status         = null;
-        $message        = null;
+        $post       = $request->getParsedBody();
+        $idSession  = $post['idSession'];
+        $usersAdded = [];
+        $datosUI    = [];
+        $status     = null;
 
         if (is_array($post)) {
             foreach ($post['user_id'] as $userId) {
@@ -119,22 +110,16 @@ class UserSessionController extends BaseController
 
                 try {
                     $usersAdded[] = $this->userSessionService->add($data);
-
-                    $message[]    = 'Se agregó exitosamente.';
-                    // $status       = parent::STATUS_CODE_201;
+                    // $status = parent::STATUS_CODE_201;
                 } catch (UserSessionAlreadyAddedException $e) {
-                    $message[] = $e->getMessage();
-                    // $status    = parent::STATUS_CODE_400;
+                    // $status = parent::STATUS_CODE_400;
                 } catch (TableIsFullException $e) {
-                    $message[] = $e->getMessage();
-                    // $status    = parent::STATUS_CODE_400;
+                    // $status = parent::STATUS_CODE_400;
                 } catch (\Exception $e) {
-                    $message[] = $e->getMessage();
                     $status    = parent::STATUS_CODE_500;
                 }
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 if (!empty($usersAdded)) {
                     $usersAddedToArray = [];
@@ -152,26 +137,21 @@ class UserSessionController extends BaseController
 
     public function update($request, $response, $args)
     {
-        $post           = $request->getParsedBody();
-        $idSession      = $post['idSession'];
-        $datosUI        = [];
-        $message        = null;
-        $status         = null;
+        $post      = $request->getParsedBody();
+        $idSession = $post['idSession'];
+        $datosUI   = [];
+        $status    = null;
 
         if (is_array($post)) {
             try {
                 $userSession = $this->userSessionService->update($post);
-                $message[]  = 'El usuario se actualizó exitosamente';
                 $status    = parent::STATUS_CODE_200;
             } catch (UserSessionNotFoundException $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
-                $message[] = $e->getMessage();
                 $status    = parent::STATUS_CODE_500;
             }
 
-            // JsonView
             if ($this->view instanceof JsonView) {
                 $datosUI = isset($userSession) ? $userSession->toArray() : [];
                 $response = $response->withStatus($status);
@@ -186,19 +166,15 @@ class UserSessionController extends BaseController
         $idSession = $args['idSession'];
         $id        = $args['idusersession'];
         $datosUI   = null;
-        $message   = null;
         $status    = null;
         
         try {
-            $delete    = $this->userSessionService->delete($id);
-            $message[] = 'El usuario se eliminó exitosamente de la sesión';
-            $status    = parent::STATUS_CODE_204;
+            $delete = $this->userSessionService->delete($id);
+            $status = parent::STATUS_CODE_204;
         } catch (UserSessionNotFoundException $e) {
-            $message[] = $e->getMessage();
-            $status    = parent::STATUS_CODE_404;
+            $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $message[] = $e->getMessage();
-            $status    = parent::STATUS_CODE_500;
+            $status = parent::STATUS_CODE_500;
         }
         
         if ($this->view instanceof JsonView) {
@@ -219,19 +195,15 @@ class UserSessionController extends BaseController
         if (is_array($post)) {
             try {
                 $userSession = $this->userSessionService->close($post);
-                $message[]   = 'El usuario ha salido de la sesión';
                 $status      = parent::STATUS_CODE_200;
             } catch (InsufficientUserSessionTimeException $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_400;
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $message[] = $e->getMessage();
-                $status    = parent::STATUS_CODE_500;
+                $status = parent::STATUS_CODE_500;
             }
             
-            // JsonView
             if ($this->view instanceof JsonView) {
-                $datosUI = isset($userSession) ? $userSession->toArray() : [];
+                $datosUI  = isset($userSession) ? $userSession->toArray() : [];
                 $response = $response->withStatus($status);
             }
         }
