@@ -109,6 +109,7 @@ class UserSessionController extends BaseController
         $status     = null;
 
         if (is_array($post)) {
+            $this->checkGenericInputData($post);
             foreach ($post['users_id'] as $userId) {
                 $data = [
                     'isApproved' => $post['approved'],
