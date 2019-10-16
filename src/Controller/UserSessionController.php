@@ -109,38 +109,44 @@ class UserSessionController extends BaseController
         $status     = null;
 
         if (is_array($post)) {
-            $this->checkGenericInputData($post);
-            foreach ($post['users_id'] as $userId) {
-                $data = [
-                    'isApproved' => $post['approved'],
-                    'points'     => $post['points'],
-                    'idSession'  => $post['idSession'],
-                    'idUser'     => $userId
-                ];
+            try {
+                $this->checkGenericInputData($post);
+                foreach ($post['users_id'] as $userId) {
+                    $data = [
+                        'isApproved' => $post['approved'],
+                        'points'     => $post['points'],
+                        'idSession'  => $post['idSession'],
+                        'idUser'     => $userId
+                    ];
 
-                try {
-                    $usersAdded[] = $this->userSessionService->add($data);
-                    // $status = parent::STATUS_CODE_201;
-                } catch (UserSessionAlreadyAddedException $e) {
-                    $status = parent::STATUS_CODE_400;
-                } catch (IncopmleteDataException $e) {
-                    $status = parent::STATUS_CODE_400;
-                } catch (TableIsFullException $e) {
-                    $status = parent::STATUS_CODE_400;
-                } catch (\Exception $e) {
-                    $status    = parent::STATUS_CODE_500;
-                }
-            }
-
-            if ($this->view instanceof JsonView) {
-                if (!empty($usersAdded)) {
-                    $usersAddedToArray = [];
-                    foreach ($usersAdded as $userSession) {
-                        $usersAddedToArray[] = $userSession->toArray();
+                    try {
+                        $usersAdded[] = $this->userSessionService->add($data);
+                        // $status = parent::STATUS_CODE_201;
+                    } catch (UserSessionAlreadyAddedException $e) {
+                        //$status = parent::STATUS_CODE_400;
+                    } catch (IncopmleteDataException $e) {
+                        //$status = parent::STATUS_CODE_400;
+                    } catch (TableIsFullException $e) {
+                        //$status = parent::STATUS_CODE_400;
+                    } catch (\Exception $e) {
+                        $status = parent::STATUS_CODE_500;
                     }
-                    $datosUI = $usersAddedToArray;
                 }
-                $response = $response->withStatus($this->setStatusForResponse($status, count($usersAdded)));
+
+                if ($this->view instanceof JsonView) {
+                    if (!empty($usersAdded)) {
+                        $usersAddedToArray = [];
+                        foreach ($usersAdded as $userSession) {
+                            $usersAddedToArray[] = $userSession->toArray();
+                        }
+                        $datosUI = $usersAddedToArray;
+                    }
+                    $response = $response->withStatus($this->setStatusForResponse($status, count($usersAdded)));
+                }
+
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
+                $response = $response->withStatus($status);
             }
         }
 
