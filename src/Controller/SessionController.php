@@ -187,7 +187,7 @@ class SessionController extends BaseController
         }
 
         if ($this->view instanceof JsonView) {
-            $datosUI  = isset($session) ? $sessionArray: [];
+            $datosUI  = isset($session) ? $session->toArray(): [];
             $response = $response->withStatus($status);
         }
 
@@ -209,11 +209,10 @@ class SessionController extends BaseController
         }
 
         if ($this->view instanceof JsonView) {
-            $datosUI  = isset($session) ? $sessionArray: [];
+            $datosUI  = isset($session) ? $session->toArray(): [];
             $response = $response->withStatus($status);
         }
 
         return $this->view->render($request, $response, $datosUI);
     }
-
 }
