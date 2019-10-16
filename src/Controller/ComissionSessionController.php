@@ -70,7 +70,7 @@ class ComissionSessionController extends BaseController
         } catch (ComissionNotFoundException $e) {
             $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status = parent::STATUS_CODE_500;
+            $status  = ($e->getCode() == parent::STATUS_CODE_404) ? parent::STATUS_CODE_404 : parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {
