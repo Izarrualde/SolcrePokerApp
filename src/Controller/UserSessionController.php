@@ -11,6 +11,7 @@ use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
 use Exception;
 
@@ -91,6 +92,14 @@ class UserSessionController extends BaseController
         return $this->view->render($request, $response, $datosUI);
     }
 
+    public function checkGenericInputData($data)
+    {
+        // does not include id
+        if (!isset($data['approved'], $data['points'], $data['idSession'], $data['users_id'])) {
+            throw new IncompleteDataException();
+        }
+    }
+
     public function add($request, $response, $args)
     {
         $post       = $request->getParsedBody();
@@ -100,35 +109,44 @@ class UserSessionController extends BaseController
         $status     = null;
 
         if (is_array($post)) {
-            foreach ($post['user_id'] as $userId) {
-                $data = [
-                    'isApproved' => $post['approved'],
-                    'points'     => $post['points'],
-                    'idSession'  => $post['idSession'],
-                    'idUser'     => $userId
-                ];
+            try {
+                $this->checkGenericInputData($post);
+                foreach ($post['users_id'] as $userId) {
+                    $data = [
+                        'isApproved' => $post['approved'],
+                        'points'     => $post['points'],
+                        'idSession'  => $post['idSession'],
+                        'idUser'     => $userId
+                    ];
 
-                try {
-                    $usersAdded[] = $this->userSessionService->add($data);
-                    // $status = parent::STATUS_CODE_201;
-                } catch (UserSessionAlreadyAddedException $e) {
-                    // $status = parent::STATUS_CODE_400;
-                } catch (TableIsFullException $e) {
-                    // $status = parent::STATUS_CODE_400;
-                } catch (\Exception $e) {
-                    $status    = parent::STATUS_CODE_500;
-                }
-            }
-
-            if ($this->view instanceof JsonView) {
-                if (!empty($usersAdded)) {
-                    $usersAddedToArray = [];
-                    foreach ($usersAdded as $userSession) {
-                        $usersAddedToArray[] = $userSession->toArray();
+                    try {
+                        $usersAdded[] = $this->userSessionService->add($data);
+                        // $status = parent::STATUS_CODE_201;
+                    } catch (UserSessionAlreadyAddedException $e) {
+                        //$status = parent::STATUS_CODE_400;
+                    } catch (IncompleteDataException $e) {
+                        //$status = parent::STATUS_CODE_400;
+                    } catch (TableIsFullException $e) {
+                        //$status = parent::STATUS_CODE_400;
+                    } catch (\Exception $e) {
+                        $status = parent::STATUS_CODE_500;
                     }
-                    $datosUI = $usersAddedToArray;
                 }
-                $response = $response->withStatus($this->setStatusForResponse($status, count($usersAdded)));
+
+                if ($this->view instanceof JsonView) {
+                    if (!empty($usersAdded)) {
+                        $usersAddedToArray = [];
+                        foreach ($usersAdded as $userSession) {
+                            $usersAddedToArray[] = $userSession->toArray();
+                        }
+                        $datosUI = $usersAddedToArray;
+                    }
+                    $response = $response->withStatus($this->setStatusForResponse($status, count($usersAdded)));
+                }
+
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
+                $response = $response->withStatus($status);
             }
         }
 
@@ -145,11 +163,14 @@ class UserSessionController extends BaseController
         if (is_array($post)) {
             try {
                 $userSession = $this->userSessionService->update($post);
-                $status    = parent::STATUS_CODE_200;
+                $status = parent::STATUS_CODE_200;
             } catch (UserSessionNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                var_dump($e->getMessage());
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {
