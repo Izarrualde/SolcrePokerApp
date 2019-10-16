@@ -93,6 +93,8 @@ class ExpensesSessionController extends BaseController
                 $status      = parent::STATUS_CODE_201;
             } catch (ExpensesInvalidException $e) {
                 $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $status = parent::STATUS_CODE_500;
             }
@@ -118,6 +120,8 @@ class ExpensesSessionController extends BaseController
                 $expenditure = $this->expensesService->update($post);
                 $status      = parent::STATUS_CODE_200;
             } catch (ExpensesInvalidException $e) {
+                $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
                 $status = parent::STATUS_CODE_400;
             } catch (ExpenditureNotFoundException $e) {
                 $status = parent::STATUS_CODE_404;

@@ -94,6 +94,8 @@ class ComissionSessionController extends BaseController
                 $status    = parent::STATUS_CODE_201;
             } catch (ComissionInvalidException $e) {
                 $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $status = parent::STATUS_CODE_500;
             }
@@ -119,6 +121,8 @@ class ComissionSessionController extends BaseController
                 $comission = $this->comissionService->update($post);
                 $status    = parent::STATUS_CODE_200;
             } catch (ComissionInvalidException $e) {
+                $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
                 $status = parent::STATUS_CODE_400;
             } catch (ComissionNotFoundException $e) {
                 $status = parent::STATUS_CODE_404;

@@ -151,6 +151,8 @@ class TipSessionController extends BaseController
                 $statusDealerTip = parent::STATUS_CODE_201;
             } catch (DealerTipInvalidException $e) {
                 $statusDealerTip = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $statusDealerTip = parent::STATUS_CODE_500;
             }
@@ -160,6 +162,8 @@ class TipSessionController extends BaseController
                 $statusServiceTip = parent::STATUS_CODE_201;
             } catch (ServiceTipInvalidException $e) {
                 $statusServiceTip = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $statusServiceTip = parent::STATUS_CODE_500;
             }
