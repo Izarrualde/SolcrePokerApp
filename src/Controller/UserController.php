@@ -9,6 +9,7 @@ use Solcre\lmsuy\View\View;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Solcre\Pokerclub\Exception\UserInvalidException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
 class UserController extends BaseController
@@ -79,12 +80,14 @@ class UserController extends BaseController
         $post    = $request->getParsedBody();
         $datosUI = [];
         $status  = null;
-        
+
         if (is_array($post)) {
             try {
                 $user   = $this->userService->add($post);
                 $status = parent::STATUS_CODE_201;
             } catch (UserInvalidException $e) {
+                $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
                 $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
                 $status = parent::STATUS_CODE_500;
