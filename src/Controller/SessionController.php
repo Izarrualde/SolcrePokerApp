@@ -109,7 +109,7 @@ class SessionController extends BaseController
             try {
                 $session = $this->sessionService->update($post);
                 $status  = parent::STATUS_CODE_200;
-            } catch (SessionInvalidException $e) {
+            } catch (IncompleteDataException $e) {
                 $status = parent::STATUS_CODE_400;
             } catch (SessionNotFoundException $e) {
                 $status = parent::STATUS_CODE_404;
