@@ -124,7 +124,7 @@ class UserSessionController extends BaseController
                         // $status = parent::STATUS_CODE_201;
                     } catch (UserSessionAlreadyAddedException $e) {
                         //$status = parent::STATUS_CODE_400;
-                    } catch (IncopmleteDataException $e) {
+                    } catch (IncompleteDataException $e) {
                         //$status = parent::STATUS_CODE_400;
                     } catch (TableIsFullException $e) {
                         //$status = parent::STATUS_CODE_400;
@@ -163,11 +163,14 @@ class UserSessionController extends BaseController
         if (is_array($post)) {
             try {
                 $userSession = $this->userSessionService->update($post);
-                $status    = parent::STATUS_CODE_200;
+                $status = parent::STATUS_CODE_200;
             } catch (UserSessionNotFoundException $e) {
-                $status    = parent::STATUS_CODE_404;
+                $status = parent::STATUS_CODE_404;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                $status    = parent::STATUS_CODE_500;
+                var_dump($e->getMessage());
+                $status = parent::STATUS_CODE_500;
             }
 
             if ($this->view instanceof JsonView) {

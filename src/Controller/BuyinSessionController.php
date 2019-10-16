@@ -8,6 +8,8 @@ use Solcre\Pokerclub\Service\UserService;
 use Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Exception\BuyinInvalidException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 use Exception;
 use Doctrine\ORM\EntityManager;
@@ -74,7 +76,9 @@ class BuyinSessionController extends BaseController
         } catch (BuyinNotFoundException $e) {
             $status = parent::STATUS_CODE_404;
         } catch (\Exception $e) {
-            $status = parent::STATUS_CODE_500;
+            $status  = ($e->getCode() == parent::STATUS_CODE_404) ? 
+            parent::STATUS_CODE_404 : 
+            parent::STATUS_CODE_500;
         }
 
         if ($this->view instanceof JsonView) {
@@ -98,6 +102,10 @@ class BuyinSessionController extends BaseController
                 $status = parent::STATUS_CODE_201;
             } catch (BuyinInvalidException $e) {
                 $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
+            } catch (UserSessionNotFoundException $e) {
+                $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
                 $status = parent::STATUS_CODE_500;
             }
@@ -124,6 +132,10 @@ class BuyinSessionController extends BaseController
                 $status = parent::STATUS_CODE_200;
             } catch (BuyinInvalidException $e) {
                 $status = parent::STATUS_CODE_400;
+            } catch (IncompleteDataException $e) {
+                $status = parent::STATUS_CODE_400;
+            } catch (UserSessionNotFoundException $e) {
+                $status = parent::STATUS_CODE_404;
             } catch (BuyinNotFoundException $e) {
                 $status = parent::STATUS_CODE_404;
             } catch (\Exception $e) {
