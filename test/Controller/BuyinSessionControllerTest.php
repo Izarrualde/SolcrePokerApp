@@ -415,7 +415,7 @@ class BuyinSessionControllerTest extends TestCase
             'idbuyin'   => 1
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404);
+        $exception = new Exception();
         $setup           = $this->listWithExceptionSetup($view, $exception);
         $controller      = $setup['controller'];
         $expectedDatosUI = $setup['expectedDatosUI'];

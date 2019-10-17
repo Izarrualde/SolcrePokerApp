@@ -454,14 +454,14 @@ class TipSessionControllerTest extends TestCase
             'idDealerTip' => 1
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\DealerTipessionEntity' . " Entity not found", 404);
+        $exception = new Exception();
 
         $setup            = $this->listDealerTipWithExceptionSetup($view, $exception);
         $controller       = $setup['controller'];
         $expectedDatosUI  = $setup['expectedDatosUI'];
         $request          = $setup['request'];
         $response         = $setup['response'];
-        $expectedResponse = $response->withStatus(404);
+        $expectedResponse = $response->withStatus(500);
 
         $view->expects($this->once())
         ->method('render')
@@ -483,14 +483,14 @@ class TipSessionControllerTest extends TestCase
             'idServiceTip' => 1
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\ServiceTipessionEntity' . " Entity not found", 404);
+        $exception = new Exception();
 
         $setup            = $this->listServiceTipWithExceptionSetup($view, $exception);
         $controller       = $setup['controller'];
         $expectedDatosUI  = $setup['expectedDatosUI'];
         $request          = $setup['request'];
         $response         = $setup['response'];
-        $expectedResponse = $response->withStatus(404);
+        $expectedResponse = $response->withStatus(500);
 
         $view->expects($this->once())
         ->method('render')

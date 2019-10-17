@@ -18,7 +18,6 @@ use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 
 class UserSessionControllerTest extends TestCase
 {
-
     public function createController($view, $userSessionService, $userService, $sessionService) {
         $container = AppWrapper::getContainer();
 
@@ -348,7 +347,7 @@ class UserSessionControllerTest extends TestCase
           'idusersession' => 1
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\UserSessionEntity' . " Entity not found", 404);
+        $exception = new Exception();
 
         $setup           = $this->listWithExceptionSetup($view, $exception);
         $controller      = $setup['controller'];
@@ -371,7 +370,7 @@ class UserSessionControllerTest extends TestCase
         $request->method('getParsedBody')->willReturn(
           [
             'idSession' => 2,
-            'user_id'   => [1],
+            'users_id'   => [1],
             'start'     => '2019-06-27 19:00:00',
             'end'       => null,
             'approved'  => 1,
@@ -403,14 +402,14 @@ class UserSessionControllerTest extends TestCase
         $expectedUserSessionAdded = new UserSessionEntity(
           1,
           $expectedSession,
-          $post['user_id'][0],
+          $post['users_id'][0],
           $post['approved'],
           $post['points'],
           null,
           date_create($post['start']),
           null,
           null,
-          $user1 = New UserEntity($post['user_id'][0])
+          $user1 = New UserEntity($post['users_id'][0])
         );
 
         $expectedUsersSession = [
@@ -460,7 +459,7 @@ class UserSessionControllerTest extends TestCase
         $request->method('getParsedBody')->willReturn(
           [
             'idSession' => 2,
-            'user_id'   => [
+            'users_id'   => [
                   'user1' => 1,
                   'user2' => 2,
                   'user3' => 3
@@ -495,40 +494,40 @@ class UserSessionControllerTest extends TestCase
         $expectedUserAdded1 = new UserSessionEntity(
           1,
           $expectedSession,
-          $post['user_id']['user1'],
+          $post['users_id']['user1'],
           $post['approved'],
           $post['points'],
           null,
           null,
           null,
           null,
-          $user1 = New UserEntity($post['user_id']['user1'])
+          $user1 = New UserEntity($post['users_id']['user1'])
         );
 
         $expectedUserAdded2 = new UserSessionEntity(
           1,
           $expectedSession,
-          $post['user_id']['user2'],
+          $post['users_id']['user2'],
           $post['approved'],
           $post['points'],
           null,
           null,
           null,
           null,
-          $user1 = New UserEntity($post['user_id']['user2'])
+          $user1 = New UserEntity($post['users_id']['user2'])
         );
 
         $expectedUserAdded3 = new UserSessionEntity(
           1,
           $expectedSession,
-          $post['user_id']['user3'],
+          $post['users_id']['user3'],
           $post['approved'],
           $post['points'],
           null,
           null,
           null,
           null,
-          $user1 = New UserEntity($post['user_id']['user3'])
+          $user1 = New UserEntity($post['users_id']['user3'])
         );
 
         $expectedUsersAdded = [$expectedUserAdded1, $expectedUserAdded2, $expectedUserAdded3];
@@ -617,7 +616,7 @@ class UserSessionControllerTest extends TestCase
           [
             'userSession to add',
             'idSession' => 2,
-            'user_id'   => [1],
+            'users_id'   => [1],
             'start'     => '2019-06-27 19:00:00',
             'approved'  => 1,
             'points'    => 0,
@@ -656,7 +655,7 @@ class UserSessionControllerTest extends TestCase
         $request->method('getParsedBody')->willReturn(
           [
             'idSession' => 2,
-            'user_id'   => [1],
+            'users_id'  => [1],
             'start'     => '2019-06-27 19:00:00',
             'end'       => '2019-06-27 23:00:00',
             'approved'  => 1,
@@ -777,7 +776,7 @@ class UserSessionControllerTest extends TestCase
           'idSession' => 2
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\UserSessionEntity' . " Entity not found", 404); 
+        $exception = new Exception(); 
 
         $setup            = $this->addAndUpdateWithExceptionSetup($view, $exception);
         $controller       = $setup['controller'];
