@@ -92,11 +92,6 @@ parameters:
             end_point: ~
             timeout: ~
             run_always: false
-        twigcs:
-            path: 'templates'
-            severity: 'warning'
-            ruleset: 'Allocine\Twigcs\Ruleset\Official'
-            triggered_by: ['twig']
         yamllint:
             whitelist_patterns: []
             ignore_patterns: []

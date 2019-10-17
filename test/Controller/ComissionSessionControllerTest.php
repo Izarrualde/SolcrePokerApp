@@ -15,7 +15,6 @@ use Test\AppWrapper;
 use Solcre\lmsuy\Controller\ComissionSessionController;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 class ComissionSessionControllerTest extends TestCase
 {
 
@@ -532,34 +531,6 @@ class ComissionSessionControllerTest extends TestCase
 
       $controller->add($request, $response, $args);
     }
-
-/*
-  public function testAddWithoutPostData() 
-  {
-    $view = $this->createMock(Slim\Views\Twig::class);
-    $comissionService = $this->createMock(ComissionSessionService::class);
-    $sessionService = $this->createMock(SessionService::class);
-
-    $controller = $this->createController($view, $comissionService, $sessionService);
-    $request = $this->createMock(Slim\Psr7\Request::class);
-    $request->method('getParsedBody')->willReturn(null);
-
-    $response = $this->createMock(Slim\Psr7\Response::class);
-    $args = [
-      'idSession' => 2
-    ];
-
-    $view->expects($this->once())
-    ->method('render')
-    ->with(
-        $this->equalTo($response),
-        $this->anything(), // For example use of a parameter we want to skip assertion
-        $this->equalTo([]),
-    );
-
-    $controller->add($request, $response, $args);
-  }
-*/
 
     public function updateSetup($view)
     {
