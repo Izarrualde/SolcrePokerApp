@@ -11,6 +11,7 @@ use Solcre\lmsuy\View\View;
 use Test\AppWrapper;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\SessionInvalidException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 
 class SessionControllerTest extends TestCase 
 {
@@ -246,7 +247,7 @@ class SessionControllerTest extends TestCase
           'idSession' => 1
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404);
+        $exception = new Exception();
 
         $setup            = $this->listWithExceptionSetup($view, $exception);
         $controller       = $setup['controller'];
@@ -254,7 +255,7 @@ class SessionControllerTest extends TestCase
         $request          = $setup['request'];
         $response         = $setup['response'];
 
-        $expectedResponse = $response->withStatus(404);
+        $expectedResponse = $response->withStatus(500);
 
         $view->expects($this->once())
         ->method('render')
@@ -566,13 +567,13 @@ class SessionControllerTest extends TestCase
         $controller->update($request, $response, $args);
     }
 
-    public function testUpdateWithInvalidSessionWithJsonView()
+    public function testUpdateWithIncompleteDataExceptionWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
 
         $args = [];
 
-        $exception = new SessionInvalidException();
+        $exception = new IncompleteDataException();
 
         $setup            = $this->addAndupdateWithExceptionSetup($view, $exception);
         $controller       = $setup['controller'];

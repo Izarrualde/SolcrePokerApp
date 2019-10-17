@@ -20,11 +20,9 @@
         "slim/php-view": "^2.2",
         "slim/psr7": "^0.3.0",
         "slim/slim": "^4.0@beta",
-        "slim/twig-view": "^2.5",
         "vlucas/phpdotenv": "^3.4@dev"
     },
     "require-dev": {
-        "friendsoftwig/twigcs": "^3.1",
         "localheinz/composer-normalize": "^1.2",
         "phpmd/phpmd": "^2.6",
         "phpro/grumphp": "^0.15.2",

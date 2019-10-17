@@ -238,7 +238,7 @@ class UserControllerTest extends TestCase
         $controller->list($request, $response, $args);
     }
 
-    public function testListUserWithExceptionWithJsonView()
+    public function testListWithExceptionWithJsonView()
     {
         $view = $this->createMock(JsonView::class);
 
@@ -246,7 +246,7 @@ class UserControllerTest extends TestCase
           'iduser' => 1
         ];
 
-        $exception = new Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404);
+        $exception = new Exception();
 
         $setup            = $this->listWithExceptionSetup($view, $exception);
         $controller       = $setup['controller'];

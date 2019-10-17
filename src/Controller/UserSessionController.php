@@ -169,7 +169,6 @@ class UserSessionController extends BaseController
             } catch (IncompleteDataException $e) {
                 $status = parent::STATUS_CODE_400;
             } catch (\Exception $e) {
-                var_dump($e->getMessage());
                 $status = parent::STATUS_CODE_500;
             }
 
